@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#090914" />
+  <title>YouGo — Talk • Play • Connect</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-label="YouGo logo">
+          <span class="brand-y">Y</span><span class="brand-g">G</span>
+          <span class="brand-play">▶</span>
+        </div>
+        <div>
+          <strong>YouGo</strong>
+          <small>Talk • Play • Connect</small>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn" data-action="search" aria-label="Search">⌕</button>
+        <button class="icon-btn notify" data-action="notifications" aria-label="Notifications">♢<i></i></button>
+      </div>
+    </header>
+
+    <main class="content">
+      <section class="screen active" data-screen="home">
+        <div class="story-row" aria-label="People online">
+          <button class="story story-add"><span class="story-avatar">+</span><small>Your room</small></button>
+          <button class="story"><span class="story-avatar a1">M</span><b></b><small>Maya</small></button>
+          <button class="story"><span class="story-avatar a2">R</span><b></b><small>Riya</small></button>
+          <button class="story"><span class="story-avatar a3">A</span><b></b><small>Arjun</small></button>
+          <button class="story"><span class="story-avatar a4">S</span><b></b><small>Sana</small></button>
+          <button class="story"><span class="story-avatar a5">K</span><b></b><small>Kiran</small></button>
+        </div>
+
+        <div class="hero-card">
+          <div class="hero-copy">
+            <span class="pill live-pill">● LIVE NOW</span>
+            <h1>Find your people.<br/>Own the vibe.</h1>
+            <p>Jump into live voice rooms, games and communities made for your mood.</p>
+            <button class="primary-btn" data-action="join-featured">Join room <span>→</span></button>
+          </div>
+          <div class="hero-orbit">
+            <div class="orb o1">M</div><div class="orb o2">R</div><div class="orb o3">A</div>
+            <div class="hero-wave">▮▮▮</div>
+          </div>
+        </div>
+
+        <div class="section-head">
+          <div><small>DISCOVER</small><h2>Live rooms</h2></div>
+          <button class="text-btn" data-action="see-all">See all</button>
+        </div>
+
+        <div class="room-grid">
+          <article class="room-card gradient-1" data-room="Late Night Talks">
+            <div class="room-top"><span class="pill">VOICE</span><span>♟ 1.8K</span></div>
+            <div class="room-art"><span class="mini-avatar a1">M</span><span class="mini-avatar a2">R</span><span class="mini-avatar a4">S</span></div>
+            <h3>Late Night Talks ✨</h3><p>Chill • Music • New friends</p>
+            <div class="room-foot"><span>🎙 8 speakers</span><strong>JOIN</strong></div>
+          </article>
+
+          <article class="room-card gradient-2" data-room="Telugu Vibes">
+            <div class="room-top"><span class="pill">TRENDING</span><span>♟ 932</span></div>
+            <div class="room-art"><span class="mini-avatar a3">A</span><span class="mini-avatar a5">K</span><span class="mini-avatar a2">R</span></div>
+            <h3>Telugu Vibes 🔥</h3><p>Fun • Games • Guntur</p>
+            <div class="room-foot"><span>🎙 6 speakers</span><strong>JOIN</strong></div>
+          </article>
+
+          <article class="room-card gradient-3" data-room="Music Lounge">
+            <div class="room-top"><span class="pill">MUSIC</span><span>♟ 674</span></div>
+            <div class="room-art music-art">♫</div>
+            <h3>Music Lounge 🎧</h3><p>Requests • Karaoke • Chill</p>
+            <div class="room-foot"><span>🎙 5 speakers</span><strong>JOIN</strong></div>
+          </article>
+
+          <article class="room-card gradient-4" data-room="Game Arena">
+            <div class="room-top"><span class="pill">GAME</span><span>♟ 515</span></div>
+            <div class="room-art game-art">🎮</div>
+            <h3>Game Arena ⚡</h3><p>PK • Dice • Mini games</p>
+            <div class="room-foot"><span>🎙 7 speakers</span><strong>JOIN</strong></div>
+          </article>
+        </div>
+
+        <div class="section-head compact">
+          <div><small>FOR YOU</small><h2>People to meet</h2></div>
+        </div>
+        <div class="people-strip">
+          <article class="person-card"><span class="person-avatar a1">M</span><h4>Maya</h4><p>Music • Travel</p><button>Follow</button></article>
+          <article class="person-card"><span class="person-avatar a3">A</span><h4>Arjun</h4><p>Gaming • Tech</p><button>Follow</button></article>
+          <article class="person-card"><span class="person-avatar a4">S</span><h4>Sana</h4><p>Talks • Fashion</p><button>Follow</button></article>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="discover">
+        <div class="page-title"><small>EXPLORE YOUGO</small><h1>Discover</h1><p>Rooms, creators and communities that match your energy.</p></div>
+        <label class="searchbox">⌕<input type="search" placeholder="Search rooms, people, interests" /></label>
+        <div class="chips">
+          <button class="chip active">For you</button><button class="chip">Music</button><button class="chip">Gaming</button><button class="chip">Dating</button><button class="chip">Telugu</button>
+        </div>
+        <div class="discover-feature gradient-2" data-room="Weekend Party">
+          <span class="pill">FEATURED ROOM</span>
+          <h2>Weekend Party 🎉</h2><p>Music, games & good people. Come say hi.</p>
+          <button class="primary-btn">Enter room</button>
+        </div>
+        <div class="list-cards">
+          <article><span class="list-icon">🎵</span><div><h3>Music & Karaoke</h3><p>148 rooms live</p></div><b>›</b></article>
+          <article><span class="list-icon">🎮</span><div><h3>Games & PK</h3><p>83 rooms live</p></div><b>›</b></article>
+          <article><span class="list-icon">💫</span><div><h3>Meet New People</h3><p>256 rooms live</p></div><b>›</b></article>
+          <article><span class="list-icon">🌙</span><div><h3>Late Night</h3><p>94 rooms live</p></div><b>›</b></article>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="inbox">
+        <div class="page-title inline-title"><div><small>YOUR PEOPLE</small><h1>Messages</h1></div><button class="icon-btn">＋</button></div>
+        <div class="inbox-tabs"><button class="active">Chats</button><button>Activity</button><button>Requests <span>3</span></button></div>
+        <div class="chat-list">
+          <article><span class="chat-avatar a1">M<i></i></span><div><h3>Maya <small>2m</small></h3><p>That room was actually so fun 😂</p></div><b class="unread">2</b></article>
+          <article><span class="chat-avatar a3">A<i></i></span><div><h3>Arjun <small>18m</small></h3><p>Join our game room tonight?</p></div></article>
+          <article><span class="chat-avatar a4">S</span><div><h3>Sana <small>1h</small></h3><p>Sent you a gift 🎁</p></div></article>
+          <article><span class="chat-avatar a5">K</span><div><h3>Kiran <small>Yesterday</small></h3><p>See you soon!</p></div></article>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="profile">
+        <div class="profile-cover">
+          <div class="profile-actions"><button class="icon-btn">⚙</button><button class="icon-btn">↗</button></div>
+          <div class="profile-avatar a2">Y<span>♛</span></div>
+          <h1>You</h1><p>@yougo_user · ID 248520</p>
+          <div class="level-row"><span>LV.12</span><span>VIP 2</span><span>♢ 3,480</span></div>
+          <button class="profile-edit">Edit profile</button>
+        </div>
+        <div class="stats"><div><b>12.8K</b><span>Followers</span></div><div><b>486</b><span>Following</span></div><div><b>1.2M</b><span>Charm</span></div></div>
+        <div class="profile-menu">
+          <article><span>👑</span><div><b>VIP Center</b><small>Unlock premium effects & privileges</small></div><i>›</i></article>
+          <article><span>💎</span><div><b>Wallet</b><small>Diamonds, coins & rewards</small></div><i>›</i></article>
+          <article><span>🏆</span><div><b>My Level</b><small>Level up and unlock room perks</small></div><i>›</i></article>
+          <article><span>🎁</span><div><b>Gift Collection</b><small>See gifts you've received</small></div><i>›</i></article>
+          <article><span>🛡</span><div><b>Safety & Privacy</b><small>Blocked users and controls</small></div><i>›</i></article>
+        </div>
+      </section>
+    </main>
+
+    <button class="create-fab" data-action="create-room" aria-label="Create room">＋</button>
+
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-nav="home"><span>⌂</span><small>Home</small></button>
+      <button class="nav-item" data-nav="discover"><span>◉</span><small>Discover</small></button>
+      <div class="nav-gap"></div>
+      <button class="nav-item" data-nav="inbox"><span>✉</span><small>Inbox</small><i class="nav-dot"></i></button>
+      <button class="nav-item" data-nav="profile"><span>♙</span><small>Me</small></button>
+    </nav>
+
+    <div class="overlay" id="roomOverlay" aria-hidden="true">
+      <div class="room-screen">
+        <div class="room-bg"></div>
+        <header class="room-header">
+          <button class="room-close" data-action="close-room">‹</button>
+          <div><h2 id="roomTitle">Late Night Talks ✨</h2><p>#284520 · 1.8K online</p></div>
+          <button class="room-more">•••</button>
+        </header>
+        <div class="room-host">
+          <span class="host-avatar a1">M<i>HOST</i></span>
+          <div><h3>Maya</h3><p>Welcome to the room 💜</p></div>
+          <button>＋ Follow</button>
+        </div>
+        <div class="seats">
+          <button class="seat occupied"><span class="a1">M</span><b>👑 Maya</b><i>1</i></button>
+          <button class="seat occupied"><span class="a3">A</span><b>Arjun</b><i>2</i></button>
+          <button class="seat occupied"><span class="a4">S</span><b>Sana</b><i>3</i></button>
+          <button class="seat"><span>＋</span><b>Seat 4</b><i>4</i></button>
+          <button class="seat"><span>＋</span><b>Seat 5</b><i>5</i></button>
+          <button class="seat"><span>＋</span><b>Seat 6</b><i>6</i></button>
+          <button class="seat"><span>＋</span><b>Seat 7</b><i>7</i></button>
+          <button class="seat"><span>＋</span><b>Seat 8</b><i>8</i></button>
+        </div>
+        <div class="room-chat">
+          <p><b class="pink">Maya</b> Welcome everyone ✨</p>
+          <p><b class="cyan">Arjun</b> Who's up for a game?</p>
+          <p><span class="system">🎁 Sana sent Rose ×10 to Maya</span></p>
+        </div>
+        <div class="room-controls">
+          <button>🎤<small>Mic</small></button><button>🎵<small>Music</small></button>
+          <button class="gift-btn" data-action="gift">🎁<small>Gift</small></button>
+          <button>🎮<small>Games</small></button><button>•••<small>More</small></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sheet-wrap" id="createSheet" aria-hidden="true">
+      <div class="sheet-backdrop" data-action="close-sheet"></div>
+      <div class="sheet">
+        <div class="sheet-handle"></div>
+        <h2>Create your room</h2><p>Choose a vibe. You can switch modes later.</p>
+        <div class="mode-grid">
+          <button class="mode active"><span>🎙</span><b>Voice</b><small>Talk together</small></button>
+          <button class="mode"><span>🎥</span><b>Video</b><small>Go face to face</small></button>
+          <button class="mode"><span>🎮</span><b>Game</b><small>Play together</small></button>
+        </div>
+        <label class="field"><span>Room name</span><input value="My YouGo Room ✨" /></label>
+        <button class="primary-btn full" data-action="start-room">Start room</button>
+      </div>
+    </div>
+
+    <div class="sheet-wrap" id="giftSheet" aria-hidden="true">
+      <div class="sheet-backdrop" data-action="close-gift"></div>
+      <div class="sheet gift-sheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-title"><div><h2>Send a gift</h2><p>Make someone's moment.</p></div><span>💎 3,480</span></div>
+        <div class="gift-grid">
+          <button><span>🌹</span><b>Rose</b><small>10</small></button>
+          <button><span>💜</span><b>Heart</b><small>50</small></button>
+          <button><span>💎</span><b>Diamond</b><small>100</small></button>
+          <button><span>🚗</span><b>Supercar</b><small>999</small></button>
+          <button><span>👑</span><b>Crown</b><small>1.5K</small></button>
+          <button><span>🏰</span><b>Castle</b><small>5K</small></button>
+        </div>
+        <button class="primary-btn full">Send gift</button>
+      </div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
