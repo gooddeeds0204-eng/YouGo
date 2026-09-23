@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#180c35"/><stop offset=".5" stop-color="#0b1332"/><stop offset="1" stop-color="#12071f"/></linearGradient>
+  <linearGradient id="pink" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffbe63"/><stop offset=".35" stop-color="#ff3b9e"/><stop offset="1" stop-color="#9a29ff"/></linearGradient>
+  <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#db4cff"/><stop offset=".48" stop-color="#5144ff"/><stop offset="1" stop-color="#14cfff"/></linearGradient>
+  <filter id="glow"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect x="10" y="10" width="492" height="492" rx="108" fill="url(#bg)" stroke="#6728d9" stroke-width="3"/>
+<g filter="url(#glow)">
+  <path d="M116 106C147 126 186 171 215 229c12 25 18 54 11 80-5 19-15 40-37 64-9 10-25 7-29-5-10-30-6-64 8-95 10-22 11-38 5-56-12-37-38-67-71-92-15-12-5-29 14-19z" fill="url(#pink)"/>
+  <path d="M212 222c34-69 86-116 151-126 38-6 56 25 32 48-27 26-59 42-84 67-20 20-27 38-26 60 1 26 13 45 41 61 20 11 43 17 68 18 16 1 24 18 12 28-26 23-73 26-112 12-47-17-79-55-90-98-6-24-3-47 8-70z" fill="url(#blue)"/>
+  <path d="M302 228h61c16 0 29 13 29 29v10c0 16-13 29-29 29h-61z" fill="url(#blue)"/>
+  <path d="M303 250l29-18v36z" fill="#ff4bab"/>
+  <circle cx="226" cy="93" r="29" fill="url(#pink)"/>
+</g>
+<text x="256" y="443" text-anchor="middle" fill="white" font-size="62" font-weight="800" font-family="Arial,Helvetica,sans-serif">You<tspan fill="#ff36bb">G</tspan><tspan fill="#39cfff">o</tspan></text>
+</svg>
