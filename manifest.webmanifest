@@ -1,0 +1,18 @@
+{
+  "name": "YouGo",
+  "short_name": "YouGo",
+  "description": "Talk, play and connect in live social voice rooms.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#090914",
+  "theme_color": "#090914",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "assets/yougo-logo.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
