@@ -8,44 +8,30 @@ import {
   isValidIndianPhone,
   normalizeIndianPhone,
 } from "@/domains/users/profileRules";
-import { colors, radius } from "@/shared/theme";
+import { colors } from "@/shared/theme";
 
 export function LoginScreen() {
   const { draft, updateDraft } = useAuthDraft();
   const [phone, setPhone] = useState(draft.phone);
   const [busy, setBusy] = useState(false);
+  const valid = isValidIndianPhone(phone);
 
   const submit = async () => {
     const normalized = normalizeIndianPhone(phone);
     if (!isValidIndianPhone(normalized) || busy) return;
-
     setBusy(true);
     updateDraft({ phone: normalized });
     const result = await demoAuthService.sendOtp(normalized);
     setBusy(false);
-
-    router.push({
-      pathname: "/otp",
-      params: { challengeId: result.challengeId },
-    });
+    router.push({ pathname: "/otp", params: { challengeId: result.challengeId } });
   };
-
-  const valid = isValidIndianPhone(phone);
 
   return (
     <AuthShell
-      step="2 OF 4"
-      title="Your number. Your identity."
-      subtitle="We’ll send a secure 6-digit OTP. Your number stays private from other users."
+      step="2 / 4"
+      title="Enter your number"
+      subtitle="We’ll send a 6-digit OTP. Your phone number is never shown on your profile."
     >
-      <View style={styles.security}>
-        <View style={styles.securityIcon}><Text style={styles.securityIconText}>✦</Text></View>
-        <View style={styles.securityCopy}>
-          <Text style={styles.securityTitle}>Private by default</Text>
-          <Text style={styles.securitySub}>Phone numbers are used only for account verification.</Text>
-        </View>
-      </View>
-
       <Text style={styles.label}>MOBILE NUMBER</Text>
 
       <View style={[styles.phoneRow, valid && styles.phoneRowValid]}>
@@ -67,104 +53,66 @@ export function LoginScreen() {
         {valid ? <Text style={styles.validMark}>✓</Text> : null}
       </View>
 
-      <View style={styles.quickInfo}>
-        <View style={styles.infoItem}><Text style={styles.infoIcon}>⚡</Text><Text style={styles.infoText}>Fast OTP</Text></View>
-        <View style={styles.infoItem}><Text style={styles.infoIcon}>🛡</Text><Text style={styles.infoText}>Secure</Text></View>
-        <View style={styles.infoItem}><Text style={styles.infoIcon}>🔒</Text><Text style={styles.infoText}>Private</Text></View>
+      <View style={styles.infoLine}>
+        <Text style={styles.infoIcon}>🔒</Text>
+        <Text style={styles.infoText}>Secure OTP verification • private by default</Text>
       </View>
 
       <Pressable
         disabled={!valid || busy}
         onPress={submit}
-        style={({ pressed }) => [
-          styles.cta,
-          (!valid || busy) && styles.ctaDisabled,
-          pressed && valid && !busy && styles.ctaPressed,
-        ]}
+        style={[styles.cta, (!valid || busy) && styles.ctaDisabled]}
       >
-        <Text style={styles.ctaLabel}>{busy ? "SENDING OTP..." : "SEND OTP"}</Text>
+        <Text style={styles.ctaLabel}>{busy ? "SENDING..." : "SEND OTP"}</Text>
         <Text style={styles.ctaArrow}>→</Text>
       </Pressable>
-
-      <Text style={styles.legal}>Standard SMS charges may apply depending on your carrier.</Text>
     </AuthShell>
   );
 }
 
 const styles = StyleSheet.create({
-  security: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-    borderRadius: radius.lg,
-    padding: 12,
-    backgroundColor: "rgba(116,67,255,0.07)",
-    borderWidth: 1,
-    borderColor: "rgba(116,67,255,0.16)",
-  },
-  securityIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: 12,
-    backgroundColor: "rgba(232,60,185,0.10)",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  securityIconText: { color: "#D59CFF", fontSize: 16 },
-  securityCopy: { flex: 1 },
-  securityTitle: { color: colors.text, fontSize: 9, fontWeight: "900" },
-  securitySub: { color: colors.textMuted, fontSize: 7, lineHeight: 11, marginTop: 3 },
   label: {
     color: "#777D91",
     fontSize: 7,
     fontWeight: "900",
-    letterSpacing: 1.3,
-    marginTop: 18,
+    letterSpacing: 1.2,
     marginBottom: 7,
   },
   phoneRow: {
-    minHeight: 62,
-    borderRadius: radius.lg,
+    minHeight: 58,
+    borderRadius: 18,
     backgroundColor: "#0C0E16",
     borderWidth: 1,
     borderColor: colors.border,
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 12,
+    paddingHorizontal: 11,
   },
   phoneRowValid: { borderColor: "rgba(57,217,138,0.42)" },
-  country: { flexDirection: "row", alignItems: "center", gap: 7 },
-  flag: { fontSize: 18 },
+  country: { flexDirection: "row", alignItems: "center", gap: 6 },
+  flag: { fontSize: 17 },
   code: { color: colors.text, fontWeight: "900", fontSize: 13 },
-  divider: { width: 1, height: 24, backgroundColor: colors.border, marginHorizontal: 11 },
-  input: { flex: 1, color: colors.text, fontSize: 18, fontWeight: "800", outlineStyle: "none" } as any,
-  validMark: { color: colors.success, fontSize: 16, fontWeight: "900" },
-  quickInfo: { flexDirection: "row", gap: 8, marginTop: 11 },
-  infoItem: {
-    flex: 1,
-    minHeight: 42,
-    borderRadius: radius.md,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: "rgba(255,255,255,0.02)",
+  divider: { width: 1, height: 22, backgroundColor: colors.border, marginHorizontal: 10 },
+  input: { flex: 1, color: colors.text, fontSize: 17, fontWeight: "800" },
+  validMark: { color: colors.success, fontSize: 15, fontWeight: "900" },
+  infoLine: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    gap: 5,
+    gap: 6,
+    marginTop: 10,
+    paddingHorizontal: 2,
   },
-  infoIcon: { fontSize: 11 },
-  infoText: { color: "#888EA1", fontSize: 7, fontWeight: "800" },
+  infoIcon: { fontSize: 10 },
+  infoText: { color: "#707688", fontSize: 7.5 },
   cta: {
-    minHeight: 56,
-    borderRadius: radius.lg,
-    marginTop: 18,
+    minHeight: 52,
+    borderRadius: 17,
+    marginTop: 14,
     backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
   },
   ctaDisabled: { opacity: 0.35 },
-  ctaPressed: { opacity: 0.9, transform: [{ scale: 0.99 }] },
-  ctaLabel: { color: "#FFFFFF", fontSize: 12, fontWeight: "900", letterSpacing: 1.2 },
-  ctaArrow: { position: "absolute", right: 18, color: "#FFFFFF", fontSize: 20 },
-  legal: { color: "#5F6576", textAlign: "center", fontSize: 7, marginTop: 11 },
+  ctaLabel: { color: "#FFFFFF", fontSize: 11, fontWeight: "900", letterSpacing: 1.1 },
+  ctaArrow: { position: "absolute", right: 17, color: "#FFFFFF", fontSize: 18 },
 });
