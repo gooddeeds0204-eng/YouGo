@@ -345,7 +345,7 @@ function toast(message){
 
 navItems.forEach(btn=>btn.addEventListener("click",()=>showScreen(btn.dataset.nav)));
 $$("[data-room]").forEach(card=>card.addEventListener("click",e=>{if(e.target.closest("button"))return;openRoom(card.dataset.room)}));
-$$("[data-panel]").forEach(btn=>btn.addEventListener("click",e=>{e.stopPropagation();openFeature(btn.dataset.panel)}));
+$("[data-panel]").forEach(btn=>btn.addEventListener("click",e=>{e.stopPropagation();if(btn.closest("#toolsSheet"))closeSheet(toolsSheet);openFeature(btn.dataset.panel)}));
 $$(".person-card button").forEach(btn=>btn.addEventListener("click",e=>{e.stopPropagation();btn.textContent=btn.textContent==="Follow"?"Following":"Follow"}));
 $$(".chip").forEach(chip=>chip.addEventListener("click",()=>{$$(".chip").forEach(c=>c.classList.remove("active"));chip.classList.add("active")}));
 $$(".mode").forEach(mode=>mode.addEventListener("click",()=>{$$(".mode").forEach(m=>m.classList.remove("active"));mode.classList.add("active")}));
