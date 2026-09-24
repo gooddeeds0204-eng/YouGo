@@ -5,6 +5,7 @@ import { PrimaryButton } from "@/shared/ui/PrimaryButton";
 import { ChoiceChip } from "@/features/auth/components/ChoiceChip";
 import { AuthHeader } from "@/features/auth/components/AuthHeader";
 import { useAuthDraft } from "@/features/auth/store/AuthDraftProvider";
+import { useSession } from "@/core/session/SessionProvider";
 import {
   isValidBirthDate,
   isValidDisplayName,
@@ -24,6 +25,7 @@ const genders: Array<{ value: Gender; label: string }> = [
 
 export function ProfileSetupScreen() {
   const { draft, updateDraft } = useAuthDraft();
+  const { setUser } = useSession();
 
   const valid =
     isValidDisplayName(draft.displayName) &&
@@ -107,7 +109,10 @@ export function ProfileSetupScreen() {
         <PrimaryButton
           label="Enter YouGo"
           disabled={!valid}
-          onPress={() => router.replace("/home")}
+          onPress={() => {
+            setUser({ id: "demo-user", displayName: draft.displayName.trim() });
+            router.replace("/home");
+          }}
         />
       </View>
     </AppScreen>
