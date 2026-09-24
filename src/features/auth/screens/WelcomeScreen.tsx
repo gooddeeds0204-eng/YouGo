@@ -21,7 +21,7 @@ export function WelcomeScreen() {
       </View>
 
       <View style={styles.actions}>
-        <PrimaryButton label="Get started" onPress={() => router.push("/login")} />
+        <PrimaryButton label="Get started" onPress={() => router.push("/language")} />
         <Text style={styles.note}>By continuing, you agree to YouGo community and safety rules.</Text>
       </View>
     </AppScreen>
