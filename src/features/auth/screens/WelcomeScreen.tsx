@@ -3,35 +3,58 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { AppScreen } from "@/shared/ui/AppScreen";
 import { WelcomeHero } from "@/features/auth/components/WelcomeHero";
 import { WelcomeFeatureStrip } from "@/features/auth/components/WelcomeFeatureStrip";
+import { WelcomeRoomPreview } from "@/features/auth/components/WelcomeRoomPreview";
 import { colors, radius, spacing } from "@/shared/theme";
 
 export function WelcomeScreen() {
   return (
-    <AppScreen contentStyle={styles.screen}>
-      <View style={styles.topGlowOne} />
-      <View style={styles.topGlowTwo} />
+    <AppScreen scroll contentStyle={styles.screen}>
+      <View style={styles.bgOrbOne} />
+      <View style={styles.bgOrbTwo} />
+      <View style={styles.bgOrbThree} />
 
-      <WelcomeHero />
+      <View style={styles.heroCard}>
+        <WelcomeHero />
 
-      <View style={styles.copy}>
-        <View style={styles.kickerRow}>
-          <View style={styles.kickerDot} />
-          <Text style={styles.kicker}>WELCOME TO THE PARTY</Text>
-          <View style={styles.kickerDot} />
+        <View style={styles.copy}>
+          <View style={styles.kicker}>
+            <View style={styles.kickerDot} />
+            <Text style={styles.kickerText}>WELCOME TO YOUGO</Text>
+            <View style={styles.kickerDot} />
+          </View>
+
+          <Text style={styles.brand}>YouGo</Text>
+          <Text style={styles.tagline}>TALK • PLAY • CONNECT</Text>
+
+          <Text style={styles.headline}>
+            Your people. Your room.{"\n"}
+            <Text style={styles.headlineAccent}>Your vibe.</Text>
+          </Text>
+
+          <Text style={styles.body}>
+            Meet, talk, play and build your world in live social rooms that never lose the vibe.
+          </Text>
+
+          <View style={styles.metrics}>
+            <View style={styles.metric}>
+              <Text style={styles.metricValue}>18K+</Text>
+              <Text style={styles.metricLabel}>online now</Text>
+            </View>
+            <View style={styles.metricDivider} />
+            <View style={styles.metric}>
+              <Text style={styles.metricValue}>24/7</Text>
+              <Text style={styles.metricLabel}>live rooms</Text>
+            </View>
+            <View style={styles.metricDivider} />
+            <View style={styles.metric}>
+              <Text style={styles.metricValue}>3</Text>
+              <Text style={styles.metricLabel}>room modes</Text>
+            </View>
+          </View>
         </View>
-
-        <Text style={styles.brand}>YouGo</Text>
-        <Text style={styles.tagline}>TALK • PLAY • CONNECT</Text>
-
-        <Text style={styles.headline}>
-          Where conversations{"\n"}
-          <Text style={styles.headlineAccent}>turn into connections.</Text>
-        </Text>
-
-        <Text style={styles.body}>
-          Join live voice rooms, video hangouts, games and communities built around your vibe.
-        </Text>
       </View>
+
+      <WelcomeRoomPreview />
 
       <WelcomeFeatureStrip />
 
@@ -41,22 +64,15 @@ export function WelcomeScreen() {
           onPress={() => router.push("/language")}
           style={({ pressed }) => [styles.cta, pressed && styles.ctaPressed]}
         >
-          <View style={styles.ctaGlow} />
-          <Text style={styles.ctaLabel}>ENTER YOUGO</Text>
-          <Text style={styles.ctaArrow}>→</Text>
+          <View style={styles.ctaShine} />
+          <View style={styles.ctaDot} />
+          <Text style={styles.ctaLabel}>START YOUR VIBE</Text>
+          <View style={styles.arrowWrap}><Text style={styles.arrow}>→</Text></View>
         </Pressable>
 
-        <View style={styles.socialProof}>
-          <View style={styles.avatarStack}>
-            <View style={[styles.avatar, styles.avatarA]}><Text style={styles.avatarText}>M</Text></View>
-            <View style={[styles.avatar, styles.avatarB]}><Text style={styles.avatarText}>A</Text></View>
-            <View style={[styles.avatar, styles.avatarC]}><Text style={styles.avatarText}>S</Text></View>
-          </View>
-          <View style={styles.proofCopy}>
-            <Text style={styles.proofTitle}>Live rooms are happening now</Text>
-            <Text style={styles.proofSub}>Find your people. Own the vibe.</Text>
-          </View>
-        </View>
+        <Text style={styles.loginHint}>
+          Already part of YouGo? <Text style={styles.loginAccent}>Sign in</Text>
+        </Text>
 
         <Text style={styles.note}>
           By continuing, you agree to YouGo community and safety rules.
@@ -68,38 +84,54 @@ export function WelcomeScreen() {
 
 const styles = StyleSheet.create({
   screen: {
-    paddingTop: 0,
-    paddingBottom: 22,
-    justifyContent: "space-between",
+    paddingTop: 6,
+    paddingBottom: 24,
+    gap: 14,
     overflow: "hidden",
   },
-  topGlowOne: {
+  bgOrbOne: {
     position: "absolute",
-    width: 320,
-    height: 320,
-    borderRadius: 160,
-    top: -170,
-    right: -160,
-    backgroundColor: "rgba(116,67,255,0.10)",
+    width: 280,
+    height: 280,
+    borderRadius: 140,
+    top: -150,
+    right: -135,
+    backgroundColor: "rgba(116,67,255,0.09)",
   },
-  topGlowTwo: {
+  bgOrbTwo: {
     position: "absolute",
-    width: 260,
-    height: 260,
-    borderRadius: 130,
-    left: -170,
-    top: 170,
-    backgroundColor: "rgba(232,60,185,0.07)",
+    width: 230,
+    height: 230,
+    borderRadius: 115,
+    left: -155,
+    top: 250,
+    backgroundColor: "rgba(232,60,185,0.055)",
+  },
+  bgOrbThree: {
+    position: "absolute",
+    width: 180,
+    height: 180,
+    borderRadius: 90,
+    right: -120,
+    top: 590,
+    backgroundColor: "rgba(43,203,255,0.035)",
+  },
+  heroCard: {
+    borderRadius: 30,
+    paddingHorizontal: 14,
+    paddingBottom: 20,
+    backgroundColor: "rgba(255,255,255,0.018)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.055)",
   },
   copy: {
     alignItems: "center",
-    paddingHorizontal: spacing.md,
+    paddingHorizontal: spacing.sm,
   },
-  kickerRow: {
+  kicker: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
-    marginBottom: 8,
+    gap: 7,
   },
   kickerDot: {
     width: 4,
@@ -107,25 +139,26 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     backgroundColor: colors.cyan,
   },
-  kicker: {
-    color: "#9EA3B8",
-    fontSize: 8,
+  kickerText: {
+    color: "#8E93A8",
+    fontSize: 7,
     fontWeight: "900",
     letterSpacing: 1.5,
   },
   brand: {
     color: colors.text,
-    fontSize: 48,
-    lineHeight: 54,
+    fontSize: 46,
+    lineHeight: 50,
     fontWeight: "900",
-    letterSpacing: -2,
+    letterSpacing: -2.1,
+    marginTop: 7,
   },
   tagline: {
     color: colors.primary,
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: "900",
-    letterSpacing: 2.5,
-    marginTop: 2,
+    letterSpacing: 2.7,
+    marginTop: 1,
   },
   headline: {
     color: colors.text,
@@ -133,108 +166,125 @@ const styles = StyleSheet.create({
     lineHeight: 30,
     fontWeight: "900",
     textAlign: "center",
-    marginTop: 18,
+    marginTop: 16,
   },
   headlineAccent: {
-    color: "#C282FF",
+    color: "#B979FF",
   },
   body: {
     color: colors.textMuted,
     textAlign: "center",
+    fontSize: 11,
+    lineHeight: 18,
+    marginTop: 8,
+    maxWidth: 320,
+  },
+  metrics: {
+    width: "100%",
+    marginTop: 18,
+    minHeight: 52,
+    borderRadius: radius.lg,
+    backgroundColor: "rgba(255,255,255,0.025)",
+    borderWidth: 1,
+    borderColor: colors.border,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+  },
+  metric: {
+    flex: 1,
+    alignItems: "center",
+  },
+  metricValue: {
+    color: colors.text,
     fontSize: 12,
-    lineHeight: 19,
-    marginTop: 11,
-    maxWidth: 330,
+    fontWeight: "900",
+  },
+  metricLabel: {
+    color: "#767C91",
+    fontSize: 6,
+    marginTop: 2,
+  },
+  metricDivider: {
+    width: 1,
+    height: 22,
+    backgroundColor: colors.border,
   },
   actions: {
-    gap: 12,
+    gap: 9,
+    paddingTop: 3,
   },
   cta: {
-    minHeight: 58,
-    borderRadius: radius.lg,
+    minHeight: 60,
+    borderRadius: 20,
     backgroundColor: colors.primary,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
     shadowColor: colors.primary,
-    shadowOpacity: 0.45,
-    shadowRadius: 22,
+    shadowOpacity: 0.48,
+    shadowRadius: 24,
     shadowOffset: { width: 0, height: 10 },
-    elevation: 10,
+    elevation: 12,
   },
-  ctaGlow: {
+  ctaShine: {
     position: "absolute",
-    width: "38%",
+    width: 130,
     height: 120,
-    left: -12,
-    top: -32,
-    transform: [{ rotate: "22deg" }],
-    backgroundColor: "rgba(255,255,255,0.10)",
+    left: 22,
+    top: -36,
+    transform: [{ rotate: "20deg" }],
+    backgroundColor: "rgba(255,255,255,0.08)",
   },
-  ctaPressed: {
-    opacity: 0.88,
-    transform: [{ scale: 0.99 }],
+  ctaDot: {
+    position: "absolute",
+    left: 18,
+    width: 7,
+    height: 7,
+    borderRadius: 4,
+    backgroundColor: "#FFFFFF",
+    opacity: 0.9,
   },
   ctaLabel: {
     color: "#FFFFFF",
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: "900",
-    letterSpacing: 1.2,
+    letterSpacing: 1.25,
   },
-  ctaArrow: {
+  arrowWrap: {
     position: "absolute",
-    right: 20,
-    color: "#FFFFFF",
-    fontSize: 22,
-    fontWeight: "700",
-  },
-  socialProof: {
-    minHeight: 58,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: "rgba(255,255,255,0.03)",
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 12,
-  },
-  avatarStack: {
-    width: 76,
-    flexDirection: "row",
-  },
-  avatar: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    borderWidth: 2,
-    borderColor: colors.background,
+    right: 12,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: "rgba(0,0,0,0.12)",
     alignItems: "center",
     justifyContent: "center",
   },
-  avatarA: { backgroundColor: "#7F3FD9" },
-  avatarB: { backgroundColor: "#D93F86", marginLeft: -8 },
-  avatarC: { backgroundColor: "#2B8FBE", marginLeft: -8 },
-  avatarText: {
+  arrow: {
     color: "#FFFFFF",
-    fontSize: 9,
-    fontWeight: "900",
+    fontSize: 18,
+    fontWeight: "700",
   },
-  proofCopy: { flex: 1 },
-  proofTitle: {
-    color: colors.text,
-    fontSize: 9,
-    fontWeight: "900",
+  ctaPressed: {
+    opacity: 0.9,
+    transform: [{ scale: 0.99 }],
   },
-  proofSub: {
-    color: colors.textMuted,
-    fontSize: 7,
-    marginTop: 2,
-  },
-  note: {
-    color: "#666B7E",
+  loginHint: {
+    color: "#777D91",
     textAlign: "center",
     fontSize: 8,
-    lineHeight: 13,
+    marginTop: 2,
+  },
+  loginAccent: {
+    color: "#D4AAFF",
+    fontWeight: "900",
+  },
+  note: {
+    color: "#5D6273",
+    textAlign: "center",
+    fontSize: 7,
+    lineHeight: 12,
   },
 });
