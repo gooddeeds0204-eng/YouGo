@@ -1,292 +1,78 @@
-import { router } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { AppScreen } from "@/shared/ui/AppScreen";
-import { WelcomeHero } from "@/features/auth/components/WelcomeHero";
-import { WelcomeFeatureStrip } from "@/features/auth/components/WelcomeFeatureStrip";
-import { WelcomeRoomPreview } from "@/features/auth/components/WelcomeRoomPreview";
-import { colors, radius, spacing } from "@/shared/theme";
+import { router } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
+import { UgoMark } from "@/shared/ui/UgoMark";
 
 export function WelcomeScreen() {
   return (
-    <AppScreen scroll contentStyle={styles.screen}>
-      <View style={styles.bgOrbOne} />
-      <View style={styles.bgOrbTwo} />
-      <View style={styles.bgOrbThree} />
+    <SafeAreaView style={styles.safe}>
+      <StatusBar style="light" />
+      <View style={styles.orbPink} />
+      <View style={styles.orbBlue} />
+      <View style={styles.orbViolet} />
 
-      <View style={styles.heroCard}>
-        <WelcomeHero />
-
-        <View style={styles.copy}>
-          <View style={styles.kicker}>
-            <View style={styles.kickerDot} />
-            <Text style={styles.kickerText}>WELCOME TO YOUGO</Text>
-            <View style={styles.kickerDot} />
+      <View style={styles.content}>
+        <View style={styles.hero}>
+          <View style={styles.logoHalo}>
+            <UgoMark size={94} light />
           </View>
-
-          <Text style={styles.brand}>YouGo</Text>
-          <Text style={styles.tagline}>TALK • PLAY • CONNECT</Text>
-
-          <Text style={styles.headline}>
-            Your people. Your room.{"\n"}
-            <Text style={styles.headlineAccent}>Your vibe.</Text>
-          </Text>
-
+          <Text style={styles.brand}>Ugo</Text>
+          <Text style={styles.tagline}>LIVE • SOCIAL • TOGETHER</Text>
+          <Text style={styles.title}>Your next room could change your night.</Text>
           <Text style={styles.body}>
-            Meet, talk, play and build your world in live social rooms that never lose the vibe.
+            Meet new people, jump into live rooms, play together and build your own community.
           </Text>
+        </View>
 
-          <View style={styles.metrics}>
-            <View style={styles.metric}>
-              <Text style={styles.metricValue}>18K+</Text>
-              <Text style={styles.metricLabel}>online now</Text>
+        <View style={styles.previewRow}>
+          {[
+            ["🎙", "Voice rooms", "#32184B"],
+            ["🎥", "Video hangouts", "#183250"],
+            ["🎮", "Games & fun", "#243C31"],
+            ["🎁", "Gifts & effects", "#4A1B3C"],
+          ].map(([icon,label,tone]) => (
+            <View key={label} style={[styles.previewCard,{backgroundColor:tone}]}>
+              <Text style={styles.previewIcon}>{icon}</Text>
+              <Text style={styles.previewText}>{label}</Text>
             </View>
-            <View style={styles.metricDivider} />
-            <View style={styles.metric}>
-              <Text style={styles.metricValue}>24/7</Text>
-              <Text style={styles.metricLabel}>live rooms</Text>
-            </View>
-            <View style={styles.metricDivider} />
-            <View style={styles.metric}>
-              <Text style={styles.metricValue}>3</Text>
-              <Text style={styles.metricLabel}>room modes</Text>
-            </View>
-          </View>
+          ))}
+        </View>
+
+        <View style={styles.actions}>
+          <Pressable onPress={() => router.push("/login")} style={styles.primary}>
+            <Text style={styles.primaryText}>GET STARTED</Text>
+            <Text style={styles.arrow}>→</Text>
+          </Pressable>
+          <Pressable onPress={() => router.push("/login")}>
+            <Text style={styles.signIn}>Already have an account? <Text style={styles.signInStrong}>Sign in</Text></Text>
+          </Pressable>
         </View>
       </View>
-
-      <WelcomeRoomPreview />
-
-      <WelcomeFeatureStrip />
-
-      <View style={styles.actions}>
-        <Pressable
-          accessibilityRole="button"
-          onPress={() => router.push("/login")}
-          style={({ pressed }) => [styles.cta, pressed && styles.ctaPressed]}
-        >
-          <View style={styles.ctaShine} />
-          <View style={styles.ctaDot} />
-          <Text style={styles.ctaLabel}>START YOUR VIBE</Text>
-          <View style={styles.arrowWrap}><Text style={styles.arrow}>→</Text></View>
-        </Pressable>
-
-        <Pressable onPress={() => router.push("/login")}>
-          <Text style={styles.loginHint}>
-            Already part of YouGo? <Text style={styles.loginAccent}>Sign in</Text>
-          </Text>
-        </Pressable>
-
-        <Text style={styles.note}>
-          By continuing, you agree to YouGo community and safety rules.
-        </Text>
-      </View>
-    </AppScreen>
+    </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  screen: {
-    paddingTop: 6,
-    paddingBottom: 24,
-    gap: 14,
-    overflow: "hidden",
-  },
-  bgOrbOne: {
-    position: "absolute",
-    width: 280,
-    height: 280,
-    borderRadius: 140,
-    top: -150,
-    right: -135,
-    backgroundColor: "rgba(116,67,255,0.09)",
-  },
-  bgOrbTwo: {
-    position: "absolute",
-    width: 230,
-    height: 230,
-    borderRadius: 115,
-    left: -155,
-    top: 250,
-    backgroundColor: "rgba(232,60,185,0.055)",
-  },
-  bgOrbThree: {
-    position: "absolute",
-    width: 180,
-    height: 180,
-    borderRadius: 90,
-    right: -120,
-    top: 590,
-    backgroundColor: "rgba(43,203,255,0.035)",
-  },
-  heroCard: {
-    borderRadius: 30,
-    paddingHorizontal: 14,
-    paddingBottom: 20,
-    backgroundColor: "rgba(255,255,255,0.018)",
-    borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.055)",
-  },
-  copy: {
-    alignItems: "center",
-    paddingHorizontal: spacing.sm,
-  },
-  kicker: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 7,
-  },
-  kickerDot: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: colors.cyan,
-  },
-  kickerText: {
-    color: "#8E93A8",
-    fontSize: 7,
-    fontWeight: "900",
-    letterSpacing: 1.5,
-  },
-  brand: {
-    color: colors.text,
-    fontSize: 46,
-    lineHeight: 50,
-    fontWeight: "900",
-    letterSpacing: -2.1,
-    marginTop: 7,
-  },
-  tagline: {
-    color: colors.primary,
-    fontSize: 10,
-    fontWeight: "900",
-    letterSpacing: 2.7,
-    marginTop: 1,
-  },
-  headline: {
-    color: colors.text,
-    fontSize: 25,
-    lineHeight: 30,
-    fontWeight: "900",
-    textAlign: "center",
-    marginTop: 16,
-  },
-  headlineAccent: {
-    color: "#B979FF",
-  },
-  body: {
-    color: colors.textMuted,
-    textAlign: "center",
-    fontSize: 11,
-    lineHeight: 18,
-    marginTop: 8,
-    maxWidth: 320,
-  },
-  metrics: {
-    width: "100%",
-    marginTop: 18,
-    minHeight: 52,
-    borderRadius: radius.lg,
-    backgroundColor: "rgba(255,255,255,0.025)",
-    borderWidth: 1,
-    borderColor: colors.border,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-around",
-  },
-  metric: {
-    flex: 1,
-    alignItems: "center",
-  },
-  metricValue: {
-    color: colors.text,
-    fontSize: 12,
-    fontWeight: "900",
-  },
-  metricLabel: {
-    color: "#767C91",
-    fontSize: 6,
-    marginTop: 2,
-  },
-  metricDivider: {
-    width: 1,
-    height: 22,
-    backgroundColor: colors.border,
-  },
-  actions: {
-    gap: 9,
-    paddingTop: 3,
-  },
-  cta: {
-    minHeight: 60,
-    borderRadius: 20,
-    backgroundColor: colors.primary,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
-    shadowColor: colors.primary,
-    shadowOpacity: 0.48,
-    shadowRadius: 24,
-    shadowOffset: { width: 0, height: 10 },
-    elevation: 12,
-  },
-  ctaShine: {
-    position: "absolute",
-    width: 130,
-    height: 120,
-    left: 22,
-    top: -36,
-    transform: [{ rotate: "20deg" }],
-    backgroundColor: "rgba(255,255,255,0.08)",
-  },
-  ctaDot: {
-    position: "absolute",
-    left: 18,
-    width: 7,
-    height: 7,
-    borderRadius: 4,
-    backgroundColor: "#FFFFFF",
-    opacity: 0.9,
-  },
-  ctaLabel: {
-    color: "#FFFFFF",
-    fontSize: 12,
-    fontWeight: "900",
-    letterSpacing: 1.25,
-  },
-  arrowWrap: {
-    position: "absolute",
-    right: 12,
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: "rgba(0,0,0,0.12)",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  arrow: {
-    color: "#FFFFFF",
-    fontSize: 18,
-    fontWeight: "700",
-  },
-  ctaPressed: {
-    opacity: 0.9,
-    transform: [{ scale: 0.99 }],
-  },
-  loginHint: {
-    color: "#777D91",
-    textAlign: "center",
-    fontSize: 8,
-    marginTop: 2,
-  },
-  loginAccent: {
-    color: "#D4AAFF",
-    fontWeight: "900",
-  },
-  note: {
-    color: "#5D6273",
-    textAlign: "center",
-    fontSize: 7,
-    lineHeight: 12,
-  },
+const styles=StyleSheet.create({
+  safe:{flex:1,backgroundColor:"#090913"},
+  orbPink:{position:"absolute",width:280,height:280,borderRadius:140,right:-120,top:-80,backgroundColor:"rgba(236,57,185,0.22)"},
+  orbBlue:{position:"absolute",width:300,height:300,borderRadius:150,left:-165,top:260,backgroundColor:"rgba(41,182,255,0.16)"},
+  orbViolet:{position:"absolute",width:240,height:240,borderRadius:120,right:-110,bottom:-70,backgroundColor:"rgba(116,67,255,0.18)"},
+  content:{flex:1,paddingHorizontal:22,paddingTop:42,paddingBottom:24,justifyContent:"space-between"},
+  hero:{alignItems:"center"},
+  logoHalo:{width:170,height:170,borderRadius:52,borderWidth:1,borderColor:"rgba(190,108,255,0.38)",backgroundColor:"rgba(29,20,52,0.78)",alignItems:"center",justifyContent:"center",shadowColor:"#A443FF",shadowOpacity:.55,shadowRadius:30,shadowOffset:{width:0,height:12},elevation:12},
+  brand:{color:"#FFFFFF",fontSize:43,fontWeight:"900",letterSpacing:-1.6,marginTop:24},
+  tagline:{color:"#EF4AB9",fontSize:10,fontWeight:"900",letterSpacing:2.1,marginTop:4},
+  title:{color:"#FFFFFF",fontSize:27,lineHeight:33,fontWeight:"900",textAlign:"center",marginTop:26,maxWidth:330},
+  body:{color:"#979BAE",fontSize:12,lineHeight:19,textAlign:"center",marginTop:10,maxWidth:326},
+  previewRow:{flexDirection:"row",flexWrap:"wrap",gap:9},
+  previewCard:{width:"48.6%",minHeight:66,borderRadius:18,borderWidth:1,borderColor:"rgba(255,255,255,0.08)",paddingHorizontal:12,flexDirection:"row",alignItems:"center",gap:10},
+  previewIcon:{fontSize:21},
+  previewText:{color:"#FFFFFF",fontSize:9,fontWeight:"800"},
+  actions:{gap:12},
+  primary:{minHeight:58,borderRadius:20,backgroundColor:"#EB37B8",alignItems:"center",justifyContent:"center",shadowColor:"#EB37B8",shadowOpacity:.5,shadowRadius:20,shadowOffset:{width:0,height:9},elevation:9},
+  primaryText:{color:"#FFFFFF",fontSize:12,fontWeight:"900",letterSpacing:1.2},
+  arrow:{position:"absolute",right:20,color:"#FFFFFF",fontSize:20},
+  signIn:{color:"#777C90",fontSize:9,textAlign:"center"},
+  signInStrong:{color:"#D89BFF",fontWeight:"900"},
 });
