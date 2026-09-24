@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
-import { colors } from "@/shared/theme";
+import { colors, radius } from "@/shared/theme";
 
 export function WelcomeHero() {
   const pulse = useRef(new Animated.Value(0)).current;
@@ -13,7 +13,6 @@ export function WelcomeHero() {
         Animated.timing(pulse, { toValue: 0, duration: 1800, useNativeDriver: true }),
       ]),
     );
-
     const floatLoop = Animated.loop(
       Animated.sequence([
         Animated.timing(float, { toValue: 1, duration: 2200, useNativeDriver: true }),
@@ -30,39 +29,29 @@ export function WelcomeHero() {
     };
   }, [float, pulse]);
 
-  const ringScale = pulse.interpolate({
-    inputRange: [0, 1],
-    outputRange: [1, 1.12],
-  });
-
-  const ringOpacity = pulse.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0.42, 0.08],
-  });
-
-  const translateY = float.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, -8],
-  });
+  const ringScale = pulse.interpolate({ inputRange: [0, 1], outputRange: [1, 1.1] });
+  const ringOpacity = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.34, 0.05] });
+  const translateY = float.interpolate({ inputRange: [0, 1], outputRange: [0, -6] });
 
   return (
     <View style={styles.wrap}>
-      <View style={styles.glowA} />
-      <View style={styles.glowB} />
-      <View style={styles.glowC} />
+      <View style={styles.auraOne} />
+      <View style={styles.auraTwo} />
+      <View style={styles.orbitOne} />
+      <View style={styles.orbitTwo} />
 
       <Animated.View
         style={[
-          styles.outerRing,
+          styles.pulseRing,
           { transform: [{ scale: ringScale }], opacity: ringOpacity },
         ]}
       />
 
       <Animated.View style={[styles.logoWrap, { transform: [{ translateY }] }]}>
-        <View style={styles.logoHalo} />
+        <View style={styles.logoGlow} />
         <View style={styles.logo}>
-          <View style={styles.logoLineA} />
-          <View style={styles.logoLineB} />
+          <View style={styles.logoSlashPink} />
+          <View style={styles.logoSlashBlue} />
           <Text style={styles.logoText}>YG</Text>
           <View style={styles.playWrap}>
             <Text style={styles.play}>▶</Text>
@@ -74,132 +63,153 @@ export function WelcomeHero() {
       <View style={[styles.spark, styles.sparkTwo]} />
       <View style={[styles.spark, styles.sparkThree]} />
 
-      <Text style={styles.livePill}>● LIVE SOCIAL EXPERIENCE</Text>
+      <View style={styles.status}>
+        <View style={styles.statusDot} />
+        <Text style={styles.statusText}>LIVE SOCIAL • ALWAYS ON</Text>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   wrap: {
-    height: 300,
+    height: 244,
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
   },
-  glowA: {
+  auraOne: {
     position: "absolute",
-    width: 240,
-    height: 240,
-    borderRadius: 120,
-    backgroundColor: "rgba(116,67,255,0.12)",
+    width: 228,
+    height: 228,
+    borderRadius: 114,
+    backgroundColor: "rgba(116,67,255,0.10)",
   },
-  glowB: {
+  auraTwo: {
     position: "absolute",
-    width: 168,
-    height: 168,
-    borderRadius: 84,
-    backgroundColor: "rgba(232,60,185,0.10)",
+    width: 156,
+    height: 156,
+    borderRadius: 78,
+    backgroundColor: "rgba(232,60,185,0.08)",
   },
-  glowC: {
-    position: "absolute",
-    width: 96,
-    height: 96,
-    borderRadius: 48,
-    backgroundColor: "rgba(43,203,255,0.08)",
-  },
-  outerRing: {
+  orbitOne: {
     position: "absolute",
     width: 176,
     height: 176,
     borderRadius: 88,
     borderWidth: 1,
-    borderColor: "#AA61FF",
+    borderColor: "rgba(166,76,255,0.18)",
+  },
+  orbitTwo: {
+    position: "absolute",
+    width: 138,
+    height: 138,
+    borderRadius: 69,
+    borderWidth: 1,
+    borderColor: "rgba(43,203,255,0.10)",
+  },
+  pulseRing: {
+    position: "absolute",
+    width: 194,
+    height: 194,
+    borderRadius: 97,
+    borderWidth: 1,
+    borderColor: "#A85CFF",
   },
   logoWrap: {
     alignItems: "center",
     justifyContent: "center",
   },
-  logoHalo: {
+  logoGlow: {
     position: "absolute",
-    width: 132,
-    height: 132,
-    borderRadius: 66,
-    backgroundColor: "rgba(232,60,185,0.08)",
+    width: 134,
+    height: 134,
+    borderRadius: 38,
+    backgroundColor: "rgba(194,73,255,0.10)",
   },
   logo: {
-    width: 118,
-    height: 118,
-    borderRadius: 34,
+    width: 108,
+    height: 108,
+    borderRadius: 31,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#15111F",
+    backgroundColor: "#121019",
     borderWidth: 1.5,
-    borderColor: "#8C44F8",
-    shadowColor: "#A64CFF",
-    shadowOpacity: 0.45,
-    shadowRadius: 24,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 10,
+    borderColor: "#914CFF",
+    shadowColor: "#B44DFF",
+    shadowOpacity: 0.5,
+    shadowRadius: 25,
+    shadowOffset: { width: 0, height: 9 },
+    elevation: 12,
     overflow: "hidden",
   },
-  logoLineA: {
+  logoSlashPink: {
     position: "absolute",
-    width: 150,
-    height: 26,
-    backgroundColor: "rgba(232,60,185,0.14)",
-    transform: [{ rotate: "-32deg" }],
+    width: 145,
+    height: 25,
+    backgroundColor: "rgba(232,60,185,0.15)",
+    transform: [{ rotate: "-31deg" }],
   },
-  logoLineB: {
+  logoSlashBlue: {
     position: "absolute",
-    width: 150,
-    height: 20,
-    backgroundColor: "rgba(43,203,255,0.11)",
-    transform: [{ rotate: "34deg" }],
+    width: 145,
+    height: 19,
+    backgroundColor: "rgba(43,203,255,0.10)",
+    transform: [{ rotate: "32deg" }],
   },
   logoText: {
     color: colors.text,
-    fontSize: 42,
+    fontSize: 39,
     fontWeight: "900",
     letterSpacing: -5,
   },
   playWrap: {
     position: "absolute",
-    right: 17,
-    bottom: 17,
-    width: 28,
-    height: 28,
+    right: 13,
+    bottom: 13,
+    width: 27,
+    height: 27,
     borderRadius: 14,
     backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.55)",
+    borderColor: "rgba(255,255,255,0.6)",
   },
-  play: {
-    color: "#FFFFFF",
-    fontSize: 10,
-    marginLeft: 2,
-  },
+  play: { color: "#FFFFFF", fontSize: 9, marginLeft: 2 },
   spark: {
     position: "absolute",
-    width: 6,
-    height: 6,
+    width: 5,
+    height: 5,
     borderRadius: 3,
     backgroundColor: colors.primary,
-    shadowColor: colors.primary,
-    shadowOpacity: 0.9,
-    shadowRadius: 8,
-    elevation: 6,
   },
-  sparkOne: { left: "23%", top: 78 },
-  sparkTwo: { right: "22%", top: 102, backgroundColor: colors.cyan },
-  sparkThree: { right: "29%", bottom: 72, width: 4, height: 4 },
-  livePill: {
+  sparkOne: { left: "25%", top: 60 },
+  sparkTwo: { right: "24%", top: 86, backgroundColor: colors.cyan },
+  sparkThree: { right: "30%", bottom: 57, width: 4, height: 4 },
+  status: {
     position: "absolute",
-    bottom: 16,
-    color: "#C9B8FF",
-    fontSize: 8,
+    bottom: 9,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: radius.pill,
+    backgroundColor: "rgba(255,255,255,0.035)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.06)",
+  },
+  statusDot: {
+    width: 5,
+    height: 5,
+    borderRadius: 3,
+    backgroundColor: colors.cyan,
+  },
+  statusText: {
+    color: "#B8B5D6",
+    fontSize: 7,
     fontWeight: "900",
-    letterSpacing: 1.4,
+    letterSpacing: 1.2,
   },
 });
