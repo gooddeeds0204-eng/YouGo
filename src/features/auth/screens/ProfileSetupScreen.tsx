@@ -1,55 +1,113 @@
 import { router } from "expo-router";
-import { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { AppScreen } from "@/shared/ui/AppScreen";
 import { PrimaryButton } from "@/shared/ui/PrimaryButton";
+import { ChoiceChip } from "@/features/auth/components/ChoiceChip";
+import { AuthHeader } from "@/features/auth/components/AuthHeader";
+import { useAuthDraft } from "@/features/auth/store/AuthDraftProvider";
+import {
+  isValidBirthDate,
+  isValidDisplayName,
+  isValidUsername,
+  normalizeUsername,
+} from "@/domains/users/profileRules";
+import type { Gender } from "@/domains/users/profile";
 import { colors, radius, spacing } from "@/shared/theme";
 
-const interests = ["Music", "Games", "Friends", "Travel", "Movies", "Fashion"];
+const interests = ["Music", "Games", "Friends", "Travel", "Movies", "Fashion", "Sports", "Food"];
+const genders: Array<{ value: Gender; label: string }> = [
+  { value: "female", label: "Female" },
+  { value: "male", label: "Male" },
+  { value: "other", label: "Other" },
+  { value: "prefer-not-to-say", label: "Prefer not to say" },
+];
 
 export function ProfileSetupScreen() {
-  const [name, setName] = useState("");
-  const [selected, setSelected] = useState<string[]>([]);
+  const { draft, updateDraft } = useAuthDraft();
 
-  const toggle = (item: string) =>
-    setSelected((current) =>
-      current.includes(item) ? current.filter((value) => value !== item) : [...current, item],
-    );
+  const valid =
+    isValidDisplayName(draft.displayName) &&
+    isValidUsername(draft.username) &&
+    isValidBirthDate(draft.birthDate) &&
+    draft.interests.length >= 2;
+
+  const toggleInterest = (item: string) => {
+    const next = draft.interests.includes(item)
+      ? draft.interests.filter((value) => value !== item)
+      : [...draft.interests, item].slice(0, 6);
+
+    updateDraft({ interests: next });
+  };
 
   return (
     <AppScreen scroll contentStyle={styles.screen}>
-      <Text style={styles.eyebrow}>CREATE YOUR PROFILE</Text>
-      <Text style={styles.title}>Make YouGo yours</Text>
-      <Text style={styles.subtitle}>You can change these details anytime.</Text>
+      <AuthHeader
+        eyebrow="CREATE PROFILE"
+        title="Make YouGo yours"
+        subtitle="Add the basics now. You can edit them later."
+      />
 
       <View style={styles.avatar}><Text style={styles.avatarText}>＋</Text></View>
 
       <View style={styles.form}>
         <Text style={styles.label}>Display name</Text>
         <TextInput
-          value={name}
-          onChangeText={setName}
+          value={draft.displayName}
+          onChangeText={(displayName) => updateDraft({ displayName })}
           placeholder="Your name"
           placeholderTextColor="#666B7D"
           style={styles.input}
         />
 
-        <Text style={styles.label}>Choose interests</Text>
+        <Text style={styles.label}>Username</Text>
+        <TextInput
+          value={draft.username}
+          onChangeText={(username) => updateDraft({ username: normalizeUsername(username) })}
+          placeholder="yougo_name"
+          placeholderTextColor="#666B7D"
+          autoCapitalize="none"
+          style={styles.input}
+        />
+
+        <Text style={styles.label}>Birth date</Text>
+        <TextInput
+          value={draft.birthDate}
+          onChangeText={(birthDate) => updateDraft({ birthDate })}
+          placeholder="YYYY-MM-DD"
+          placeholderTextColor="#666B7D"
+          keyboardType="numbers-and-punctuation"
+          maxLength={10}
+          style={styles.input}
+        />
+
+        <Text style={styles.label}>Gender</Text>
         <View style={styles.chips}>
-          {interests.map((item) => {
-            const active = selected.includes(item);
-            return (
-              <Pressable key={item} onPress={() => toggle(item)} style={[styles.chip, active && styles.chipActive]}>
-                <Text style={[styles.chipText, active && styles.chipTextActive]}>{item}</Text>
-              </Pressable>
-            );
-          })}
+          {genders.map((item) => (
+            <ChoiceChip
+              key={item.value}
+              label={item.label}
+              selected={draft.gender === item.value}
+              onPress={() => updateDraft({ gender: item.value })}
+            />
+          ))}
+        </View>
+
+        <Text style={styles.label}>Choose at least 2 interests</Text>
+        <View style={styles.chips}>
+          {interests.map((item) => (
+            <ChoiceChip
+              key={item}
+              label={item}
+              selected={draft.interests.includes(item)}
+              onPress={() => toggleInterest(item)}
+            />
+          ))}
         </View>
 
         <PrimaryButton
           label="Enter YouGo"
-          disabled={!name.trim()}
-          onPress={() => router.replace("/(tabs)")}
+          disabled={!valid}
+          onPress={() => router.replace("/home")}
         />
       </View>
     </AppScreen>
@@ -58,9 +116,6 @@ export function ProfileSetupScreen() {
 
 const styles = StyleSheet.create({
   screen: { paddingTop: 42, paddingBottom: 32 },
-  eyebrow: { color: colors.secondary, fontWeight: "900", fontSize: 10, letterSpacing: 1.4 },
-  title: { color: colors.text, fontSize: 30, fontWeight: "900", marginTop: 8 },
-  subtitle: { color: colors.textMuted, fontSize: 13, marginTop: 8 },
   avatar: {
     width: 92,
     height: 92,
@@ -85,16 +140,10 @@ const styles = StyleSheet.create({
     color: colors.text,
     paddingHorizontal: spacing.lg,
   },
-  chips: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm, marginBottom: spacing.lg },
-  chip: {
-    paddingHorizontal: 14,
-    paddingVertical: 9,
-    borderRadius: radius.pill,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
+  chips: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: spacing.sm,
+    marginBottom: spacing.sm,
   },
-  chipActive: { borderColor: colors.primary, backgroundColor: "#32142D" },
-  chipText: { color: colors.textMuted, fontSize: 12, fontWeight: "700" },
-  chipTextActive: { color: colors.text },
 });
