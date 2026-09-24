@@ -34,18 +34,18 @@ export function PhoneScreen() {
       <Text style={styles.title}>Phone number</Text>
 
       <View style={styles.form}>
-        <View style={styles.phoneBox}>
+        <View style={[styles.phoneField, valid && styles.phoneFieldActive]}>
           <Pressable style={styles.codeBox}>
             <Text style={styles.code}>+91</Text>
             <Text style={styles.chevron}>⌄</Text>
           </Pressable>
-
+          <View style={styles.divider} />
           <TextInput
             value={phone}
             onChangeText={(value) => setPhone(normalizeIndianPhone(value))}
             keyboardType="phone-pad"
-            placeholder="Phone number"
-            placeholderTextColor="#A6A7AA"
+            placeholder="Enter phone number"
+            placeholderTextColor="#A4A6AA"
             maxLength={10}
             autoFocus
             style={styles.input}
@@ -73,7 +73,7 @@ export function PhoneScreen() {
 
 const styles = StyleSheet.create({
   screen: {
-    paddingTop: 10,
+    paddingTop: 8,
   },
   back: {
     width: 42,
@@ -81,61 +81,70 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   backText: {
-    color: "#66686C",
-    fontSize: 42,
-    lineHeight: 42,
+    color: "#6A6C70",
+    fontSize: 40,
+    lineHeight: 40,
     fontWeight: "300",
   },
   title: {
-    color: "#181A1D",
+    color: "#1A1C20",
     fontSize: 30,
+    lineHeight: 36,
     fontWeight: "900",
     textAlign: "center",
-    marginTop: 24,
+    marginTop: 25,
   },
   form: {
-    marginTop: 70,
-    paddingHorizontal: 38,
+    marginTop: 68,
+    paddingHorizontal: 30,
   },
-  phoneBox: {
-    minHeight: 62,
+  phoneField: {
+    minHeight: 64,
     borderRadius: 22,
     backgroundColor: "#F5F5F6",
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 14,
+    paddingHorizontal: 16,
+  },
+  phoneFieldActive: {
+    backgroundColor: "#F2F8F6",
   },
   codeBox: {
-    minWidth: 78,
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
   },
   code: {
-    color: "#2B2D30",
+    color: "#25272B",
     fontSize: 18,
     fontWeight: "700",
   },
   chevron: {
-    color: "#2B2D30",
-    fontSize: 21,
+    color: "#25272B",
+    fontSize: 20,
+  },
+  divider: {
+    width: 1,
+    height: 25,
+    backgroundColor: "#DEDFE2",
+    marginHorizontal: 13,
   },
   input: {
     flex: 1,
-    color: "#222428",
+    color: "#25272B",
     fontSize: 17,
-    paddingHorizontal: 8,
+    fontWeight: "500",
   },
   primary: {
     minHeight: 58,
     borderRadius: 29,
-    backgroundColor: "#28D2AD",
+    backgroundColor: "#28D1AC",
     alignItems: "center",
     justifyContent: "center",
     marginTop: 34,
   },
   primaryDisabled: {
-    backgroundColor: "#A8A9AB",
+    backgroundColor: "#A6A7AA",
   },
   primaryText: {
     color: "#FFFFFF",
@@ -144,10 +153,11 @@ const styles = StyleSheet.create({
   },
   linkButton: {
     alignItems: "center",
-    paddingVertical: 20,
+    paddingTop: 20,
+    paddingBottom: 12,
   },
   linkText: {
-    color: "#34CFAE",
+    color: "#32CDAA",
     fontSize: 15,
     fontWeight: "800",
   },
