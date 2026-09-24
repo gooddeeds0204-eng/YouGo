@@ -1,7 +1,9 @@
 export const routes = {
   welcome: "/welcome",
-  language: "/language",
   login: "/login",
+  language: "/language",
+  phone: "/phone",
+  password: "/password",
   otp: "/otp",
   profileSetup: "/profile-setup",
   home: "/home",
