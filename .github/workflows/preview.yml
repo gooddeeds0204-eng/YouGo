@@ -45,19 +45,21 @@ jobs:
 
       - name: Make raw.githack index path router-safe
         run: |
+          cat > dist/route-fix.js <<'EOF'
+          (function () {
+            var base = '/gooddeeds0204-eng/YouGo/preview/';
+            if (location.pathname !== base) {
+              history.replaceState(null, '', base);
+            }
+          })();
+          EOF
+
           node <<'NODE'
           const fs = require('fs');
           const file = 'dist/index.html';
           let html = fs.readFileSync(file, 'utf8');
-          const patch = `<script>
-          (function () {
-            var base = '/gooddeeds0204-eng/YouGo/preview/';
-            if (location.pathname.endsWith('/index.html') || location.search) {
-              history.replaceState(null, '', base);
-            }
-          })();
-          </script>`;
-          html = html.replace('<head>', '<head>' + patch);
+          const tag = '<script src="/gooddeeds0204-eng/YouGo/preview/route-fix.js"></script>';
+          html = html.replace('<head>', '<head>' + tag);
           fs.writeFileSync(file, html);
           NODE
 
