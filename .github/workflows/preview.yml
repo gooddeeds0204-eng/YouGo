@@ -27,12 +27,39 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
+      - name: Configure portable SPA preview
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const app = JSON.parse(fs.readFileSync('app.json', 'utf8'));
+          app.expo.web = { ...(app.expo.web || {}), output: 'single' };
+          app.expo.experiments = {
+            ...(app.expo.experiments || {}),
+            baseUrl: '/gooddeeds0204-eng/YouGo/preview'
+          };
+          fs.writeFileSync('app.json', JSON.stringify(app, null, 2));
+          NODE
+
       - name: Export Expo web preview
         run: npx expo export --platform web --output-dir dist
 
-      - name: Make exported asset URLs branch-portable
+      - name: Make raw.githack index path router-safe
         run: |
-          find dist -name "*.html" -type f -print0 | xargs -0 sed -i 's|href="/|href="./|g; s|src="/|src="./|g'
+          node <<'NODE'
+          const fs = require('fs');
+          const file = 'dist/index.html';
+          let html = fs.readFileSync(file, 'utf8');
+          const patch = `<script>
+          (function () {
+            var base = '/gooddeeds0204-eng/YouGo/preview/';
+            if (location.pathname.endsWith('/index.html') || location.search) {
+              history.replaceState(null, '', base);
+            }
+          })();
+          </script>`;
+          html = html.replace('<head>', '<head>' + patch);
+          fs.writeFileSync(file, html);
+          NODE
 
       - name: Publish preview branch
         uses: peaceiris/actions-gh-pages@v4
