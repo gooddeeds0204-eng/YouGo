@@ -196,21 +196,48 @@
       </div>
 
       <div class="room-stage voice-stage active" data-stage="voice">
-        <div class="room-host">
-          <span class="host-avatar a1">M<i>HOST</i></span>
-          <div><h3>Maya <span class="role-badge">Owner</span></h3><p>Welcome to the room 💜</p></div>
-          <button>＋ Follow</button>
+        <div class="room-special-row">
+          <button class="treasure-card" data-panel="pocket"><span>🎁</span><div><b>Lucky Chest</b><small>00:42</small></div></button>
+          <div class="room-status"><span>🏆 11.5K</span><span>👥 1.8K</span></div>
         </div>
 
-        <div class="seats">
-          <button class="seat occupied"><span class="a1">M</span><b>👑 Maya</b><small>Host</small><i>1</i></button>
-          <button class="seat occupied"><span class="a3">A</span><b>Arjun</b><small>Admin</small><i>2</i></button>
-          <button class="seat occupied"><span class="a4">S</span><b>Sana</b><small>🎤</small><i>3</i></button>
-          <button class="seat occupied"><span class="a5">K</span><b>Kiran</b><small>🎤</small><i>4</i></button>
-          <button class="seat"><span>＋</span><b>Seat 5</b><small>Open</small><i>5</i></button>
-          <button class="seat"><span>＋</span><b>Seat 6</b><small>Open</small><i>6</i></button>
-          <button class="seat"><span>🔒</span><b>Seat 7</b><small>Locked</small><i>7</i></button>
-          <button class="seat"><span>＋</span><b>Seat 8</b><small>Open</small><i>8</i></button>
+        <div class="host-seat-wrap">
+          <button class="seat deluxe host-deluxe">
+            <span class="seat-frame frame-royal"><span class="seat-photo a1">M</span><i class="frame-crown">♛</i></span>
+            <b>❤️ Maya ❤️</b><small><em>HOST</em> VIP 6 · LV.58</small>
+          </button>
+        </div>
+
+        <div class="seats premium-seats">
+          <button class="seat deluxe">
+            <span class="seat-frame frame-angel"><span class="seat-photo a4">S</span><i class="frame-crown">♛</i></span>
+            <b>Bobby 💙</b><small><em>ADMIN</em> LV.52</small><i class="seat-no">1</i>
+          </button>
+          <button class="seat empty-seat"><span class="empty-chair">🛋</span><b>No.2</b><small>Open seat</small><i class="seat-no">2</i></button>
+          <button class="seat empty-seat"><span class="empty-chair">🛋</span><b>No.3</b><small>Open seat</small><i class="seat-no">3</i></button>
+
+          <button class="seat deluxe">
+            <span class="seat-frame frame-ice"><span class="seat-photo a3">A</span><i class="frame-crown">❄</i></span>
+            <b>Arjun</b><small><em>ADMIN</em> LV.46</small><i class="seat-no">4</i>
+          </button>
+          <button class="seat deluxe">
+            <span class="seat-frame frame-neon"><span class="seat-photo a5">K</span><i class="frame-crown">∞</i></span>
+            <b>Kiran</b><small>VIP 3 · 🎤</small><i class="seat-no">5</i>
+          </button>
+          <button class="seat deluxe">
+            <span class="seat-frame frame-gold"><span class="seat-photo a2">R</span><i class="frame-crown">♛</i></span>
+            <b>Riya</b><small>VIP 4 · LV.39</small><i class="seat-no">6</i>
+          </button>
+
+          <button class="seat deluxe small-frame">
+            <span class="seat-frame frame-love"><span class="seat-photo a4">S</span><i class="frame-crown">♥</i></span>
+            <b>Sana 💜</b><small>LV.35 · 🔇</small><i class="seat-no">7</i>
+          </button>
+          <button class="seat empty-seat locked"><span class="empty-chair">🔒</span><b>No.8</b><small>Locked</small><i class="seat-no">8</i></button>
+        </div>
+
+        <div class="seat-legend">
+          <span><i class="dot host"></i>Host</span><span><i class="dot admin"></i>Admin</span><span><i class="dot speaker"></i>Speaker</span>
         </div>
       </div>
 
@@ -239,15 +266,46 @@
         <div><i class="a2">R</i><i class="a4">S</i><i class="a5">K</i><i>+99</i></div>
       </div>
 
-      <div class="room-chat">
-        <p><b class="pink">Maya</b> Welcome everyone ✨</p>
-        <p><b class="cyan">Arjun</b> Who's ready for PK?</p>
-        <p><span class="system">🚗 VIP Riya entered with Neon Racer</span></p>
-        <p><span class="system">🎁 Sana sent Couple Heart ×10 to Maya</span></p>
+      <div class="room-feed">
+        <article class="entry-banner vip-entry">
+          <span class="entry-icon">🚘</span>
+          <div><b>VIP Riya entered the room</b><small>Neon Racer · VIP 4</small></div>
+          <strong>VIP</strong>
+        </article>
+
+        <div class="room-chat" id="roomChat">
+          <article class="chat-line admin-chat">
+            <span class="chat-mini frame-mini-gold">M</span>
+            <div class="chat-body">
+              <div class="chat-meta"><em class="badge admin">HOST</em><em class="badge vip">VIP6</em><em class="badge level">LV.58</em><b>Maya</b></div>
+              <p>Welcome everyone ✨ keep it friendly 💜</p>
+            </div>
+          </article>
+          <article class="chat-line">
+            <span class="chat-mini a3">A</span>
+            <div class="chat-body">
+              <div class="chat-meta"><em class="badge admin">ADMIN</em><em class="badge level">LV.46</em><b>Arjun</b></div>
+              <p>Room PK in 5 minutes 🔥</p>
+            </div>
+          </article>
+          <article class="gift-chat">
+            <span>🎁</span><div><b>Sana sent Couple Heart ×10</b><small>to ❤️ Maya ❤️</small></div><strong>+1K</strong>
+          </article>
+          <article class="chat-line vip-chat">
+            <span class="chat-mini a2">R</span>
+            <div class="chat-body">
+              <div class="chat-meta"><em class="badge vip">VIP4</em><em class="badge level">LV.39</em><b>Riya</b></div>
+              <p>Hi guys 😄😄</p>
+            </div>
+          </article>
+        </div>
       </div>
 
-      <div class="chat-composer">
-        <button>☺</button><input placeholder="Say something..." /><button>➤</button>
+      <div class="chat-composer premium-composer">
+        <button class="composer-mini" data-action="emoji">☺</button>
+        <div class="composer-input-wrap"><span class="composer-badge">VIP</span><input id="roomMessage" placeholder="Say something..." maxlength="120" /></div>
+        <button class="composer-mini" data-action="chat-more">•••</button>
+        <button class="send-chat" data-action="send-chat">➤</button>
       </div>
 
       <div class="room-controls">
