@@ -236,3 +236,65 @@ giftSheet.addEventListener("click",e=>{
 });
 
 if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));}
+
+
+// Premium room interactions
+function appendRoomMessage(text){
+  const chat=$("#roomChat");
+  if(!chat||!text.trim())return;
+  const row=document.createElement("article");
+  row.className="chat-line vip-chat";
+  row.innerHTML=`
+    <span class="chat-mini a2">Y</span>
+    <div class="chat-body">
+      <div class="chat-meta"><em class="badge vip">VIP2</em><em class="badge level">LV.12</em><b>You</b></div>
+      <p></p>
+    </div>`;
+  row.querySelector("p").textContent=text.trim();
+  chat.appendChild(row);
+  chat.scrollTop=chat.scrollHeight;
+}
+
+function openSeatProfile(seat){
+  const name=seat.querySelector("b")?.textContent?.trim()||"YouGo member";
+  const frame=seat.querySelector(".seat-frame")?.className||"";
+  const frameName=frame.includes("royal")?"Royal Crown":frame.includes("angel")?"Angel Wings":frame.includes("ice")?"Ice Crystal":frame.includes("gold")?"Golden Orbit":frame.includes("love")?"Love Aura":"Neon Pulse";
+  featureContent.innerHTML=`
+    <div class="feature-head">
+      <div><h2>👤 ${name}</h2><p>Room profile preview</p></div>
+      <span class="balance-pill">Online</span>
+    </div>
+    <div class="vip-hero">
+      <small>EQUIPPED PROFILE FRAME</small>
+      <h3>${frameName}</h3>
+      <p>Frames appear on room seats, profile, entrance banner and selected chat styles.</p>
+    </div>
+    <div class="feature-grid">
+      <button class="feature-card"><span>💬</span><b>Message</b><small>Start a private chat</small></button>
+      <button class="feature-card"><span>➕</span><b>Follow</b><small>Follow this member</small></button>
+      <button class="feature-card"><span>🎁</span><b>Send gift</b><small>Open gift shop</small></button>
+      <button class="feature-card"><span>🏅</span><b>Badges</b><small>VIP, level and event badges</small></button>
+    </div>`;
+  openSheet(featureSheet);
+}
+
+document.addEventListener("click",e=>{
+  const action=e.target.closest("[data-action]")?.dataset.action;
+  if(action==="send-chat"){
+    const input=$("#roomMessage");
+    appendRoomMessage(input?.value||"");
+    if(input)input.value="";
+  }
+  if(action==="emoji")toast("Emoji panel ready");
+  if(action==="chat-more")toast("Chat tools: mentions, effects, quick replies");
+  const seat=e.target.closest(".seat.deluxe");
+  if(seat&&!e.target.closest("[data-action]"))openSeatProfile(seat);
+});
+
+document.addEventListener("keydown",e=>{
+  if(e.key==="Enter"&&e.target?.id==="roomMessage"){
+    e.preventDefault();
+    appendRoomMessage(e.target.value);
+    e.target.value="";
+  }
+});
