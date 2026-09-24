@@ -1,5 +1,6 @@
 export const appConfig = {
-  name: "YouGo",
+  name: "Ugo",
+  repositoryName: "YouGo",
   tagline: "Talk • Play • Connect",
   defaultCountry: "IN",
   defaultLanguage: "en",
