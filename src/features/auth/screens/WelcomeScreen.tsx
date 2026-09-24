@@ -61,7 +61,7 @@ export function WelcomeScreen() {
       <View style={styles.actions}>
         <Pressable
           accessibilityRole="button"
-          onPress={() => router.push("/language")}
+          onPress={() => router.push("/login")}
           style={({ pressed }) => [styles.cta, pressed && styles.ctaPressed]}
         >
           <View style={styles.ctaShine} />
@@ -70,9 +70,11 @@ export function WelcomeScreen() {
           <View style={styles.arrowWrap}><Text style={styles.arrow}>→</Text></View>
         </Pressable>
 
-        <Text style={styles.loginHint}>
-          Already part of YouGo? <Text style={styles.loginAccent}>Sign in</Text>
-        </Text>
+        <Pressable onPress={() => router.push("/login")}>
+          <Text style={styles.loginHint}>
+            Already part of YouGo? <Text style={styles.loginAccent}>Sign in</Text>
+          </Text>
+        </Pressable>
 
         <Text style={styles.note}>
           By continuing, you agree to YouGo community and safety rules.
