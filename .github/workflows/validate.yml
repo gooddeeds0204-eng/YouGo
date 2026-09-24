@@ -1,4 +1,4 @@
-name: Validate YouGo Prototype
+name: Validate YouGo Mobile
 
 on:
   push:
@@ -14,22 +14,25 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Check JavaScript syntax
-        run: node --check app.js
-      - name: Check required app files
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: TypeScript check
+        run: npm run typecheck
+
+      - name: Validate Expo config
+        run: npx expo config --type public
+
+      - name: Verify modular architecture
         run: |
-          test -s index.html
-          test -s styles.css
-          test -s app.js
-          test -s manifest.webmanifest
-          test -s assets/yougo-logo.svg
-      - name: Verify core feature markers
-        run: |
-          grep -q "Voice" index.html
-          grep -q "Video" index.html
-          grep -q "Game" index.html
-          grep -q "Lucky Pocket" index.html
-          grep -q "Room PK" index.html
-          grep -q "Couple Space" app.js
-          grep -q "Profile Photo Wall" app.js
-          grep -q "SVIP" app.js
+          test -s src/app/_layout.tsx
+          test -s src/features/room/shell/RoomShell.tsx
+          test -s src/registries/gameRegistry.ts
+          test -s src/registries/giftRegistry.ts
+          test -s src/config/roomLevels.ts
