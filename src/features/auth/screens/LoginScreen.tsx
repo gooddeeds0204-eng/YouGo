@@ -1,118 +1,319 @@
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
-import { useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-import { AuthShell } from "@/features/auth/components/AuthShell";
-import { useAuthDraft } from "@/features/auth/store/AuthDraftProvider";
-import { demoAuthService } from "@/features/auth/services/authService";
-import {
-  isValidIndianPhone,
-  normalizeIndianPhone,
-} from "@/domains/users/profileRules";
-import { colors } from "@/shared/theme";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
+
+function providerPreview(name: string) {
+  Alert.alert("Preview mode", name + " sign-in will be connected in the backend phase.");
+}
 
 export function LoginScreen() {
-  const { draft, updateDraft } = useAuthDraft();
-  const [phone, setPhone] = useState(draft.phone);
-  const [busy, setBusy] = useState(false);
-  const valid = isValidIndianPhone(phone);
-
-  const submit = async () => {
-    const normalized = normalizeIndianPhone(phone);
-    if (!isValidIndianPhone(normalized) || busy) return;
-    setBusy(true);
-    updateDraft({ phone: normalized });
-    const result = await demoAuthService.sendOtp(normalized);
-    setBusy(false);
-    router.push({ pathname: "/otp", params: { challengeId: result.challengeId } });
-  };
-
   return (
-    <AuthShell
-      step="2 / 4"
-      title="Enter your number"
-      subtitle="We’ll send a 6-digit OTP. Your phone number is never shown on your profile."
-    >
-      <Text style={styles.label}>MOBILE NUMBER</Text>
+    <SafeAreaView style={styles.safe}>
+      <StatusBar style="dark" />
 
-      <View style={[styles.phoneRow, valid && styles.phoneRowValid]}>
-        <View style={styles.country}>
-          <Text style={styles.flag}>🇮🇳</Text>
-          <Text style={styles.code}>+91</Text>
+      <View style={styles.bgTop} />
+      <View style={styles.bgBottom} />
+      <View style={styles.orbOne} />
+      <View style={styles.orbTwo} />
+      <View style={styles.orbThree} />
+
+      <View style={styles.content}>
+        <View style={styles.brandWrap}>
+          <View style={styles.logo}>
+            <Text style={styles.logoY}>Y</Text>
+            <View style={styles.logoChat}><Text style={styles.logoPlay}>▶</Text></View>
+            <Text style={styles.logoG}>G</Text>
+          </View>
+
+          <Text style={styles.title}>YouGo</Text>
+          <Text style={styles.subtitle}>Talk, play, meet and belong.</Text>
         </View>
-        <View style={styles.divider} />
-        <TextInput
-          value={phone}
-          onChangeText={(value) => setPhone(normalizeIndianPhone(value))}
-          keyboardType="phone-pad"
-          placeholder="98765 43210"
-          placeholderTextColor="#5F6577"
-          style={styles.input}
-          maxLength={10}
-          autoFocus
-        />
-        {valid ? <Text style={styles.validMark}>✓</Text> : null}
-      </View>
 
-      <View style={styles.infoLine}>
-        <Text style={styles.infoIcon}>🔒</Text>
-        <Text style={styles.infoText}>Secure OTP verification • private by default</Text>
-      </View>
+        <View style={styles.actions}>
+          <Pressable
+            onPress={() => providerPreview("Facebook")}
+            style={({ pressed }) => [styles.providerButton, pressed && styles.pressed]}
+          >
+            <View style={[styles.providerIcon, styles.facebookIcon]}>
+              <Text style={styles.facebookText}>f</Text>
+            </View>
+            <Text style={styles.providerText}>Continue with Facebook</Text>
+          </Pressable>
 
-      <Pressable
-        disabled={!valid || busy}
-        onPress={submit}
-        style={[styles.cta, (!valid || busy) && styles.ctaDisabled]}
-      >
-        <Text style={styles.ctaLabel}>{busy ? "SENDING..." : "SEND OTP"}</Text>
-        <Text style={styles.ctaArrow}>→</Text>
-      </Pressable>
-    </AuthShell>
+          <Pressable
+            onPress={() => providerPreview("Google")}
+            style={({ pressed }) => [styles.providerButton, pressed && styles.pressed]}
+          >
+            <View style={styles.providerIcon}>
+              <Text style={styles.googleText}>G</Text>
+            </View>
+            <Text style={styles.providerText}>Continue with Google</Text>
+          </Pressable>
+
+          <View style={styles.quickRow}>
+            <Pressable
+              onPress={() => router.push("/phone")}
+              style={({ pressed }) => [styles.quickButton, pressed && styles.pressed]}
+            >
+              <Text style={styles.quickIcon}>▣</Text>
+            </Pressable>
+
+            <Pressable
+              onPress={() => router.push("/phone")}
+              style={({ pressed }) => [styles.quickButton, pressed && styles.pressed]}
+            >
+              <Text style={styles.phoneIcon}>☎</Text>
+            </Pressable>
+
+            <Pressable
+              onPress={() => providerPreview("Email")}
+              style={({ pressed }) => [styles.quickButton, pressed && styles.pressed]}
+            >
+              <Text style={styles.mailIcon}>✉</Text>
+            </Pressable>
+          </View>
+        </View>
+
+        <View style={styles.bottom}>
+          <Pressable onPress={() => router.push("/language")} style={styles.languagePill}>
+            <Text style={styles.languageGlobe}>◎</Text>
+            <Text style={styles.languageText}>English</Text>
+            <Text style={styles.languageArrow}>›</Text>
+          </Pressable>
+
+          <Text style={styles.legal}>
+            By continuing, you agree to YouGo Terms, Privacy Policy and Community Guidelines.
+          </Text>
+        </View>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  label: {
-    color: "#777D91",
-    fontSize: 7,
+  safe: {
+    flex: 1,
+    backgroundColor: "#35DB73",
+  },
+  bgTop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "#43E64C",
+  },
+  bgBottom: {
+    position: "absolute",
+    left: -80,
+    right: -80,
+    bottom: -80,
+    height: "60%",
+    borderTopLeftRadius: 260,
+    borderTopRightRadius: 260,
+    backgroundColor: "#22CDB9",
+    transform: [{ rotate: "-4deg" }],
+  },
+  orbOne: {
+    position: "absolute",
+    width: 160,
+    height: 160,
+    borderRadius: 80,
+    right: -55,
+    top: 170,
+    backgroundColor: "rgba(255,236,77,0.20)",
+  },
+  orbTwo: {
+    position: "absolute",
+    width: 110,
+    height: 110,
+    borderRadius: 55,
+    left: -35,
+    top: 360,
+    backgroundColor: "rgba(34,203,255,0.16)",
+  },
+  orbThree: {
+    position: "absolute",
+    width: 76,
+    height: 76,
+    borderRadius: 24,
+    right: 42,
+    bottom: 185,
+    backgroundColor: "rgba(255,232,63,0.17)",
+    transform: [{ rotate: "18deg" }],
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 26,
+    paddingTop: 54,
+    paddingBottom: 24,
+    justifyContent: "space-between",
+  },
+  brandWrap: {
+    alignItems: "center",
+  },
+  logo: {
+    width: 132,
+    height: 92,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+  },
+  logoY: {
+    color: "#FFF642",
+    fontSize: 72,
+    lineHeight: 80,
     fontWeight: "900",
-    letterSpacing: 1.2,
-    marginBottom: 7,
+    transform: [{ rotate: "-7deg" }],
+    marginRight: -10,
   },
-  phoneRow: {
-    minHeight: 58,
-    borderRadius: 18,
-    backgroundColor: "#0C0E16",
-    borderWidth: 1,
-    borderColor: colors.border,
+  logoG: {
+    color: "#FFF642",
+    fontSize: 72,
+    lineHeight: 80,
+    fontWeight: "900",
+    transform: [{ rotate: "7deg" }],
+    marginLeft: -10,
+  },
+  logoChat: {
+    width: 54,
+    height: 54,
+    borderRadius: 27,
+    backgroundColor: "#242424",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 2,
+  },
+  logoPlay: {
+    color: "#FFFFFF",
+    fontSize: 13,
+    marginLeft: 2,
+  },
+  title: {
+    color: "#FFFFFF",
+    fontSize: 24,
+    fontWeight: "900",
+    marginTop: 4,
+  },
+  subtitle: {
+    color: "rgba(255,255,255,0.92)",
+    fontSize: 13,
+    fontWeight: "700",
+    textAlign: "center",
+    marginTop: 8,
+  },
+  actions: {
+    gap: 14,
+    paddingHorizontal: 8,
+  },
+  providerButton: {
+    minHeight: 60,
+    borderRadius: 30,
+    backgroundColor: "#FFFFFF",
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 11,
+    paddingHorizontal: 16,
+    shadowColor: "#178E70",
+    shadowOpacity: 0.16,
+    shadowRadius: 18,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 4,
   },
-  phoneRowValid: { borderColor: "rgba(57,217,138,0.42)" },
-  country: { flexDirection: "row", alignItems: "center", gap: 6 },
-  flag: { fontSize: 17 },
-  code: { color: colors.text, fontWeight: "900", fontSize: 13 },
-  divider: { width: 1, height: 22, backgroundColor: colors.border, marginHorizontal: 10 },
-  input: { flex: 1, color: colors.text, fontSize: 17, fontWeight: "800" },
-  validMark: { color: colors.success, fontSize: 15, fontWeight: "900" },
-  infoLine: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-    marginTop: 10,
-    paddingHorizontal: 2,
-  },
-  infoIcon: { fontSize: 10 },
-  infoText: { color: "#707688", fontSize: 7.5 },
-  cta: {
-    minHeight: 52,
-    borderRadius: 17,
-    marginTop: 14,
-    backgroundColor: colors.primary,
+  providerIcon: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: "#F7F8FA",
     alignItems: "center",
     justifyContent: "center",
   },
-  ctaDisabled: { opacity: 0.35 },
-  ctaLabel: { color: "#FFFFFF", fontSize: 11, fontWeight: "900", letterSpacing: 1.1 },
-  ctaArrow: { position: "absolute", right: 17, color: "#FFFFFF", fontSize: 18 },
+  facebookIcon: {
+    backgroundColor: "#5D8BE8",
+  },
+  facebookText: {
+    color: "#FFFFFF",
+    fontSize: 30,
+    fontWeight: "900",
+    marginTop: 5,
+  },
+  googleText: {
+    color: "#4285F4",
+    fontSize: 24,
+    fontWeight: "900",
+  },
+  providerText: {
+    color: "#303236",
+    fontSize: 14,
+    fontWeight: "800",
+    marginLeft: 14,
+  },
+  quickRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 26,
+    marginTop: 12,
+  },
+  quickButton: {
+    width: 58,
+    height: 58,
+    borderRadius: 29,
+    backgroundColor: "rgba(255,255,255,0.96)",
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#178E70",
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 3,
+  },
+  quickIcon: {
+    color: "#33CDA1",
+    fontSize: 25,
+    fontWeight: "900",
+  },
+  phoneIcon: {
+    color: "#3D9DFF",
+    fontSize: 24,
+    fontWeight: "900",
+  },
+  mailIcon: {
+    color: "#7B86A6",
+    fontSize: 23,
+    fontWeight: "900",
+  },
+  bottom: {
+    alignItems: "center",
+    gap: 16,
+  },
+  languagePill: {
+    minHeight: 46,
+    borderRadius: 23,
+    paddingHorizontal: 18,
+    backgroundColor: "rgba(255,255,255,0.28)",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  languageGlobe: {
+    color: "#FFFFFF",
+    fontSize: 18,
+  },
+  languageText: {
+    color: "#FFFFFF",
+    fontSize: 13,
+    fontWeight: "800",
+  },
+  languageArrow: {
+    color: "#FFFFFF",
+    fontSize: 20,
+    marginTop: -2,
+  },
+  legal: {
+    color: "rgba(255,255,255,0.86)",
+    fontSize: 9,
+    lineHeight: 15,
+    textAlign: "center",
+    maxWidth: 320,
+  },
+  pressed: {
+    opacity: 0.86,
+    transform: [{ scale: 0.99 }],
+  },
 });
