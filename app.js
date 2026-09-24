@@ -10,6 +10,7 @@ const giftSheet=$("#giftSheet");
 const toolsSheet=$("#toolsSheet");
 const featureSheet=$("#featureSheet");
 const featureContent=$("#featureContent");
+const onboardingSheet=$("#onboardingSheet");
 
 const featureViews={
   events:()=>`
@@ -152,7 +153,169 @@ const featureViews={
     <div class="mini-game"><span>🎲</span><h3>Lucky Dice</h3><p>A quick social randomizer for room games and challenges.</p><button class="primary-btn" data-action="demo-dice">Roll dice</button></div>`,
   effects:()=>`
     <div class="feature-head"><div><h2>✨ Entry Effects</h2><p>Choose your room entrance animation</p></div></div>
-    <div class="feature-grid"><button class="feature-card"><span>🚗</span><b>Neon Racer</b><small>Equipped</small></button><button class="feature-card"><span>🌌</span><b>Galaxy Gate</b><small>Event item</small></button><button class="feature-card"><span>🐉</span><b>Dragon</b><small>VIP exclusive</small></button><button class="feature-card"><span>💫</span><b>Star Trail</b><small>299 diamonds</small></button></div>`
+    <div class="feature-grid"><button class="feature-card"><span>🚗</span><b>Neon Racer</b><small>Equipped</small></button><button class="feature-card"><span>🌌</span><b>Galaxy Gate</b><small>Event item</small></button><button class="feature-card"><span>🐉</span><b>Dragon</b><small>VIP exclusive</small></button><button class="feature-card"><span>💫</span><b>Star Trail</b><small>299 diamonds</small></button></div>`,
+  couple:()=>`
+    <div class="feature-head"><div><h2>💞 Couple Space</h2><p>Your relationship level, gifts and shared memories</p></div><span class="balance-pill">Bond Lv.8</span></div>
+    <div class="couple-hero">
+      <span class="couple-avatar a2">Y</span><div class="couple-heart">♥</div><span class="couple-avatar a1">M</span>
+      <h3>You & Maya</h3><p>Bond score 82,450 · Anniversary in 18 days</p>
+      <i><em style="width:82%"></em></i>
+    </div>
+    <div class="feature-grid">
+      <button class="feature-card" data-demo-action="couple-gift"><span>💝</span><b>Couple Gifts</b><small>Exclusive relationship gifts</small></button>
+      <button class="feature-card" data-demo-action="couple-mission"><span>✅</span><b>Couple Missions</b><small>Daily shared activities</small></button>
+      <button class="feature-card"><span>📸</span><b>Memories</b><small>Shared photos and milestones</small></button>
+      <button class="feature-card"><span>💍</span><b>Bond Badge</b><small>Display your couple identity</small></button>
+    </div>`,
+  hostCenter:()=>`
+    <div class="feature-head"><div><h2>🎙 Host Center</h2><p>Room growth, moderation and host progress</p></div><span class="balance-pill">Host Lv.6</span></div>
+    <div class="stats-grid">
+      <article><b>18.4K</b><small>Weekly visitors</small></article><article><b>4.8K</b><small>New followers</small></article>
+      <article><b>2.1M</b><small>Gift charm</small></article><article><b>92%</b><small>Room health</small></article>
+    </div>
+    <div class="action-list">
+      <button data-panel="roomSettings"><span>⚙️</span><div><b>Room management</b><small>Name, cover, privacy and welcome message</small></div><i>›</i></button>
+      <button data-panel="adminRoles"><span>👑</span><div><b>Admins & moderators</b><small>Assign room management roles</small></div><i>›</i></button>
+      <button data-panel="members"><span>👥</span><div><b>Member insights</b><small>Audience, speakers and regular visitors</small></div><i>›</i></button>
+      <button data-panel="missions"><span>🏅</span><div><b>Host missions</b><small>Grow activity and unlock host cosmetics</small></div><i>›</i></button>
+    </div>`,
+  dailyCheckin:()=>`
+    <div class="feature-head"><div><h2>📅 Daily Check-in</h2><p>Keep your streak and collect in-app rewards</p></div><span class="balance-pill">🔥 7 days</span></div>
+    <div class="checkin-grid">
+      <button class="claimed"><span>1</span><b>🪙 50</b><small>Claimed</small></button>
+      <button class="claimed"><span>2</span><b>🎟 20</b><small>Claimed</small></button>
+      <button class="claimed"><span>3</span><b>💎 5</b><small>Claimed</small></button>
+      <button class="claimed"><span>4</span><b>🎡 1</b><small>Claimed</small></button>
+      <button class="claimed"><span>5</span><b>🪙 100</b><small>Claimed</small></button>
+      <button class="claimed"><span>6</span><b>🎟 40</b><small>Claimed</small></button>
+      <button class="today" data-demo-action="checkin"><span>7</span><b>🎁</b><small>Claim today</small></button>
+    </div>`,
+  achievements:()=>`
+    <div class="feature-head"><div><h2>🏅 Achievements</h2><p>Badges, milestones and profile titles</p></div><span class="balance-pill">18 / 64</span></div>
+    <div class="achievement-grid">
+      <article class="unlocked"><span>🎙</span><b>Room Starter</b><small>Create your first room</small></article>
+      <article class="unlocked"><span>💬</span><b>Social Spark</b><small>Send 1,000 room messages</small></article>
+      <article class="unlocked"><span>🎁</span><b>Gift Giver</b><small>Send 100 gifts</small></article>
+      <article><span>👑</span><b>VIP Legend</b><small>Reach VIP 5</small></article>
+      <article><span>🏆</span><b>Top 10</b><small>Enter a monthly leaderboard top 10</small></article>
+      <article><span>🫶</span><b>Family Star</b><small>Reach Family Lv.10</small></article>
+    </div>`,
+  settings:()=>`
+    <div class="feature-head"><div><h2>⚙️ Settings</h2><p>Account, app and notification preferences</p></div></div>
+    <div class="control-list">
+      <label><div><b>Push notifications</b><small>Messages, gifts, events and room invites</small></div><input type="checkbox" checked /></label>
+      <label><div><b>Room invitation alerts</b><small>Friends and family invitations</small></div><input type="checkbox" checked /></label>
+      <label><div><b>Gift animations</b><small>Show full-screen premium gift effects</small></div><input type="checkbox" checked /></label>
+      <label><div><b>Auto-play entry effects</b><small>Show VIP vehicles and entrance effects</small></div><input type="checkbox" checked /></label>
+    </div>
+    <div class="action-list" style="margin-top:10px">
+      <button data-demo-action="language"><span>🌐</span><div><b>Language</b><small>English · Telugu · Hindi</small></div><i>›</i></button>
+      <button data-demo-action="account"><span>👤</span><div><b>Account & security</b><small>Phone, password and connected account</small></div><i>›</i></button>
+      <button data-panel="safety"><span>🛡</span><div><b>Privacy & safety</b><small>Messaging, blocking and report settings</small></div><i>›</i></button>
+      <button data-demo-action="support"><span>❓</span><div><b>Help & support</b><small>FAQs, feedback and contact support</small></div><i>›</i></button>
+    </div>`,
+  members:()=>`
+    <div class="feature-head"><div><h2>👥 Room Members</h2><p>Speakers, audience and regular visitors</p></div><span class="balance-pill">1.8K online</span></div>
+    <div class="member-tabs"><button class="active">Speakers 6</button><button>Audience 1.8K</button><button>Following 84</button></div>
+    <div class="member-list">
+      <article><span class="a1">M</span><div><b>Maya 👑</b><small>Owner · VIP 6 · Lv.58</small></div><button>Owner</button></article>
+      <article><span class="a3">A</span><div><b>Arjun</b><small>Admin · Lv.46</small></div><button data-demo-action="member-menu">Manage</button></article>
+      <article><span class="a4">S</span><div><b>Sana</b><small>Speaker · VIP 3</small></div><button data-demo-action="member-menu">Manage</button></article>
+      <article><span class="a5">K</span><div><b>Kiran</b><small>Speaker · Lv.39</small></div><button data-demo-action="member-menu">Manage</button></article>
+    </div>`,
+  roomSettings:()=>`
+    <div class="feature-head"><div><h2>⚙️ Room Settings</h2><p>Configure the persistent room container</p></div></div>
+    <div class="form-stack">
+      <label><span>Room name</span><input value="Late Night Talks ✨" /></label>
+      <label><span>Announcement</span><textarea>Welcome! Be kind • No spam • Follow the host for updates</textarea></label>
+      <label><span>Room category</span><select><option>Friends & Chat</option><option>Music</option><option>Games</option><option>Dating</option></select></label>
+      <label><span>Privacy</span><select><option>Public</option><option>Friends only</option><option>Password</option></select></label>
+    </div>
+    <div class="control-list" style="margin-top:10px">
+      <label><div><b>Allow seat requests</b><small>Audience members can request a mic seat</small></div><input type="checkbox" checked /></label>
+      <label><div><b>Allow gifts</b><small>Enable room gift interactions</small></div><input type="checkbox" checked /></label>
+      <label><div><b>Show room on Discover</b><small>Eligible public rooms can be recommended</small></div><input type="checkbox" checked /></label>
+    </div>
+    <button class="primary-btn full" data-demo-action="save-room" style="margin-top:12px">Save settings</button>`,
+  seatSettings:()=>`
+    <div class="feature-head"><div><h2>💺 Seat Settings</h2><p>Level 1 starts with 8 seats; higher room levels can unlock more.</p></div><span class="balance-pill">8 seats</span></div>
+    <div class="seat-control-grid">
+      <button class="active" data-seat-control="1"><span>1</span><b>Host</b><small>Locked owner</small></button>
+      <button class="active" data-seat-control="2"><span>2</span><b>Admin</b><small>Open</small></button>
+      <button class="active" data-seat-control="3"><span>3</span><b>Speaker</b><small>Open</small></button>
+      <button class="active" data-seat-control="4"><span>4</span><b>Speaker</b><small>Open</small></button>
+      <button data-seat-control="5"><span>5</span><b>Empty</b><small>Tap to lock</small></button>
+      <button data-seat-control="6"><span>6</span><b>Empty</b><small>Tap to lock</small></button>
+      <button class="locked" data-seat-control="7"><span>7</span><b>Locked</b><small>Tap to open</small></button>
+      <button data-seat-control="8"><span>8</span><b>Empty</b><small>Tap to lock</small></button>
+    </div>`,
+  broadcast:()=>`
+    <div class="feature-head"><div><h2>📢 Room Broadcast</h2><p>Pin a message for everyone in the room</p></div></div>
+    <div class="form-stack">
+      <label><span>Broadcast message</span><textarea id="broadcastText" maxlength="120">PK starts in 5 minutes! 🔥</textarea></label>
+    </div>
+    <div class="feature-grid" style="margin-top:10px">
+      <button class="feature-card" data-demo-action="broadcast-normal"><span>📢</span><b>Normal</b><small>Standard room announcement</small></button>
+      <button class="feature-card" data-demo-action="broadcast-highlight"><span>✨</span><b>Highlight</b><small>Premium animated banner</small></button>
+    </div>`,
+  memberMgmt:()=>`
+    <div class="feature-head"><div><h2>🛡 Member Management</h2><p>Moderation actions for room safety</p></div></div>
+    <div class="action-list">
+      <button data-demo-action="mute-member"><span>🔇</span><div><b>Mute member</b><small>Temporarily stop a member from speaking</small></div><i>›</i></button>
+      <button data-demo-action="remove-seat"><span>💺</span><div><b>Remove from seat</b><small>Move speaker back to audience</small></div><i>›</i></button>
+      <button data-demo-action="kick-member"><span>🚪</span><div><b>Remove from room</b><small>Kick a member from the current room</small></div><i>›</i></button>
+      <button data-demo-action="block-room"><span>🚫</span><div><b>Room block</b><small>Prevent a member from rejoining</small></div><i>›</i></button>
+      <button data-demo-action="report-member"><span>⚠️</span><div><b>Report</b><small>Submit a safety report</small></div><i>›</i></button>
+    </div>`,
+  adminRoles:()=>`
+    <div class="feature-head"><div><h2>👑 Admin Roles</h2><p>Owner can assign admins and moderators from Level 1</p></div><span class="balance-pill">2 / 5 admins</span></div>
+    <div class="member-list">
+      <article><span class="a1">M</span><div><b>Maya</b><small>Room owner</small></div><button>Owner</button></article>
+      <article><span class="a3">A</span><div><b>Arjun</b><small>Admin · Members + seats + broadcast</small></div><button data-demo-action="remove-admin">Remove</button></article>
+      <article><span class="a4">S</span><div><b>Sana</b><small>Moderator · Chat + mute controls</small></div><button data-demo-action="promote-admin">Promote</button></article>
+    </div>
+    <button class="primary-btn full" data-demo-action="add-admin" style="margin-top:12px">＋ Add admin</button>`,
+  muteAll:()=>`
+    <div class="feature-head"><div><h2>🔇 Mute Controls</h2><p>Quick room-wide audio moderation</p></div></div>
+    <div class="control-list">
+      <label><div><b>Mute all speakers</b><small>Host and admins remain unaffected</small></div><input id="muteAllToggle" type="checkbox" /></label>
+      <label><div><b>New seats start muted</b><small>Members unmute after host permission</small></div><input type="checkbox" /></label>
+      <label><div><b>Audience sound effects</b><small>Allow reactions and room SFX</small></div><input type="checkbox" checked /></label>
+    </div>`,
+  audioControls:()=>`
+    <div class="feature-head"><div><h2>🎚 Audio Controls</h2><p>Room audio and music mix</p></div></div>
+    <div class="slider-list">
+      <label><span>Speaker volume <b>80%</b></span><input type="range" min="0" max="100" value="80" /></label>
+      <label><span>Music volume <b>55%</b></span><input type="range" min="0" max="100" value="55" /></label>
+      <label><span>Gift sound <b>70%</b></span><input type="range" min="0" max="100" value="70" /></label>
+      <label><span>Entry effect sound <b>60%</b></span><input type="range" min="0" max="100" value="60" /></label>
+    </div>
+    <div class="control-list" style="margin-top:10px">
+      <label><div><b>Noise suppression</b><small>Reduce background noise on microphone seats</small></div><input type="checkbox" checked /></label>
+      <label><div><b>Echo cancellation</b><small>Improve voice clarity in live rooms</small></div><input type="checkbox" checked /></label>
+    </div>`,
+  search:()=>`
+    <div class="feature-head"><div><h2>⌕ Search YouGo</h2><p>Find rooms, people, IDs and families</p></div></div>
+    <label class="searchbox"><span>⌕</span><input id="globalSearch" placeholder="Search room ID, user, family..." autofocus /></label>
+    <div class="search-results">
+      <h4>Trending searches</h4>
+      <div class="chips"><button class="chip active">Telugu rooms</button><button class="chip">Music</button><button class="chip">Game PK</button><button class="chip">New friends</button></div>
+      <h4>Suggested</h4>
+      <div class="member-list">
+        <article><span class="a1">M</span><div><b>Maya</b><small>ID 824520 · VIP 6</small></div><button>View</button></article>
+        <article><span>🎙</span><div><b>Late Night Talks</b><small>Room #284520 · 1.8K online</small></div><button data-demo-action="search-room">Join</button></article>
+      </div>
+    </div>`,
+  notifications:()=>`
+    <div class="feature-head"><div><h2>🔔 Notifications</h2><p>Messages, gifts, events and room activity</p></div><span class="balance-pill">6 new</span></div>
+    <div class="notification-list">
+      <article class="new"><span>🎁</span><div><b>Sana sent you Couple Heart ×10</b><small>2 minutes ago</small></div></article>
+      <article class="new"><span>🎙</span><div><b>Maya invited you to Late Night Talks</b><small>8 minutes ago</small></div></article>
+      <article class="new"><span>🏆</span><div><b>You moved to #12 in Galaxy Carnival</b><small>24 minutes ago</small></div></article>
+      <article><span>🫶</span><div><b>Neon Tribe completed a family mission</b><small>1 hour ago</small></div></article>
+      <article><span>👀</span><div><b>3 people viewed your profile</b><small>2 hours ago</small></div></article>
+    </div>`
+
 };
 
 function showScreen(name){
@@ -210,12 +373,19 @@ document.addEventListener("click",e=>{
   if(action==="room-tools")openSheet(toolsSheet);
   if(action==="close-tools")closeSheet(toolsSheet);
   if(action==="close-feature")closeSheet(featureSheet);
+  if(action==="close-onboarding")closeSheet(onboardingSheet);
+  if(action==="demo-skip"){localStorage.setItem("yougo-onboarded","1");closeSheet(onboardingSheet);toast("Demo mode ready ✨");}
+  if(action==="demo-login"){
+    const phone=$("#demoPhone")?.value?.trim();
+    if(!phone){toast("Enter a mobile number for the OTP demo");}
+    else{const btn=e.target.closest("button");btn.textContent="OTP verified ✓";localStorage.setItem("yougo-onboarded","1");setTimeout(()=>{closeSheet(onboardingSheet);toast("Profile ready — welcome to YouGo");btn.textContent="Continue with OTP";},700);}
+  }
   if(action==="toggle-mic"){const b=e.target.closest("button");b.classList.toggle("muted");b.firstChild.textContent=b.classList.contains("muted")?"🔇":"🎤";toast(b.classList.contains("muted")?"Microphone muted":"Microphone on");}
   if(action==="pk"){closeSheet(toolsSheet);toast("Room PK started — team scores are now live");}
   if(action==="game-pk"){closeSheet(toolsSheet);$$("[data-room-mode]").find(b=>b.dataset.roomMode==="game")?.click();toast("Game PK mode ready");}
   if(action==="start-pk")toast("PK challenge opened");
-  if(action==="search")toast("Search by room ID, user ID, name or family");
-  if(action==="notifications")toast("Notifications center");
+  if(action==="search")openFeature("search");
+  if(action==="notifications")openFeature("notifications");
   if(action==="demo-spin"){e.target.textContent="🎁 +50 reward points";setTimeout(()=>e.target.textContent="Spin again",1200);}
   if(action==="demo-hunt"){e.target.textContent="💎 Found 12 reward diamonds";setTimeout(()=>e.target.textContent="Try again",1200);}
   if(action==="demo-pocket"){e.target.textContent="🎟 +25 event tokens";setTimeout(()=>e.target.textContent="Pocket opened",1200);}
@@ -225,8 +395,30 @@ document.addEventListener("click",e=>{
 featureSheet.addEventListener("click",e=>{
   const game=e.target.closest("[data-game]")?.dataset.game;
   if(game){toast(game+" selected");closeSheet(featureSheet);$$("[data-room-mode]").find(b=>b.dataset.roomMode==="game")?.click();if(!roomOverlay.classList.contains("open"))openRoom("Game Arena ⚡");}
-  const tab=e.target.closest(".rank-tabs button");
-  if(tab){$$(".rank-tabs button",tab.parentElement).forEach(b=>b.classList.remove("active"));tab.classList.add("active");}
+  const tab=e.target.closest(".rank-tabs button,.member-tabs button");
+  if(tab){$("button",tab.parentElement).forEach(b=>b.classList.remove("active"));tab.classList.add("active");}
+  const nested=e.target.closest("[data-panel]");
+  if(nested){e.stopPropagation();openFeature(nested.dataset.panel);}
+  const seat=e.target.closest("[data-seat-control]");
+  if(seat){
+    if(seat.classList.contains("locked")){seat.classList.remove("locked");seat.querySelector("b").textContent="Empty";seat.querySelector("small").textContent="Tap to lock";toast("Seat opened");}
+    else if(!seat.classList.contains("active")){seat.classList.add("locked");seat.querySelector("b").textContent="Locked";seat.querySelector("small").textContent="Tap to open";toast("Seat locked");}
+  }
+  const demo=e.target.closest("[data-demo-action]")?.dataset.demoAction;
+  if(demo){
+    const messages={
+      "couple-gift":"Couple gift shop opened 💞","couple-mission":"Couple mission progress updated",
+      "checkin":"Day 7 reward claimed 🎁","language":"Language selector ready","account":"Account security screen ready",
+      "support":"Support center ready","member-menu":"Member moderation menu opened","save-room":"Room settings saved",
+      "broadcast-normal":"Broadcast sent to the room 📢","broadcast-highlight":"Highlighted announcement sent ✨",
+      "mute-member":"Member muted","remove-seat":"Member moved to audience","kick-member":"Member removed from room",
+      "block-room":"Member blocked from this room","report-member":"Report flow opened","remove-admin":"Admin role removed",
+      "promote-admin":"Moderator promoted","add-admin":"Admin selector opened","search-room":"Joining Late Night Talks…"
+    };
+    toast(messages[demo]||"Action completed");
+    if(demo==="checkin"){const b=e.target.closest("button");b.classList.add("claimed");b.classList.remove("today");b.querySelector("small").textContent="Claimed";}
+    if(demo==="search-room"){closeSheet(featureSheet);openRoom("Late Night Talks ✨");}
+  }
 });
 
 giftSheet.addEventListener("click",e=>{
@@ -296,5 +488,20 @@ document.addEventListener("keydown",e=>{
     e.preventDefault();
     appendRoomMessage(e.target.value);
     e.target.value="";
+  }
+});
+
+
+document.addEventListener("input",e=>{
+  if(e.target.matches(".slider-list input[type=range]")){
+    const label=e.target.closest("label")?.querySelector("span b");
+    if(label)label.textContent=e.target.value+"%";
+  }
+});
+
+// Show onboarding once for a fresh preview; demo mode can skip it.
+window.addEventListener("load",()=>{
+  if(!localStorage.getItem("yougo-onboarded")){
+    setTimeout(()=>openSheet(onboardingSheet),350);
   }
 });
