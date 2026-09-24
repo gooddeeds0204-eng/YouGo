@@ -97,7 +97,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#35DB73",
   },
   bgTop: {
-    ...StyleSheet.absoluteFillObject,
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
     backgroundColor: "#43E64C",
   },
   bgBottom: {
