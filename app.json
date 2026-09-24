@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "YouGo",
+    "slug": "yougo",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "yougo",
+    "userInterfaceStyle": "dark",
+    "plugins": [
+      "expo-router"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "android": {
+      "package": "com.yougo.app"
+    },
+    "ios": {
+      "bundleIdentifier": "com.yougo.app",
+      "supportsTablet": false
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static"
+    }
+  }
+}
