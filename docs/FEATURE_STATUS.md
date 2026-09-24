@@ -38,3 +38,6 @@ Legend: ✅ foundation ready · 🟡 planned/partial · ⬜ not started
 - ⬜ PK
 - ⬜ Games runtime
 - ⬜ Family/couple/events/rankings
+
+## UI Direction
+- ✅ Final 25-screen UI direction frozen in `docs/UI_DESIGN_FINAL.md`
