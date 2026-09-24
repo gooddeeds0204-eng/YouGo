@@ -1,27 +1,51 @@
 import { router } from "expo-router";
 import { useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, TextInput, View } from "react-native";
 import { AppScreen } from "@/shared/ui/AppScreen";
 import { PrimaryButton } from "@/shared/ui/PrimaryButton";
+import { AuthHeader } from "@/features/auth/components/AuthHeader";
+import { useAuthDraft } from "@/features/auth/store/AuthDraftProvider";
+import { demoAuthService } from "@/features/auth/services/authService";
+import {
+  isValidIndianPhone,
+  normalizeIndianPhone,
+} from "@/domains/users/profileRules";
 import { colors, radius, spacing } from "@/shared/theme";
 
 export function LoginScreen() {
-  const [phone, setPhone] = useState("");
+  const { draft, updateDraft } = useAuthDraft();
+  const [phone, setPhone] = useState(draft.phone);
+  const [busy, setBusy] = useState(false);
+
+  const submit = async () => {
+    const normalized = normalizeIndianPhone(phone);
+    if (!isValidIndianPhone(normalized) || busy) return;
+
+    setBusy(true);
+    updateDraft({ phone: normalized });
+    const result = await demoAuthService.sendOtp(normalized);
+    setBusy(false);
+
+    router.push({
+      pathname: "/otp",
+      params: { challengeId: result.challengeId },
+    });
+  };
 
   return (
     <AppScreen contentStyle={styles.screen}>
-      <View>
-        <Text style={styles.eyebrow}>WELCOME BACK</Text>
-        <Text style={styles.title}>Enter your mobile number</Text>
-        <Text style={styles.subtitle}>We’ll send an OTP to verify your account.</Text>
-      </View>
+      <AuthHeader
+        eyebrow="SIGN IN"
+        title="Enter your mobile number"
+        subtitle="We’ll verify your number with a 6-digit OTP."
+      />
 
       <View style={styles.form}>
         <View style={styles.phoneRow}>
-          <View style={styles.code}><Text style={styles.codeText}>+91</Text></View>
+          <View style={styles.code}><TextInput editable={false} value="+91" style={styles.codeText} /></View>
           <TextInput
             value={phone}
-            onChangeText={setPhone}
+            onChangeText={(value) => setPhone(normalizeIndianPhone(value))}
             keyboardType="phone-pad"
             placeholder="98765 43210"
             placeholderTextColor="#666B7D"
@@ -31,9 +55,9 @@ export function LoginScreen() {
         </View>
 
         <PrimaryButton
-          label="Send OTP"
-          disabled={phone.trim().length < 10}
-          onPress={() => router.push({ pathname: "/otp", params: { phone } })}
+          label={busy ? "Sending..." : "Send OTP"}
+          disabled={!isValidIndianPhone(phone) || busy}
+          onPress={submit}
         />
       </View>
     </AppScreen>
@@ -42,9 +66,6 @@ export function LoginScreen() {
 
 const styles = StyleSheet.create({
   screen: { paddingTop: 56, gap: 42 },
-  eyebrow: { color: colors.secondary, fontWeight: "900", fontSize: 10, letterSpacing: 1.4 },
-  title: { color: colors.text, fontSize: 30, fontWeight: "900", marginTop: 8, maxWidth: 290 },
-  subtitle: { color: colors.textMuted, fontSize: 13, lineHeight: 20, marginTop: 10 },
   form: { gap: spacing.lg },
   phoneRow: { flexDirection: "row", gap: spacing.sm },
   code: {
@@ -56,7 +77,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  codeText: { color: colors.text, fontWeight: "800" },
+  codeText: {
+    color: colors.text,
+    fontWeight: "800",
+    textAlign: "center",
+  },
   input: {
     flex: 1,
     minHeight: 54,
