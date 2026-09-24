@@ -16,7 +16,7 @@ const featureViews={
   events:()=>`
     <div class="feature-head"><div><h2>🎉 Galaxy Carnival</h2><p>Monthly event • 6 days left</p></div><span class="balance-pill">🎟 1,240 tokens</span></div>
     <div class="progress-card"><h3>Your event progress</h3><p>Send gifts and complete event missions to unlock the Galaxy entry effect.</p><i><em style="width:64%"></em></i></div>
-    <div class="rank-tabs"><button class="active">Top Gifts</button><button>Hosts</button><button>Rooms</button><button>Families</button></div>
+    <div class="rank-tabs"><button class="active">Monthly</button><button>Weekly</button><button>Festival</button><button>Top Gifts</button><button>Hosts</button><button>Rooms</button><button>Families</button></div>
     <div class="rank-list">
       <div class="rank-row"><strong>1</strong><span class="a1">M</span><div><b>Maya</b><small>Gift value</small></div><em>2.8M</em></div>
       <div class="rank-row"><strong>2</strong><span class="a3">A</span><div><b>Arjun</b><small>Gift value</small></div><em>2.3M</em></div>
@@ -36,6 +36,8 @@ const featureViews={
   games:()=>`
     <div class="feature-head"><div><h2>🎮 Game Center</h2><p>Party games that stay inside the room</p></div><span class="balance-pill">🎟 8 free plays</span></div>
     <div class="feature-grid">
+      <button class="feature-card" data-game="Ludo"><span>🎲</span><b>Ludo</b><small>Classic board game with room friends.</small></button>
+      <button class="feature-card" data-game="UNO"><span>🃏</span><b>UNO-style Cards</b><small>Fast card rounds while chatting.</small></button>
       <button class="feature-card" data-game="Diamond Hunt"><span>💎</span><b>Diamond Hunt</b><small>Find reward diamonds and event tokens.</small></button>
       <button class="feature-card" data-game="Spin & Win"><span>🎡</span><b>Spin & Win</b><small>Free spins, cosmetics and reward points.</small></button>
       <button class="feature-card" data-game="Greedy"><span>🤑</span><b>Greedy</b><small>Party rounds with score-based rewards.</small></button>
@@ -53,15 +55,16 @@ const featureViews={
       <button><span>📢</span><div><b>Family announcements</b><small>Messages from leaders and admins</small></div><i>›</i></button>
     </div>`,
   moments:()=>`
-    <div class="feature-head"><div><h2>✨ Moments</h2><p>Posts from friends and people you follow</p></div><button class="icon-btn">＋</button></div>
+    <div class="feature-head"><div><h2>✨ Moments</h2><p>Photos, jokes, status updates and short videos</p></div><button class="icon-btn" data-demo-action="new-moment">＋</button></div>
     <div class="action-list">
       <article><span class="a1">M</span><div><b>Maya · 12m</b><small>Late night room was a vibe 💜 · ❤️ 2.4K · 💬 189</small></div></article>
       <article><span class="a3">A</span><div><b>Arjun · 1h</b><small>Game PK tonight. Who is joining? 🎮 · ❤️ 980 · 💬 76</small></div></article>
-      <article><span class="a4">S</span><div><b>Sana · 3h</b><small>Unlocked my new Galaxy frame ✨ · ❤️ 4.1K · 💬 312</small></div></article>
+      <article><span class="a4">S</span><div><b>Sana · 3h</b><small>🎬 Short video · Unlocked my new Galaxy frame ✨ · ❤️ 4.1K · 💬 312</small></div></article>
     </div>`,
   vip:()=>`
     <div class="feature-head"><div><h2>👑 VIP Center</h2><p>Premium identity, effects and room privileges</p></div><span class="balance-pill">VIP 2</span></div>
-    <div class="vip-hero"><small>CURRENT VIP</small><h3>VIP 2 · 18 days left</h3><p>Level up through activity and supported VIP rules. Rewards can include exclusive frames, badges and entry effects.</p></div>
+    <div class="vip-hero"><small>CURRENT VIP</small><h3>VIP 2 · 18 days left</h3><p>VIP and SVIP tiers can unlock exclusive frames, badges, vehicles, chat styling and entrance effects.</p></div>
+    <div class="svip-card"><span>💠</span><div><b>SVIP</b><small>Higher-tier premium identity and exclusive cosmetics</small></div><button data-demo-action="svip">Preview</button></div>
     <div class="vip-benefits">
       <article><span>✨</span><b>Entry effect</b><small>Premium room entrance</small></article>
       <article><span>🖼</span><b>Avatar frame</b><small>Exclusive VIP borders</small></article>
@@ -90,9 +93,9 @@ const featureViews={
   inventory:()=>`
     <div class="feature-head"><div><h2>🎒 My Bag</h2><p>Your cosmetic collection</p></div><span class="balance-pill">24 items</span></div>
     <div class="feature-grid">
-      <article class="feature-card"><span>🖼</span><b>Avatar Frames</b><small>6 owned</small></article>
-      <article class="feature-card"><span>🚗</span><b>Vehicles</b><small>3 owned</small></article>
-      <article class="feature-card"><span>💬</span><b>Chat Bubbles</b><small>5 owned</small></article>
+      <button class="feature-card" data-panel="photoWall"><span>🖼</span><b>Avatar Frames</b><small>6 owned</small></button>
+      <button class="feature-card" data-demo-action="vehicles"><span>🚗</span><b>Vehicles</b><small>3 owned</small></button>
+      <button class="feature-card" data-demo-action="chat-bubbles"><span>💬</span><b>Chat Bubbles</b><small>5 owned</small></button>
       <article class="feature-card"><span>✨</span><b>Entry Effects</b><small>4 owned</small></article>
       <article class="feature-card"><span>🏅</span><b>Badges</b><small>4 owned</small></article>
       <article class="feature-card"><span>🎨</span><b>Room Themes</b><small>2 owned</small></article>
@@ -101,7 +104,7 @@ const featureViews={
     <div class="feature-head"><div><h2>⚡ Level 12</h2><p>Activity level and room unlocks</p></div><span class="balance-pill">12,480 XP</span></div>
     <div class="progress-card"><h3>Level 13</h3><p>2,520 XP remaining</p><i><em style="width:78%"></em></i></div>
     <div class="action-list">
-      <article><span>💺</span><div><b>Room seat capacity</b><small>Level 1 starts with 8 seats; higher levels can unlock more.</small></div></article>
+      <article><span>💺</span><div><b>Room seat capacity</b><small>Lv.1: 8 seats · Lv.5: 12 · Lv.10: 16 · Lv.20: 20 · high room levels: up to 27 seats.</small></div></article>
       <article><span>👑</span><div><b>Host & admin roles</b><small>Available from Level 1 for room management.</small></div></article>
       <article><span>✨</span><div><b>Level effects</b><small>Badges, room styles and profile unlocks.</small></div></article>
     </div>`,
@@ -315,6 +318,30 @@ const featureViews={
       <article><span>🫶</span><div><b>Neon Tribe completed a family mission</b><small>1 hour ago</small></div></article>
       <article><span>👀</span><div><b>3 people viewed your profile</b><small>2 hours ago</small></div></article>
     </div>`
+,
+  photoWall:()=>`
+    <div class="feature-head"><div><h2>🖼 Profile Photo Wall</h2><p>Show your personality with photos, highlights and short videos</p></div><button class="icon-btn" data-demo-action="photo-add">＋</button></div>
+    <div class="photo-wall">
+      <article class="photo-tile tall"><span>📸</span><b>Night Vibes</b><small>Photo</small></article>
+      <article class="photo-tile"><span>🎬</span><b>Room PK</b><small>Short video</small></article>
+      <article class="photo-tile"><span>✨</span><b>Galaxy Event</b><small>Highlight</small></article>
+      <article class="photo-tile wide"><span>🎤</span><b>Karaoke night with friends</b><small>Photo · 2.8K likes</small></article>
+      <article class="photo-tile"><span>🏆</span><b>Top 20</b><small>Achievement</small></article>
+    </div>`,
+  privateChat:()=>`
+    <div class="private-chat-head"><span class="a1">M</span><div><h2 id="privateChatName">Maya</h2><p>Online · VIP 6 · Lv.58</p></div><button data-demo-action="voice-call">📞</button><button data-demo-action="video-call">🎥</button></div>
+    <div class="private-thread" id="privateThread">
+      <p class="them">That PK was crazy 😂</p>
+      <p class="me">Next round we win 🔥</p>
+      <div class="private-image">🖼 <span>Room screenshot</span></div>
+      <p class="them">Join again tonight?</p>
+    </div>
+    <div class="private-composer">
+      <button data-demo-action="chat-photo">📷</button>
+      <button data-demo-action="voice-note">🎤</button>
+      <input id="privateMessage" placeholder="Message..." />
+      <button data-demo-action="send-private">➤</button>
+    </div>`
 
 };
 
@@ -386,6 +413,7 @@ document.addEventListener("click",e=>{
   if(action==="start-pk")toast("PK challenge opened");
   if(action==="search")openFeature("search");
   if(action==="notifications")openFeature("notifications");
+  if(action==="share-room")toast("Share link copied — send the room to friends");
   if(action==="demo-spin"){e.target.textContent="🎁 +50 reward points";setTimeout(()=>e.target.textContent="Spin again",1200);}
   if(action==="demo-hunt"){e.target.textContent="💎 Found 12 reward diamonds";setTimeout(()=>e.target.textContent="Try again",1200);}
   if(action==="demo-pocket"){e.target.textContent="🎟 +25 event tokens";setTimeout(()=>e.target.textContent="Pocket opened",1200);}
@@ -413,11 +441,21 @@ featureSheet.addEventListener("click",e=>{
       "broadcast-normal":"Broadcast sent to the room 📢","broadcast-highlight":"Highlighted announcement sent ✨",
       "mute-member":"Member muted","remove-seat":"Member moved to audience","kick-member":"Member removed from room",
       "block-room":"Member blocked from this room","report-member":"Report flow opened","remove-admin":"Admin role removed",
-      "promote-admin":"Moderator promoted","add-admin":"Admin selector opened","search-room":"Joining Late Night Talks…"
+      "promote-admin":"Moderator promoted","add-admin":"Admin selector opened","search-room":"Joining Late Night Talks…",
+      "new-moment":"Create Moment composer opened","svip":"SVIP privilege preview opened","vehicles":"Vehicle collection opened",
+      "chat-bubbles":"Chat bubble collection opened","photo-add":"Photo/video picker opened","voice-call":"Voice call demo ready",
+      "video-call":"Video call demo ready","chat-photo":"Image picker opened","voice-note":"Hold to record voice note"
     };
     toast(messages[demo]||"Action completed");
     if(demo==="checkin"){const b=e.target.closest("button");b.classList.add("claimed");b.classList.remove("today");b.querySelector("small").textContent="Claimed";}
     if(demo==="search-room"){closeSheet(featureSheet);openRoom("Late Night Talks ✨");}
+    if(demo==="send-private"){
+      const input=$("#privateMessage");
+      if(input?.value.trim()){
+        const thread=$("#privateThread");
+        const p=document.createElement("p");p.className="me";p.textContent=input.value.trim();thread.appendChild(p);input.value="";thread.scrollTop=thread.scrollHeight;toast("Message sent");
+      }
+    }
   }
 });
 
@@ -505,3 +543,9 @@ window.addEventListener("load",()=>{
     setTimeout(()=>openSheet(onboardingSheet),350);
   }
 });
+
+
+$$("[data-chat]").forEach(item=>item.addEventListener("click",()=>{
+  openFeature("privateChat");
+  setTimeout(()=>{const name=$("#privateChatName");if(name)name.textContent=item.dataset.chat;},0);
+}));
