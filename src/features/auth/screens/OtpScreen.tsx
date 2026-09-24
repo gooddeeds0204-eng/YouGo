@@ -1,20 +1,19 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import { AuthShell } from "@/features/auth/components/AuthShell";
-import { OtpBoxes } from "@/features/auth/components/OtpBoxes";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { LightAuthScreen } from "@/features/auth/components/LightAuthScreen";
 import { useAuthDraft } from "@/features/auth/store/AuthDraftProvider";
 import { demoAuthService } from "@/features/auth/services/authService";
-import { colors } from "@/shared/theme";
 
 export function OtpScreen() {
   const { challengeId = "" } = useLocalSearchParams<{ challengeId?: string }>();
   const { draft } = useAuthDraft();
   const [otp, setOtp] = useState("");
   const [busy, setBusy] = useState(false);
+  const valid = otp.length === 6;
 
   const verify = async () => {
-    if (otp.length !== 6 || busy) return;
+    if (!valid || busy) return;
     setBusy(true);
     await demoAuthService.verifyOtp(challengeId, otp);
     setBusy(false);
@@ -22,56 +21,115 @@ export function OtpScreen() {
   };
 
   return (
-    <AuthShell
-      step="3 / 4"
-      title="Verify your number"
-      subtitle={"Code sent to +91 " + (draft.phone || "your number")}
-    >
-      <OtpBoxes value={otp} onChange={setOtp} />
-
-      <Text style={styles.previewNote}>Preview mode: enter any 6 digits.</Text>
-
-      <Pressable
-        disabled={otp.length !== 6 || busy}
-        onPress={verify}
-        style={[styles.cta, (otp.length !== 6 || busy) && styles.ctaDisabled]}
-      >
-        <Text style={styles.ctaLabel}>{busy ? "VERIFYING..." : "VERIFY & CONTINUE"}</Text>
-        <Text style={styles.ctaArrow}>→</Text>
+    <LightAuthScreen contentStyle={styles.screen}>
+      <Pressable onPress={() => router.back()} style={styles.back}>
+        <Text style={styles.backText}>‹</Text>
       </Pressable>
 
-      <View style={styles.resendRow}>
-        <Text style={styles.resendText}>Didn’t receive it?</Text>
-        <Pressable><Text style={styles.resendAction}>Resend OTP</Text></Pressable>
+      <Text style={styles.title}>OTP verification</Text>
+      <Text style={styles.subtitle}>Code sent to +91 {draft.phone || "your number"}</Text>
+
+      <View style={styles.form}>
+        <TextInput
+          value={otp}
+          onChangeText={(value) => setOtp(value.replace(/\D/g, "").slice(0, 6))}
+          keyboardType="number-pad"
+          textContentType="oneTimeCode"
+          autoFocus
+          placeholder="•  •  •  •  •  •"
+          placeholderTextColor="#B4B5B8"
+          maxLength={6}
+          style={styles.otpInput}
+        />
+
+        <Pressable
+          disabled={!valid || busy}
+          onPress={verify}
+          style={[styles.primary, (!valid || busy) && styles.primaryDisabled]}
+        >
+          <Text style={styles.primaryText}>{busy ? "Verifying..." : "Verify"}</Text>
+        </Pressable>
+
+        <Pressable style={styles.linkButton}>
+          <Text style={styles.linkText}>Resend OTP</Text>
+        </Pressable>
       </View>
-    </AuthShell>
+
+      <Text style={styles.preview}>Preview mode: any 6 digits will work.</Text>
+    </LightAuthScreen>
   );
 }
 
 const styles = StyleSheet.create({
-  previewNote: {
-    color: "#6E7487",
-    textAlign: "center",
-    fontSize: 7,
-    marginTop: 9,
+  screen: { paddingTop: 10 },
+  back: {
+    width: 42,
+    height: 42,
+    justifyContent: "center",
   },
-  cta: {
-    minHeight: 52,
-    borderRadius: 17,
-    marginTop: 14,
-    backgroundColor: colors.primary,
+  backText: {
+    color: "#66686C",
+    fontSize: 42,
+    lineHeight: 42,
+    fontWeight: "300",
+  },
+  title: {
+    color: "#181A1D",
+    fontSize: 30,
+    fontWeight: "900",
+    textAlign: "center",
+    marginTop: 24,
+  },
+  subtitle: {
+    color: "#8B8D91",
+    fontSize: 14,
+    textAlign: "center",
+    marginTop: 10,
+  },
+  form: {
+    marginTop: 64,
+    paddingHorizontal: 38,
+  },
+  otpInput: {
+    minHeight: 66,
+    borderRadius: 22,
+    backgroundColor: "#F5F5F6",
+    color: "#222428",
+    fontSize: 24,
+    fontWeight: "900",
+    letterSpacing: 7,
+    textAlign: "center",
+    paddingHorizontal: 14,
+  },
+  primary: {
+    minHeight: 58,
+    borderRadius: 29,
+    backgroundColor: "#28D2AD",
     alignItems: "center",
     justifyContent: "center",
+    marginTop: 34,
   },
-  ctaDisabled: { opacity: 0.35 },
-  ctaLabel: { color: "#FFFFFF", fontSize: 10.5, fontWeight: "900", letterSpacing: 0.9 },
-  ctaArrow: { position: "absolute", right: 17, color: "#FFFFFF", fontSize: 18 },
-  resendRow: {
-    flexDirection: "row",
-    justifyContent: "center",
-    gap: 5,
-    marginTop: 12,
+  primaryDisabled: {
+    backgroundColor: "#A8A9AB",
   },
-  resendText: { color: colors.textMuted, fontSize: 8 },
-  resendAction: { color: "#D58EFF", fontSize: 8, fontWeight: "900" },
+  primaryText: {
+    color: "#FFFFFF",
+    fontSize: 18,
+    fontWeight: "900",
+  },
+  linkButton: {
+    alignItems: "center",
+    paddingVertical: 20,
+  },
+  linkText: {
+    color: "#34CFAE",
+    fontSize: 15,
+    fontWeight: "800",
+  },
+  preview: {
+    color: "#A1A3A8",
+    fontSize: 10,
+    textAlign: "center",
+    marginTop: 28,
+  },
 });
