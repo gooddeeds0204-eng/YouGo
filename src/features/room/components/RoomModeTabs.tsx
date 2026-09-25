@@ -1,40 +1,35 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import type { RoomMode } from "@/contracts/room";
-import { colors, radius } from "@/shared/theme";
 
-type Props = {
-  mode: RoomMode;
-  onChange: (mode: RoomMode) => void;
-};
+type Props={mode:RoomMode;onChange:(mode:RoomMode)=>void};
 
-export function RoomModeTabs({ mode, onChange }: Props) {
-  return (
+const items:Array<{id:RoomMode;icon:string;label:string}>=[
+  {id:"voice",icon:"🎙",label:"Voice"},
+  {id:"video",icon:"🎥",label:"Video"},
+  {id:"game",icon:"🎮",label:"Game"},
+];
+
+export function RoomModeTabs({mode,onChange}:Props){
+  return(
     <View style={styles.wrap}>
-      {(["voice", "video", "game"] as RoomMode[]).map((item) => (
-        <Pressable
-          key={item}
-          onPress={() => onChange(item)}
-          style={[styles.tab, mode === item && styles.active]}
-        >
-          <Text style={[styles.text, mode === item && styles.activeText]}>
-            {item === "voice" ? "🎙 Voice" : item === "video" ? "🎥 Video" : "🎮 Game"}
-          </Text>
-        </Pressable>
-      ))}
+      {items.map(item=>{
+        const active=mode===item.id;
+        return(
+          <Pressable key={item.id} onPress={()=>onChange(item.id)} style={[styles.tab,active&&styles.active]}>
+            <Text style={styles.icon}>{item.icon}</Text>
+            <Text style={[styles.text,active&&styles.activeText]}>{item.label}</Text>
+          </Pressable>
+        );
+      })}
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  wrap: {
-    flexDirection: "row",
-    backgroundColor: colors.surface,
-    borderRadius: radius.md,
-    padding: 5,
-    marginTop: 14,
-  },
-  tab: { flex: 1, paddingVertical: 9, borderRadius: radius.sm, alignItems: "center" },
-  active: { backgroundColor: "#6A39D5" },
-  text: { color: colors.textMuted, fontSize: 9, fontWeight: "800" },
-  activeText: { color: colors.text },
+const styles=StyleSheet.create({
+  wrap:{flexDirection:"row",backgroundColor:"rgba(17,19,30,.90)",borderRadius:18,padding:4,marginTop:10,borderWidth:1,borderColor:"rgba(255,255,255,.06)"},
+  tab:{flex:1,minHeight:40,borderRadius:14,alignItems:"center",justifyContent:"center",flexDirection:"row",gap:5},
+  active:{backgroundColor:"#2A173B",borderWidth:1,borderColor:"rgba(232,60,185,.28)"},
+  icon:{fontSize:13},
+  text:{color:"#747A8E",fontSize:7.5,fontWeight:"900"},
+  activeText:{color:"#FFFFFF"},
 });
