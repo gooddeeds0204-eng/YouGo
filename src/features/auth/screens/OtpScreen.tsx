@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text, TextInput } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { LightAuthScreen } from "@/features/auth/components/LightAuthScreen";
 import { useAuthDraft } from "@/features/auth/store/AuthDraftProvider";
-import { demoAuthService } from "@/features/auth/services/authService";
+import { authService } from "@/features/auth/services/authService";
 
 export function OtpScreen(){
   const {challengeId=""}=useLocalSearchParams<{challengeId?:string}>();
@@ -13,7 +13,7 @@ export function OtpScreen(){
   const valid=otp.length===6;
   const verify=async()=>{
     if(!valid||busy)return;
-    setBusy(true); await demoAuthService.verifyOtp(challengeId,otp); setBusy(false); router.replace("/profile-setup");
+    setBusy(true); await authService.verifyOtp(challengeId,otp); setBusy(false); router.replace("/profile-setup");
   };
   return(
     <LightAuthScreen contentStyle={styles.screen}>
