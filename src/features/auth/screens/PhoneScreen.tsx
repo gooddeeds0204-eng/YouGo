@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { router } from "expo-router";
 import { LightAuthScreen } from "@/features/auth/components/LightAuthScreen";
 import { useAuthDraft } from "@/features/auth/store/AuthDraftProvider";
-import { demoAuthService } from "@/features/auth/services/authService";
+import { authService } from "@/features/auth/services/authService";
 import { isValidIndianPhone, normalizeIndianPhone } from "@/domains/users/profileRules";
 
 export function PhoneScreen(){
@@ -16,7 +16,7 @@ export function PhoneScreen(){
     const normalized=normalizeIndianPhone(phone);
     if(!isValidIndianPhone(normalized)||busy)return;
     setBusy(true); updateDraft({phone:normalized});
-    const result=await demoAuthService.sendOtp(normalized);
+    const result=await authService.sendOtp(normalized);
     setBusy(false);
     router.push({pathname:"/otp",params:{challengeId:result.challengeId}});
   };
