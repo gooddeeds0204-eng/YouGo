@@ -64,10 +64,16 @@ Legend: ✅ foundation ready · 🟡 planned/partial · ⬜ not started
 - ✅ Mobile TypeScript + Expo validation passing
 - ✅ Web preview publishing successfully
 
-## Backend/runtime still separate
-- ⬜ Real Supabase auth and persistence
-- ⬜ Realtime room state
-- ⬜ Real LiveKit voice/video
-- ⬜ Production wallet/recharge transactions
-- ⬜ Production gift delivery and inventory
-- ⬜ Production game logic / server-side reward enforcement
+## Backend/runtime progress
+- 🟡 Supabase auth client + persistent session implemented; cloud project not linked yet
+- 🟡 Profile persistence repository implemented; migration not deployed yet
+- 🟡 Rooms create/load/join/mode/chat repositories implemented
+- 🟡 Realtime room chat and private chat adapters implemented
+- 🟡 Secure wallet read/history implemented
+- 🟡 Server-authoritative gift transaction + gift UI connection implemented
+- 🟡 Notifications repository + UI connection implemented
+- 🟡 LiveKit token boundary + secure Edge Function implemented
+- ⬜ Dedicated Ugo Supabase project deployment
+- ⬜ Native LiveKit React Native media client
+- ⬜ Production recharge/payment provider
+- ⬜ Production game runtime / reward enforcement
