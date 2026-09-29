@@ -1,15 +1,81 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { AppScreen } from "@/shared/ui/AppScreen";
 import { Avatar } from "@/shared/ui/Avatar";
+import {
+  listPrivateMessages,
+  sendPrivateMessage,
+  type PrivateMessage,
+} from "@/platform/supabase/messages";
+import { subscribeToPrivateMessages } from "@/platform/supabase/realtime";
 
 export function PrivateChatScreen(){
   const {conversationId}=useLocalSearchParams<{conversationId:string}>();
   const [text,setText]=useState("");
-  const [messages,setMessages]=useState<string[]>([]);
-  const send=()=>{if(!text.trim())return;setMessages(v=>[...v,text.trim()]);setText("");};
+  const [messages,setMessages]=useState<PrivateMessage[]>([]);
+  const [sending,setSending]=useState(false);
   const name=conversationId==="arjun"?"Arjun":conversationId==="official"?"Ugo Official":"Priya";
+
+  useEffect(()=>{
+    let mounted=true;
+
+    void listPrivateMessages(conversationId).then((rows)=>{
+      if(mounted) setMessages(rows);
+    }).catch(()=>undefined);
+
+    const unsubscribe=subscribeToPrivateMessages(conversationId,(event)=>{
+      const row=event.payload as any;
+      if(!row?.id)return;
+      setMessages((current)=>{
+        if(current.some((item)=>item.id===row.id))return current;
+        return [...current,{
+          id:row.id,
+          conversationId:row.conversation_id,
+          senderId:row.sender_id,
+          type:row.type,
+          body:row.body,
+          createdAt:row.created_at,
+        }].slice(-80);
+      });
+    });
+
+    return()=>{
+      mounted=false;
+      unsubscribe();
+    };
+  },[conversationId]);
+
+  const send=async()=>{
+    const clean=text.trim();
+    if(!clean||sending)return;
+    setSending(true);
+
+    try{
+      const saved=await sendPrivateMessage(conversationId,clean);
+      setText("");
+
+      if(saved){
+        setMessages((current)=>current.some((item)=>item.id===saved.id)?current:[...current,saved]);
+      }else{
+        setMessages((current)=>[
+          ...current,
+          {
+            id:"demo-"+Date.now(),
+            conversationId,
+            senderId:"demo-user",
+            type:"text",
+            body:clean,
+            createdAt:new Date().toISOString(),
+          },
+        ]);
+      }
+    }finally{
+      setSending(false);
+    }
+  };
+
+  const hasRealMessages=messages.length>0;
 
   return(
     <AppScreen contentStyle={styles.screen}>
@@ -21,17 +87,37 @@ export function PrivateChatScreen(){
       </View>
 
       <View style={styles.thread}>
-        <View style={styles.them}><Text style={styles.bubbleText}>Hi! 👋</Text><Text style={styles.time}>9:21 PM</Text></View>
-        <View style={styles.me}><Text style={styles.bubbleText}>Hey! are you there?</Text><Text style={styles.timeLight}>9:22 PM</Text></View>
-        <View style={styles.them}><Text style={styles.bubbleText}>Yes, joining the room now ❤️</Text><Text style={styles.time}>9:23 PM</Text></View>
-        <View style={styles.voice}><Text style={styles.voiceIcon}>🎤</Text><Text style={styles.wave}>▂▅▇▃▆▂▅</Text><Text style={styles.voiceTime}>00:12</Text></View>
-        {messages.map((m,i)=><View key={i} style={styles.me}><Text style={styles.bubbleText}>{m}</Text></View>)}
+        {!hasRealMessages ? (
+          <>
+            <View style={styles.them}><Text style={styles.bubbleText}>Hi! 👋</Text><Text style={styles.time}>9:21 PM</Text></View>
+            <View style={styles.me}><Text style={styles.bubbleText}>Hey! are you there?</Text><Text style={styles.timeLight}>9:22 PM</Text></View>
+            <View style={styles.them}><Text style={styles.bubbleText}>Yes, joining the room now ❤️</Text><Text style={styles.time}>9:23 PM</Text></View>
+            <View style={styles.voice}><Text style={styles.voiceIcon}>🎤</Text><Text style={styles.wave}>▂▅▇▃▆▂▅</Text><Text style={styles.voiceTime}>00:12</Text></View>
+          </>
+        ) : messages.map((message)=>{
+          const mine=message.senderId==="demo-user";
+          return(
+            <View key={message.id} style={mine?styles.me:styles.them}>
+              <Text style={styles.bubbleText}>{message.body}</Text>
+              <Text style={mine?styles.timeLight:styles.time}>{new Date(message.createdAt).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"})}</Text>
+            </View>
+          );
+        })}
       </View>
 
       <View style={styles.composer}>
         <Pressable style={styles.attach}><Text>＋</Text></Pressable>
-        <TextInput value={text} onChangeText={setText} placeholder="Type a message..." placeholderTextColor="#696F83" style={styles.input}/>
-        <Pressable onPress={send} style={styles.send}><Text style={styles.sendText}>{text.trim()?"➤":"🎤"}</Text></Pressable>
+        <TextInput
+          value={text}
+          onChangeText={setText}
+          placeholder="Type a message..."
+          placeholderTextColor="#696F83"
+          style={styles.input}
+          onSubmitEditing={send}
+          returnKeyType="send"
+          maxLength={2000}
+        />
+        <Pressable onPress={text.trim()?send:undefined} style={styles.send}><Text style={styles.sendText}>{sending?"…":text.trim()?"➤":"🎤"}</Text></Pressable>
       </View>
     </AppScreen>
   );
