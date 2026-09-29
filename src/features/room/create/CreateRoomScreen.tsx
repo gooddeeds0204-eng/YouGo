@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { router } from "expo-router";
 import { AppScreen } from "@/shared/ui/AppScreen";
 import { colors } from "@/shared/theme";
+import { createRoom } from "@/platform/supabase/rooms";
 
 type Mode="voice"|"video"|"game";
 
@@ -11,7 +12,18 @@ export function CreateRoomScreen(){
   const [privacy,setPrivacy]=useState<"public"|"private">("public");
   const [name,setName]=useState("Chill Vibes");
 
-  const create=()=>router.push("/room/new-room");
+  const [busy,setBusy]=useState(false);
+
+  const create=async()=>{
+    if(!name.trim()||busy)return;
+    setBusy(true);
+    try{
+      const room=await createRoom({name,mode,privacy});
+      router.push(room?("/room/"+room.id):"/room/new-room");
+    }finally{
+      setBusy(false);
+    }
+  };
 
   return(
     <AppScreen scroll contentStyle={styles.screen}>
@@ -52,7 +64,7 @@ export function CreateRoomScreen(){
         <View><Text style={styles.infoTitle}>Persistent room</Text><Text style={styles.infoText}>Switch Voice, Video and Game modes later without losing room identity, chat, roles or gifts.</Text></View>
       </View>
 
-      <Pressable onPress={create} style={styles.primary}><Text style={styles.primaryText}>CREATE ROOM</Text><Text style={styles.arrow}>→</Text></Pressable>
+      <Pressable disabled={busy||!name.trim()} onPress={create} style={[styles.primary,(busy||!name.trim())&&styles.primaryDisabled]}><Text style={styles.primaryText}>{busy?"CREATING...":"CREATE ROOM"}</Text><Text style={styles.arrow}>→</Text></Pressable>
     </AppScreen>
   );
 }
@@ -88,6 +100,7 @@ const styles=StyleSheet.create({
   infoTitle:{color:"#FFFFFF",fontSize:9,fontWeight:"900"},
   infoText:{color:"#777D91",fontSize:7,lineHeight:11,marginTop:3,maxWidth:290},
   primary:{minHeight:58,borderRadius:20,backgroundColor:"#E83CB9",alignItems:"center",justifyContent:"center",marginTop:14},
+  primaryDisabled:{opacity:.45},
   primaryText:{color:"#FFFFFF",fontSize:12,fontWeight:"900",letterSpacing:1.1},
   arrow:{position:"absolute",right:20,color:"#FFFFFF",fontSize:20},
 });
