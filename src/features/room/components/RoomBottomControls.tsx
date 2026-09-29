@@ -2,13 +2,14 @@ import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { router } from "expo-router";
 
 type Props = {
+  roomId: string;
   message: string;
   onChangeMessage: (value: string) => void;
   onSend: () => void;
   sending?: boolean;
 };
 
-export function RoomBottomControls({message,onChangeMessage,onSend,sending=false}:Props){
+export function RoomBottomControls({roomId,message,onChangeMessage,onSend,sending=false}:Props){
   return(
     <View style={styles.wrap}>
       <View style={styles.chat}>
@@ -27,7 +28,7 @@ export function RoomBottomControls({message,onChangeMessage,onSend,sending=false
       <Pressable onPress={message.trim()?onSend:undefined} style={[styles.icon,message.trim()&&styles.send]}>
         <Text style={styles.iconText}>{sending?"…":message.trim()?"➤":"🎤"}</Text>
       </Pressable>
-      <Pressable onPress={()=>router.push("/gifts")} style={[styles.icon,styles.gift]}><Text style={styles.iconText}>🎁</Text></Pressable>
+      <Pressable onPress={()=>router.push({pathname:"/gifts",params:{roomId}})} style={[styles.icon,styles.gift]}><Text style={styles.iconText}>🎁</Text></Pressable>
       <Pressable style={styles.icon}><Text style={styles.iconText}>•••</Text></Pressable>
     </View>
   );
