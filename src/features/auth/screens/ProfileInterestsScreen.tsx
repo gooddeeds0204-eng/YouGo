@@ -5,6 +5,8 @@ import { ChoiceChip } from "@/features/auth/components/ChoiceChip";
 import { useAuthDraft } from "@/features/auth/store/AuthDraftProvider";
 import { useSession } from "@/core/session/SessionProvider";
 import { colors } from "@/shared/theme";
+import { authService } from "@/features/auth/services/authService";
+import { upsertMyProfile } from "@/platform/supabase/profiles";
 
 const interests=["Music","Games","Friends","Movies","Travel","Fashion","Sports","Food","Karaoke","Dating"];
 
@@ -15,8 +17,19 @@ export function ProfileInterestsScreen(){
     const next=draft.interests.includes(item)?draft.interests.filter(v=>v!==item):[...draft.interests,item].slice(0,6);
     updateDraft({interests:next});
   };
-  const finish=()=>{
-    setUser({id:"demo-user",displayName:draft.displayName.trim()||"Ugo User"});
+  const finish=async()=>{
+    const authUser=await authService.getCurrentUser();
+
+    if(authUser){
+      const profile=await upsertMyProfile(authUser.id,draft);
+      setUser({
+        id:authUser.id,
+        displayName:profile?.displayName||draft.displayName.trim()||authUser.displayName,
+      });
+    }else{
+      setUser({id:"demo-user",displayName:draft.displayName.trim()||"Ugo User"});
+    }
+
     router.replace("/home");
   };
   return(
