@@ -8,7 +8,8 @@ export function subscribeToRoomMessages(
   listener: (event: RealtimeEnvelope) => void,
 ): RealtimeUnsubscribe {
   const supabase = getSupabaseClient();
-  if (!supabase) return () => undefined;
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(roomId);
+  if (!supabase || !isUuid) return () => undefined;
 
   const channel = supabase
     .channel("room-chat:" + roomId)
