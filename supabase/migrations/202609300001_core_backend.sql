@@ -346,14 +346,14 @@ language sql
 stable
 security definer
 set search_path = public
-as $
+as $$
   select exists (
     select 1
     from public.room_members
     where room_id = target_room_id
       and user_id = auth.uid()
   );
-$;
+$$;
 
 create or replace function public.is_conversation_member(target_conversation_id uuid)
 returns boolean
@@ -361,14 +361,14 @@ language sql
 stable
 security definer
 set search_path = public
-as $
+as $$
   select exists (
     select 1
     from public.private_conversation_members
     where conversation_id = target_conversation_id
       and user_id = auth.uid()
   );
-$;
+$$;
 
 revoke all on function public.is_room_member(uuid) from public;
 revoke all on function public.is_conversation_member(uuid) from public;
@@ -381,7 +381,7 @@ returns trigger
 language plpgsql
 security definer
 set search_path = public
-as $
+as $$
 declare
   seat_total integer := 8;
 begin
@@ -402,7 +402,7 @@ begin
 
   return new;
 end;
-$;
+$$;
 
 drop trigger if exists on_room_created on public.rooms;
 create trigger on_room_created
