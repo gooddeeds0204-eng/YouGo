@@ -1,9 +1,14 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 
 export function LiveEffectsScreen(){
+  const params=useLocalSearchParams<{gift?:string;icon?:string;qty?:string}>();
+  const gift=params.gift||"Luxury Car";
+  const icon=params.icon||"🏎️";
+  const qty=params.qty||"1";
+
   return(
     <SafeAreaView style={styles.safe}>
       <StatusBar style="light"/>
@@ -11,12 +16,12 @@ export function LiveEffectsScreen(){
       <Text style={[styles.spark,styles.s1]}>✦</Text><Text style={[styles.spark,styles.s2]}>✦</Text><Text style={[styles.spark,styles.s3]}>♡</Text><Text style={[styles.spark,styles.s4]}>♡</Text>
       <Pressable onPress={()=>router.back()} style={styles.close}><Text style={styles.closeText}>×</Text></Pressable>
       <View style={styles.center}>
-        <View style={styles.car}><Text style={styles.carText}>🏎️</Text></View>
-        <Text style={styles.title}>Ravi sent</Text>
-        <Text style={styles.gift}>Luxury Car</Text>
-        <Text style={styles.combo}>× 1 • FULL ROOM EFFECT</Text>
+        <View style={styles.car}><Text style={styles.carText}>{icon}</Text></View>
+        <Text style={styles.title}>Gift sent</Text>
+        <Text style={styles.gift}>{gift}</Text>
+        <Text style={styles.combo}>× {qty} • FULL ROOM EFFECT</Text>
       </View>
-      <View style={styles.chat}><Text style={styles.chatText}>♡  Amazing entrance!</Text><Text style={styles.chatMeta}>Room effect preview</Text></View>
+      <View style={styles.chat}><Text style={styles.chatText}>♡  The room just lit up!</Text><Text style={styles.chatMeta}>Live gift effect preview</Text></View>
     </SafeAreaView>
   );
 }
