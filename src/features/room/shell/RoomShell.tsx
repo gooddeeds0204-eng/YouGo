@@ -107,6 +107,7 @@ export function RoomShell({roomId}:Props){
       <RoomToolsPreview/>
       <View style={styles.bottomSpace}/>
       <RoomBottomControls
+        roomId={roomId}
         message={message}
         onChangeMessage={setMessage}
         onSend={send}
