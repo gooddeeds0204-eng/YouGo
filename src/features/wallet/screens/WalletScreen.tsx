@@ -1,8 +1,14 @@
+import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
 import { AppScreen } from "@/shared/ui/AppScreen";
+import {
+  getMyWallet,
+  listMyWalletTransactions,
+  type WalletTransactionRow,
+} from "@/platform/supabase/wallet";
 
-const tx=[
+const demoTx=[
   ["🎁","Gift sent • Heart ×10","-500","Today"],
   ["💎","Recharge","＋2,000","Yesterday"],
   ["🎮","Game reward","＋120","Sep 23"],
@@ -10,6 +16,31 @@ const tx=[
 ];
 
 export function WalletScreen(){
+  const [diamonds,setDiamonds]=useState(3480);
+  const [coins,setCoins]=useState(18240);
+  const [eventTokens,setEventTokens]=useState(560);
+  const [freeSpins,setFreeSpins]=useState(12);
+  const [transactions,setTransactions]=useState<WalletTransactionRow[]>([]);
+
+  useEffect(()=>{
+    void getMyWallet().then((wallet)=>{
+      if(!wallet)return;
+      setDiamonds(wallet.diamonds);
+      setCoins(wallet.coins);
+      setEventTokens(wallet.eventTokens);
+      setFreeSpins(wallet.freeSpins);
+    }).catch(()=>undefined);
+
+    void listMyWalletTransactions().then(setTransactions).catch(()=>undefined);
+  },[]);
+
+  const currency=[
+    ["💎","Diamonds",diamonds.toLocaleString()],
+    ["🪙","Coins",coins.toLocaleString()],
+    ["🎟","Event tokens",eventTokens.toLocaleString()],
+    ["🎡","Free spins",freeSpins.toLocaleString()],
+  ];
+
   return(
     <AppScreen scroll contentStyle={styles.screen}>
       <View style={styles.header}><Pressable onPress={()=>router.back()}><Text style={styles.back}>‹</Text></Pressable><Text style={styles.title}>Wallet</Text><Text style={styles.history}>History</Text></View>
@@ -17,8 +48,8 @@ export function WalletScreen(){
       <View style={styles.balanceCard}>
         <View style={styles.glow}/>
         <Text style={styles.label}>AVAILABLE BALANCE</Text>
-        <Text style={styles.balance}>💎 3,480</Text>
-        <Text style={styles.rupee}>Approx. premium balance</Text>
+        <Text style={styles.balance}>💎 {diamonds.toLocaleString()}</Text>
+        <Text style={styles.rupee}>Premium balance</Text>
         <View style={styles.actions}>
           <Pressable style={styles.recharge}><Text style={styles.rechargeText}>RECHARGE</Text></Pressable>
           <Pressable style={styles.secondary}><Text style={styles.secondaryText}>STORE</Text></Pressable>
@@ -26,17 +57,20 @@ export function WalletScreen(){
       </View>
 
       <View style={styles.currencyRow}>
-        {[
-          ["💎","Diamonds","3,480"],["🪙","Coins","18,240"],["🎟","Event tokens","560"],["🎡","Free spins","12"]
-        ].map(([icon,label,value])=><View key={label} style={styles.currency}><Text style={styles.currencyIcon}>{icon}</Text><Text style={styles.currencyValue}>{value}</Text><Text style={styles.currencyLabel}>{label}</Text></View>)}
+        {currency.map(([icon,label,value])=><View key={label} style={styles.currency}><Text style={styles.currencyIcon}>{icon}</Text><Text style={styles.currencyValue}>{value}</Text><Text style={styles.currencyLabel}>{label}</Text></View>)}
       </View>
 
       <View style={styles.sectionHead}><Text style={styles.sectionTitle}>Recent activity</Text><Text style={styles.see}>View all</Text></View>
       <View style={styles.list}>
-        {tx.map(([icon,title,amount,date])=><View key={title} style={styles.row}><View style={styles.txIcon}><Text>{icon}</Text></View><View style={styles.copy}><Text style={styles.txTitle}>{title}</Text><Text style={styles.date}>{date}</Text></View><Text style={[styles.amount,amount.startsWith("＋")&&styles.plus]}>{amount}</Text></View>)}
+        {transactions.length?transactions.map((tx)=>{
+          const positive=tx.amount>0;
+          const icon=tx.type==="gift-send"?"🎁":tx.type==="reward"?"🎮":tx.type==="recharge"?"💎":"🛍";
+          const label=tx.type.replaceAll("-"," ");
+          return <View key={tx.id} style={styles.row}><View style={styles.txIcon}><Text>{icon}</Text></View><View style={styles.copy}><Text style={styles.txTitle}>{label}</Text><Text style={styles.date}>{new Date(tx.createdAt).toLocaleString()}</Text></View><Text style={[styles.amount,positive&&styles.plus]}>{positive?"＋":""}{tx.amount.toLocaleString()}</Text></View>;
+        }):demoTx.map(([icon,title,amount,date])=><View key={title} style={styles.row}><View style={styles.txIcon}><Text>{icon}</Text></View><View style={styles.copy}><Text style={styles.txTitle}>{title}</Text><Text style={styles.date}>{date}</Text></View><Text style={[styles.amount,amount.startsWith("＋")&&styles.plus]}>{amount}</Text></View>)}
       </View>
 
-      <View style={styles.note}><Text style={styles.noteIcon}>🛡</Text><Text style={styles.noteText}>Production balances and transactions will be server-authoritative. This screen is the UI layer only.</Text></View>
+      <View style={styles.note}><Text style={styles.noteIcon}>🛡</Text><Text style={styles.noteText}>Wallet balances are server-authoritative when Supabase is connected. Gift spending is executed through a secure database transaction.</Text></View>
     </AppScreen>
   );
 }
@@ -69,7 +103,7 @@ const styles=StyleSheet.create({
   row:{minHeight:62,borderRadius:17,backgroundColor:"#11131E",padding:10,flexDirection:"row",alignItems:"center"},
   txIcon:{width:40,height:40,borderRadius:14,backgroundColor:"#1B1D2A",alignItems:"center",justifyContent:"center"},
   copy:{flex:1,marginLeft:10},
-  txTitle:{color:"#FFFFFF",fontSize:8.5,fontWeight:"800"},
+  txTitle:{color:"#FFFFFF",fontSize:8.5,fontWeight:"800",textTransform:"capitalize"},
   date:{color:"#676D80",fontSize:6.5,marginTop:3},
   amount:{color:"#FF9EAE",fontSize:8.5,fontWeight:"900"},
   plus:{color:"#5AD5A5"},
