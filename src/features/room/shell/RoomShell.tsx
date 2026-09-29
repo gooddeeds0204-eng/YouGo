@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
 import type { RoomMode } from "@/contracts/room";
@@ -12,13 +12,72 @@ import { RoomToolsPreview } from "@/features/room/tools/RoomToolsPreview";
 import { RoomChatFeed } from "@/features/room/chat/RoomChatFeed";
 import { RoomBottomControls } from "@/features/room/components/RoomBottomControls";
 import { AppScreen } from "@/shared/ui/AppScreen";
+import {
+  getRoom,
+  joinRoom,
+  sendRoomMessage,
+  setRoomMode,
+  type RoomMessage,
+} from "@/platform/supabase/rooms";
 
 type Props={roomId:string};
 
 export function RoomShell({roomId}:Props){
   const [mode,setMode]=useState<RoomMode>("voice");
-  const roomLevel=1;
+  const [roomName,setRoomName]=useState("Chill Vibes");
+  const [roomLevel,setRoomLevel]=useState(1);
+  const [audienceCount,setAudienceCount]=useState(1842);
+  const [message,setMessage]=useState("");
+  const [sending,setSending]=useState(false);
+  const [optimisticMessage,setOptimisticMessage]=useState<RoomMessage|null>(null);
   const seatCount=seatsForRoomLevel(roomLevel);
+
+  useEffect(()=>{
+    let mounted=true;
+
+    void getRoom(roomId).then((room)=>{
+      if(!mounted||!room)return;
+      setRoomName(room.name);
+      setRoomLevel(room.level);
+      setMode(room.mode);
+      setAudienceCount(room.audienceCount);
+    }).catch(()=>undefined);
+
+    void joinRoom(roomId).catch(()=>undefined);
+
+    return()=>{mounted=false;};
+  },[roomId]);
+
+  const changeMode=(next:RoomMode)=>{
+    setMode(next);
+    void setRoomMode(roomId,next).catch(()=>undefined);
+  };
+
+  const send=async()=>{
+    const clean=message.trim();
+    if(!clean||sending)return;
+    setSending(true);
+
+    try{
+      const saved=await sendRoomMessage(roomId,clean);
+      setMessage("");
+
+      if(saved){
+        setOptimisticMessage(saved);
+      }else{
+        setOptimisticMessage({
+          id:"demo-"+Date.now(),
+          roomId,
+          senderId:"demo-user",
+          type:"text",
+          body:clean,
+          createdAt:new Date().toISOString(),
+        });
+      }
+    }finally{
+      setSending(false);
+    }
+  };
 
   return(
     <AppScreen scroll contentStyle={styles.screen}>
@@ -26,10 +85,10 @@ export function RoomShell({roomId}:Props){
 
       <View style={styles.header}>
         <Pressable style={styles.back} onPress={()=>router.back()}><Text style={styles.backText}>‹</Text></Pressable>
-        <View style={styles.roomMark}><Text style={styles.roomMarkText}>CV</Text></View>
+        <View style={styles.roomMark}><Text style={styles.roomMarkText}>{roomName.slice(0,2).toUpperCase()}</Text></View>
         <View style={styles.headerCopy}>
-          <Text style={styles.roomName}>Chill Vibes ✨</Text>
-          <Text style={styles.meta}>#{roomId} • LV.{roomLevel} • India</Text>
+          <Text style={styles.roomName}>{roomName} ✨</Text>
+          <Text style={styles.meta}>#{roomId.slice(0,8)} • LV.{roomLevel} • {audienceCount.toLocaleString()} online</Text>
         </View>
         <Pressable style={styles.follow}><Text style={styles.followText}>＋ Follow</Text></Pressable>
         <Pressable style={styles.more}><Text style={styles.moreText}>•••</Text></Pressable>
@@ -37,17 +96,22 @@ export function RoomShell({roomId}:Props){
 
       <View style={styles.announcement}><Text style={styles.announceIcon}>📢</Text><Text style={styles.announceText}>Welcome! Respect everyone • enjoy the vibe • event gifts are live.</Text></View>
 
-      <RoomModeTabs mode={mode} onChange={setMode}/>
+      <RoomModeTabs mode={mode} onChange={changeMode}/>
 
       {mode==="voice"?<VoiceStage seatCount={seatCount}/>:null}
       {mode==="video"?<VideoStage/>:null}
       {mode==="game"?<GameStage/>:null}
 
       <RoomAudienceBar/>
-      <RoomChatFeed/>
+      <RoomChatFeed roomId={roomId} optimisticMessage={optimisticMessage}/>
       <RoomToolsPreview/>
       <View style={styles.bottomSpace}/>
-      <RoomBottomControls/>
+      <RoomBottomControls
+        message={message}
+        onChangeMessage={setMessage}
+        onSend={send}
+        sending={sending}
+      />
     </AppScreen>
   );
 }
