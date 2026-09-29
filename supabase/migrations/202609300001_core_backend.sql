@@ -339,6 +339,76 @@ drop trigger if exists families_set_updated_at on public.families;
 create trigger families_set_updated_at before update on public.families
 for each row execute function public.set_updated_at();
 
+-- Security-definer membership helpers avoid recursive RLS lookups.
+create or replace function public.is_room_member(target_room_id uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $
+  select exists (
+    select 1
+    from public.room_members
+    where room_id = target_room_id
+      and user_id = auth.uid()
+  );
+$;
+
+create or replace function public.is_conversation_member(target_conversation_id uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $
+  select exists (
+    select 1
+    from public.private_conversation_members
+    where conversation_id = target_conversation_id
+      and user_id = auth.uid()
+  );
+$;
+
+revoke all on function public.is_room_member(uuid) from public;
+revoke all on function public.is_conversation_member(uuid) from public;
+grant execute on function public.is_room_member(uuid) to authenticated;
+grant execute on function public.is_conversation_member(uuid) to authenticated;
+
+-- Room bootstrap: owner membership + Level-1 seats are server-created.
+create or replace function public.handle_new_room()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $
+declare
+  seat_total integer := 8;
+begin
+  insert into public.room_members (room_id, user_id, role)
+  values (new.id, new.owner_id, 'owner')
+  on conflict (room_id, user_id) do update set role = 'owner';
+
+  if new.level >= 30 then seat_total := 27;
+  elsif new.level >= 20 then seat_total := 20;
+  elsif new.level >= 10 then seat_total := 16;
+  elsif new.level >= 5 then seat_total := 12;
+  end if;
+
+  insert into public.room_seats (room_id, seat_no)
+  select new.id, s
+  from generate_series(1, seat_total) s
+  on conflict (room_id, seat_no) do nothing;
+
+  return new;
+end;
+$;
+
+drop trigger if exists on_room_created on public.rooms;
+create trigger on_room_created
+after insert on public.rooms
+for each row execute function public.handle_new_room();
+
 -- RLS.
 alter table public.profiles enable row level security;
 alter table public.wallets enable row level security;
@@ -384,10 +454,7 @@ for select to authenticated
 using (
   privacy = 'public'
   or owner_id = auth.uid()
-  or exists (
-    select 1 from public.room_members rm
-    where rm.room_id = rooms.id and rm.user_id = auth.uid()
-  )
+  or public.is_room_member(id)
 );
 create policy "rooms_owner_insert" on public.rooms
 for insert to authenticated with check (owner_id = auth.uid());
@@ -401,7 +468,10 @@ create policy "room_members_visible_to_room_users" on public.room_members
 for select to authenticated
 using (
   user_id = auth.uid()
-  or exists (select 1 from public.rooms r where r.id = room_id and r.owner_id = auth.uid())
+  or exists (
+    select 1 from public.rooms r
+    where r.id = room_id and r.owner_id = auth.uid()
+  )
 );
 create policy "room_members_self_join" on public.room_members
 for insert to authenticated with check (user_id = auth.uid() and role = 'member');
@@ -421,10 +491,7 @@ using (
       and (
         r.privacy = 'public'
         or r.owner_id = auth.uid()
-        or exists (
-          select 1 from public.room_members rm
-          where rm.room_id = r.id and rm.user_id = auth.uid()
-        )
+        or public.is_room_member(r.id)
       )
   )
 );
@@ -434,36 +501,21 @@ for insert to authenticated with check (sender_id = auth.uid());
 -- Private conversations/messages: members only.
 create policy "private_conversations_member_read" on public.private_conversations
 for select to authenticated
-using (
-  exists (
-    select 1 from public.private_conversation_members pcm
-    where pcm.conversation_id = id and pcm.user_id = auth.uid()
-  )
-);
+using (public.is_conversation_member(id));
+
 create policy "conversation_members_member_read" on public.private_conversation_members
 for select to authenticated
-using (
-  exists (
-    select 1 from public.private_conversation_members mine
-    where mine.conversation_id = conversation_id and mine.user_id = auth.uid()
-  )
-);
+using (public.is_conversation_member(conversation_id));
+
 create policy "private_messages_member_read" on public.private_messages
 for select to authenticated
-using (
-  exists (
-    select 1 from public.private_conversation_members pcm
-    where pcm.conversation_id = conversation_id and pcm.user_id = auth.uid()
-  )
-);
+using (public.is_conversation_member(conversation_id));
+
 create policy "private_messages_self_insert" on public.private_messages
 for insert to authenticated
 with check (
   sender_id = auth.uid()
-  and exists (
-    select 1 from public.private_conversation_members pcm
-    where pcm.conversation_id = conversation_id and pcm.user_id = auth.uid()
-  )
+  and public.is_conversation_member(conversation_id)
 );
 
 -- Social.
