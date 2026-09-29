@@ -72,8 +72,17 @@ Legend: ✅ foundation ready · 🟡 planned/partial · ⬜ not started
 - 🟡 Secure wallet read/history implemented
 - 🟡 Server-authoritative gift transaction + gift UI connection implemented
 - 🟡 Notifications repository + UI connection implemented
-- 🟡 LiveKit token boundary + secure Edge Function implemented
-- ⬜ Dedicated Ugo Supabase project deployment
+- ✅ LiveKit token Edge Function deployed to Ugo Supabase; LiveKit service credentials still pending
+- ✅ Dedicated Ugo Supabase project created in India (Mumbai) and core migrations deployed
 - ⬜ Native LiveKit React Native media client
 - ⬜ Production recharge/payment provider
 - ⬜ Production game runtime / reward enforcement
+
+
+## Supabase project state
+- ✅ Ugo project: active
+- ✅ Core schema / RLS / gift RPC / private chat RPC deployed
+- ✅ Security hardening and foreign-key indexes deployed
+- ✅ livekit-token Edge Function deployed
+- ℹ️ Asritha Fashion Mall project is paused/inactive; its data was not deleted
+- ✅ VYORA project was not modified
