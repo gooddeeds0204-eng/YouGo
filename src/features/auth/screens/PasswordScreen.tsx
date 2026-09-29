@@ -4,7 +4,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { LightAuthScreen } from "@/features/auth/components/LightAuthScreen";
 import { useAuthDraft } from "@/features/auth/store/AuthDraftProvider";
 import { useSession } from "@/core/session/SessionProvider";
-import { demoAuthService } from "@/features/auth/services/authService";
+import { authService } from "@/features/auth/services/authService";
 import { isValidIndianPhone, normalizeIndianPhone } from "@/domains/users/profileRules";
 
 export function PasswordScreen(){
@@ -16,17 +16,18 @@ export function PasswordScreen(){
   const [show,setShow]=useState(false);
   const valid=isValidIndianPhone(phone)&&password.length>=4;
 
-  const login=()=>{
+  const login=async()=>{
     if(!valid)return;
     updateDraft({phone});
-    setUser({id:"demo-user",displayName:"Ugo User"});
+    const user=await authService.signInWithPassword(phone,password);
+    setUser(user);
     router.replace("/home");
   };
 
   const otp=async()=>{
     if(!isValidIndianPhone(phone))return;
     updateDraft({phone});
-    const r=await demoAuthService.sendOtp(phone);
+    const r=await authService.sendOtp(phone);
     router.push({pathname:"/otp",params:{challengeId:r.challengeId}});
   };
 
