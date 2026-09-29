@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
 import { AppScreen } from "@/shared/ui/AppScreen";
+import { useSession } from "@/core/session/SessionProvider";
 
 const sections=[
   ["ACCOUNT",[["👤","Account & profile"],["🔐","Privacy"],["🔔","Notifications"]]],
@@ -9,17 +10,23 @@ const sections=[
 ];
 
 export function SettingsScreen(){
+  const {user,signOut}=useSession();
+  const logout=async()=>{
+    await signOut();
+    router.replace("/login");
+  };
+
   return(
     <AppScreen scroll contentStyle={styles.screen}>
       <View style={styles.header}><Pressable onPress={()=>router.back()}><Text style={styles.back}>‹</Text></Pressable><Text style={styles.title}>Settings</Text><View style={styles.spacer}/></View>
 
-      <View style={styles.account}><View style={styles.avatar}><Text style={styles.avatarText}>N</Text></View><View style={styles.accountCopy}><Text style={styles.name}>Neha</Text><Text style={styles.id}>ID 2345678</Text></View><Text style={styles.arrow}>›</Text></View>
+      <View style={styles.account}><View style={styles.avatar}><Text style={styles.avatarText}>{(user?.displayName||"U")[0]}</Text></View><View style={styles.accountCopy}><Text style={styles.name}>{user?.displayName||"Ugo User"}</Text><Text style={styles.id}>{user?.id?"ID "+user.id.slice(0,8):"Preview account"}</Text></View><Text style={styles.arrow}>›</Text></View>
 
       {sections.map(([heading,items])=><View key={heading as string} style={styles.section}><Text style={styles.heading}>{heading}</Text><View style={styles.card}>{(items as string[][]).map(([icon,label],index)=><Pressable key={label} style={[styles.row,index>0&&styles.border]}><Text style={styles.icon}>{icon}</Text><Text style={styles.label}>{label}</Text><Text style={styles.arrow}>›</Text></Pressable>)}</View></View>)}
 
       <View style={styles.safetyNote}><Text style={styles.safetyIcon}>🛡</Text><View><Text style={styles.safetyTitle}>Your safety matters</Text><Text style={styles.safetyText}>Control who can contact you, report behavior and manage blocks from one place.</Text></View></View>
 
-      <Pressable style={styles.logout}><Text style={styles.logoutText}>Log out</Text></Pressable>
+      <Pressable onPress={logout} style={styles.logout}><Text style={styles.logoutText}>Log out</Text></Pressable>
     </AppScreen>
   );
 }
