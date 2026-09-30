@@ -26,10 +26,10 @@ export function RoomModeTabs({mode,onChange}:Props){
 }
 
 const styles=StyleSheet.create({
-  wrap:{flexDirection:"row",backgroundColor:"rgba(17,19,30,.90)",borderRadius:18,padding:4,marginTop:10,borderWidth:1,borderColor:"rgba(255,255,255,.06)"},
-  tab:{flex:1,minHeight:40,borderRadius:14,alignItems:"center",justifyContent:"center",flexDirection:"row",gap:5},
-  active:{backgroundColor:"#2A173B",borderWidth:1,borderColor:"rgba(232,60,185,.28)"},
-  icon:{fontSize:13},
-  text:{color:"#747A8E",fontSize:7.5,fontWeight:"900"},
-  activeText:{color:"#FFFFFF"},
+  wrap:{flexDirection:"row",backgroundColor:"rgba(255,255,255,.10)",borderRadius:20,padding:4,marginTop:10,borderWidth:1,borderColor:"rgba(255,255,255,.08)"},
+  tab:{flex:1,minHeight:44,borderRadius:16,alignItems:"center",justifyContent:"center",flexDirection:"row",gap:6},
+  active:{backgroundColor:"#FFFFFF"},
+  icon:{fontSize:15},
+  text:{color:"rgba(255,255,255,.62)",fontSize:10,fontWeight:"900"},
+  activeText:{color:"#6C4DF0"},
 });
