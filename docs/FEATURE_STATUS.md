@@ -86,3 +86,16 @@ Legend: ✅ foundation ready · 🟡 planned/partial · ⬜ not started
 - ✅ livekit-token Edge Function deployed
 - ℹ️ Asritha Fashion Mall project is paused/inactive; its data was not deleted
 - ✅ VYORA project was not modified
+
+
+## Party Social UI V2
+- ✅ Replaced dark/corporate dashboard direction with vibrant party-social design
+- ✅ Splash / Welcome / Login / Phone / OTP redesigned
+- ✅ 3-step profile onboarding redesigned
+- ✅ Home / Discover / Inbox / Profile redesigned
+- ✅ Create Party flow redesigned
+- ✅ Voice / Video / Game room experiences redesigned
+- ✅ Seats / audience / room chat / tools / composer redesigned
+- ✅ Gifts / VIP / Wallet / Games / Family-Couple / Settings redesigned
+- ✅ Private chat / notifications redesigned
+- ✅ Original Ugo branding retained; no proprietary third-party artwork copied
