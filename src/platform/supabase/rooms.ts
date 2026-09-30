@@ -35,7 +35,7 @@ export async function createRoom(input: {
 
   const { data: auth } = await supabase.auth.getUser();
   const ownerId = auth.user?.id;
-  if (!ownerId) throw new Error("Sign in before creating a room.");
+  if (!ownerId) return null;
 
   const { data, error } = await supabase
     .from("rooms")
@@ -131,7 +131,7 @@ export async function sendRoomMessage(roomId: string, body: string) {
 
   const { data: auth } = await supabase.auth.getUser();
   const senderId = auth.user?.id;
-  if (!senderId) throw new Error("Sign in before sending a message.");
+  if (!senderId) return null;
 
   const { data, error } = await supabase
     .from("room_messages")
