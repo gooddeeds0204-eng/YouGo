@@ -3,15 +3,23 @@ import { router } from "expo-router";
 import { AppScreen } from "@/shared/ui/AppScreen";
 import { useSession } from "@/core/session/SessionProvider";
 
-const sections=[
-  ["ACCOUNT",[["👤","Account & profile"],["🔐","Privacy"],["🔔","Notifications"]]],
-  ["SAFETY",[["🛡","Safety center"],["🚫","Blocked users"],["⚑","Reports & moderation"]]],
-  ["APP",[["🌐","Language"],["🎨","Appearance"],["❓","Help & support"]]],
+const rows=[
+  ["👤","Account & profile"],
+  ["🔐","Privacy"],
+  ["🔔","Notifications"],
+  ["🛡","Safety center"],
+  ["🚫","Blocked users"],
+  ["🌐","Language"],
+  ["❓","Help & support"],
 ];
 
 export function SettingsScreen(){
   const {user,signOut}=useSession();
-  const logout=async()=>{await signOut();router.replace("/login");};
+
+  const logout=async()=>{
+    await signOut();
+    router.replace("/login");
+  };
 
   return(
     <AppScreen scroll contentStyle={styles.screen}>
@@ -27,12 +35,17 @@ export function SettingsScreen(){
         <Text style={styles.arrow}>›</Text>
       </View>
 
-      {sections.map(([heading,items])=><View key={heading as string} style={styles.section}>
-        <Text style={styles.heading}>{heading}</Text>
-        <View style={styles.card}>{(items as string[][]).map(([icon,label],index)=><Pressable key={label} style={[styles.row,index>0&&styles.border]}><View style={styles.iconWrap}><Text style={styles.icon}>{icon}</Text></View><Text style={styles.label}>{label}</Text><Text style={styles.arrow}>›</Text></Pressable>)}</View>
-      </View>)}
+      <View style={styles.menu}>
+        {rows.map(([icon,label],index)=>(
+          <Pressable key={label} style={[styles.row,index>0&&styles.border]}>
+            <Text style={styles.icon}>{icon}</Text>
+            <Text style={styles.label}>{label}</Text>
+            <Text style={styles.arrow}>›</Text>
+          </Pressable>
+        ))}
+      </View>
 
-      <View style={styles.safetyNote}><Text style={styles.safetyIcon}>🛡</Text><View><Text style={styles.safetyTitle}>Your safety matters</Text><Text style={styles.safetyText}>Control who can contact you, report behavior and manage blocks from one place.</Text></View></View>
+      <View style={styles.safety}><Text style={styles.safetyIcon}>🛡</Text><Text style={styles.safetyText}>Control who can contact you and report unwanted behavior from the Safety Center.</Text></View>
 
       <Pressable onPress={logout} style={styles.logout}><Text style={styles.logoutText}>Log out</Text></Pressable>
     </AppScreen>
@@ -40,31 +53,27 @@ export function SettingsScreen(){
 }
 
 const styles=StyleSheet.create({
-  screen:{paddingTop:10,paddingBottom:28,gap:14},
+  screen:{paddingTop:10,paddingBottom:24,gap:16},
   header:{flexDirection:"row",alignItems:"center",justifyContent:"space-between"},
-  back:{width:40,height:40,borderRadius:14,backgroundColor:"#FFFFFF",borderWidth:1,borderColor:"#EEEAF4",alignItems:"center",justifyContent:"center"},
-  backText:{color:"#554D65",fontSize:29,marginTop:-3},
-  title:{color:"#2B243D",fontSize:21,fontWeight:"900"},
-  spacer:{width:40},
-  account:{minHeight:82,borderRadius:21,backgroundColor:"#7A5CFF",padding:12,flexDirection:"row",alignItems:"center",overflow:"hidden"},
-  avatar:{width:54,height:54,borderRadius:27,backgroundColor:"#FF6AA9",borderWidth:3,borderColor:"#FFFFFF",alignItems:"center",justifyContent:"center"},
+  back:{width:42,height:42,borderRadius:14,backgroundColor:"#FFFFFF",borderWidth:1,borderColor:"#ECEAF2",alignItems:"center",justifyContent:"center"},
+  backText:{color:"#4D4657",fontSize:30,marginTop:-3},
+  title:{color:"#211D2C",fontSize:22,fontWeight:"900"},
+  spacer:{width:42},
+  account:{minHeight:82,borderRadius:20,backgroundColor:"#FFFFFF",borderWidth:1,borderColor:"#ECEAF2",padding:12,flexDirection:"row",alignItems:"center"},
+  avatar:{width:54,height:54,borderRadius:27,backgroundColor:"#F768A7",alignItems:"center",justifyContent:"center"},
   avatarText:{color:"#FFFFFF",fontSize:17,fontWeight:"900"},
   accountCopy:{flex:1,marginLeft:11},
-  name:{color:"#FFFFFF",fontSize:12,fontWeight:"900"},
-  id:{color:"rgba(255,255,255,.68)",fontSize:7,marginTop:3},
-  arrow:{color:"#A39BAD",fontSize:20},
-  section:{gap:7},
-  heading:{color:"#8D859A",fontSize:7,fontWeight:"900",letterSpacing:1.1,marginLeft:2},
-  card:{borderRadius:20,backgroundColor:"#FFFFFF",overflow:"hidden",borderWidth:1,borderColor:"#EEEAF4"},
-  row:{minHeight:60,flexDirection:"row",alignItems:"center",paddingHorizontal:12},
-  border:{borderTopWidth:1,borderTopColor:"#F0EDF4"},
-  iconWrap:{width:40,height:40,borderRadius:13,backgroundColor:"#F2EDFF",alignItems:"center",justifyContent:"center"},
-  icon:{fontSize:18},
-  label:{flex:1,color:"#433B52",fontSize:9.5,fontWeight:"800",marginLeft:10},
-  safetyNote:{borderRadius:20,backgroundColor:"#EAF8F4",padding:13,flexDirection:"row",gap:10},
-  safetyIcon:{fontSize:20},
-  safetyTitle:{color:"#416A5D",fontSize:9,fontWeight:"900"},
-  safetyText:{color:"#6D8A82",fontSize:6.8,lineHeight:10,marginTop:3,maxWidth:290},
-  logout:{minHeight:54,borderRadius:18,borderWidth:1,borderColor:"#FFD7DF",backgroundColor:"#FFF3F6",alignItems:"center",justifyContent:"center"},
-  logoutText:{color:"#FF657E",fontSize:10,fontWeight:"900"},
+  name:{color:"#332E3A",fontSize:15,fontWeight:"900"},
+  id:{color:"#817A8B",fontSize:11,marginTop:3},
+  arrow:{color:"#9A94A0",fontSize:22},
+  menu:{borderRadius:20,backgroundColor:"#FFFFFF",borderWidth:1,borderColor:"#ECEAF2",overflow:"hidden"},
+  row:{minHeight:60,flexDirection:"row",alignItems:"center",paddingHorizontal:14},
+  border:{borderTopWidth:1,borderTopColor:"#F0EEF3"},
+  icon:{fontSize:20},
+  label:{flex:1,color:"#433E49",fontSize:13,fontWeight:"800",marginLeft:11},
+  safety:{borderRadius:18,backgroundColor:"#EAF8F4",padding:13,flexDirection:"row",alignItems:"center"},
+  safetyIcon:{fontSize:20,marginRight:9},
+  safetyText:{flex:1,color:"#64857B",fontSize:11,lineHeight:16},
+  logout:{minHeight:54,borderRadius:18,borderWidth:1,borderColor:"#FFD5DD",backgroundColor:"#FFF3F6",alignItems:"center",justifyContent:"center"},
+  logoutText:{color:"#E75B72",fontSize:14,fontWeight:"900"},
 });
