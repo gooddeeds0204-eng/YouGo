@@ -25,20 +25,17 @@ export function LightAuthScreen({ children, contentStyle, scroll = false }: Prop
   return (
     <SafeAreaView style={styles.safe}>
       <StatusBar style="dark" />
+      <View style={styles.orbA}/>
+      <View style={styles.orbB}/>
       {body}
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
-  },
-  fill: {
-    flex: 1,
-  },
-  content: {
-    paddingHorizontal: 22,
-  },
+  safe:{flex:1,backgroundColor:"#F9F7FF",overflow:"hidden"},
+  fill:{flex:1},
+  content:{paddingHorizontal:20},
+  orbA:{position:"absolute",width:260,height:260,borderRadius:130,backgroundColor:"rgba(139,92,255,.10)",right:-120,top:-80},
+  orbB:{position:"absolute",width:220,height:220,borderRadius:110,backgroundColor:"rgba(255,95,162,.08)",left:-110,bottom:80},
 });
