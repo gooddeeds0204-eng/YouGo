@@ -1,8 +1,27 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
 import { AppScreen } from "@/shared/ui/AppScreen";
+import { useSession } from "@/core/session/SessionProvider";
+import { getProfile } from "@/platform/supabase/profiles";
+import type { UserProfile } from "@/contracts/user";
 
 export function ProfileScreen(){
+  const {user}=useSession();
+  const [profile,setProfile]=useState<UserProfile|null>(null);
+
+  useEffect(()=>{
+    if(!user?.id)return;
+    void getProfile(user.id).then(setProfile).catch(()=>undefined);
+  },[user?.id]);
+
+  const displayName=profile?.displayName||user?.displayName||"Ugo User";
+  const avatarUrl=profile?.avatarUrl||user?.avatarUrl||null;
+  const username=profile?.username||"ugo_user";
+  const level=profile?.level||1;
+  const vipLevel=profile?.vipLevel||0;
+  const charm=profile?.charm||0;
+
   return(
     <AppScreen scroll contentStyle={styles.screen}>
       <View style={styles.header}>
@@ -13,15 +32,21 @@ export function ProfileScreen(){
       <View style={styles.profileCard}>
         <View style={styles.profileGlow}/><View style={styles.goldLine}/>
         <View style={styles.avatarHalo}>
-          <View style={styles.avatarRing}><View style={styles.avatar}><Text style={styles.avatarText}>N</Text></View></View>
+          <View style={styles.avatarRing}>
+            <View style={styles.avatar}>
+              {avatarUrl
+                ? <Image source={{uri:avatarUrl}} style={styles.avatarImage}/>
+                : <Text style={styles.avatarText}>{displayName[0]?.toUpperCase()||"U"}</Text>}
+            </View>
+          </View>
         </View>
 
         <View style={styles.profileCopy}>
-          <View style={styles.nameRow}><Text style={styles.name}>Neha</Text><View style={styles.verified}><Text style={styles.verifiedText}>✓</Text></View></View>
-          <Text style={styles.id}>@neha_ugo • ID 2345678</Text>
+          <View style={styles.nameRow}><Text numberOfLines={1} style={styles.name}>{displayName}</Text><View style={styles.verified}><Text style={styles.verifiedText}>✓</Text></View></View>
+          <Text numberOfLines={1} style={styles.id}>@{username} • ID {user?.id.slice(0,8)||"--------"}</Text>
           <View style={styles.badgeRow}>
-            <Text style={styles.level}>LV.24</Text>
-            <Text style={styles.vip}>♛ VIP 3</Text>
+            <Text style={styles.level}>LV.{level}</Text>
+            <Text style={styles.vip}>♛ VIP {vipLevel}</Text>
           </View>
         </View>
 
@@ -29,7 +54,7 @@ export function ProfileScreen(){
       </View>
 
       <View style={styles.stats}>
-        {[["12.5K","Followers"],["3.4K","Following"],["98K","Charm"],["246","Visitors"]].map(([value,label],index)=>(
+        {[["—","Followers"],["—","Following"],[charm.toLocaleString(),"Charm"],["—","Visitors"]].map(([value,label],index)=>(
           <View key={label} style={[styles.stat,index>0&&styles.statBorder]}>
             <Text style={styles.statValue}>{value}</Text>
             <Text style={styles.statLabel}>{label}</Text>
@@ -44,7 +69,7 @@ export function ProfileScreen(){
           <Text style={styles.walletTitle}>Wallet & Store</Text>
           <Text style={styles.walletSub}>Diamonds, coins and purchases</Text>
         </View>
-        <View style={styles.walletRight}><Text style={styles.walletBalance}>3,480</Text><Text style={styles.walletArrow}>›</Text></View>
+        <View style={styles.walletRight}><Text style={styles.walletBalance}>Open</Text><Text style={styles.walletArrow}>›</Text></View>
       </Pressable>
 
       <View style={styles.sectionHead}><Text style={styles.sectionTitle}>Shortcuts</Text><View style={styles.goldDot}/></View>
@@ -95,11 +120,12 @@ const styles=StyleSheet.create({
   goldLine:{position:"absolute",left:0,top:0,bottom:0,width:3,backgroundColor:"#E8B95A"},
   avatarHalo:{width:86,height:86,borderRadius:43,backgroundColor:"rgba(232,185,90,.10)",alignItems:"center",justifyContent:"center"},
   avatarRing:{width:78,height:78,borderRadius:39,borderWidth:2,borderColor:"#E8B95A",alignItems:"center",justifyContent:"center"},
-  avatar:{width:68,height:68,borderRadius:34,backgroundColor:"#CF5A8C",alignItems:"center",justifyContent:"center"},
+  avatar:{width:68,height:68,borderRadius:34,backgroundColor:"#CF5A8C",alignItems:"center",justifyContent:"center",overflow:"hidden"},
+  avatarImage:{width:"100%",height:"100%"},
   avatarText:{color:"#FFFFFF",fontSize:25,fontWeight:"900"},
-  profileCopy:{flex:1,marginLeft:13},
+  profileCopy:{flex:1,marginLeft:13,minWidth:0},
   nameRow:{flexDirection:"row",alignItems:"center"},
-  name:{color:"#FFFFFF",fontSize:21,fontWeight:"900"},
+  name:{color:"#FFFFFF",fontSize:21,fontWeight:"900",maxWidth:"82%"},
   verified:{width:18,height:18,borderRadius:9,backgroundColor:"#7054E8",alignItems:"center",justifyContent:"center",marginLeft:6},
   verifiedText:{color:"#FFFFFF",fontSize:10,fontWeight:"900"},
   id:{color:"rgba(255,255,255,.48)",fontSize:10.5,marginTop:3},
@@ -120,7 +146,7 @@ const styles=StyleSheet.create({
   walletTitle:{color:"#2C2732",fontSize:14,fontWeight:"900",marginLeft:11,marginTop:2},
   walletSub:{color:"#817A87",fontSize:10,marginLeft:11,marginTop:2},
   walletRight:{marginLeft:"auto",alignItems:"flex-end"},
-  walletBalance:{color:"#7054E8",fontSize:14,fontWeight:"900"},
+  walletBalance:{color:"#7054E8",fontSize:12,fontWeight:"900"},
   walletArrow:{color:"#A29BA8",fontSize:22},
   sectionHead:{flexDirection:"row",alignItems:"center"},
   sectionTitle:{color:"#1D1924",fontSize:18,fontWeight:"900"},
