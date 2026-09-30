@@ -15,6 +15,9 @@ export async function sendGift(input: {
   const supabase = getSupabaseClient();
   if (!supabase) return null;
 
+  const { data: auth } = await supabase.auth.getUser();
+  if (!auth.user) return null;
+
   const { data, error } = await supabase.rpc("send_gift", {
     p_gift_id: input.giftId,
     p_quantity: input.quantity,
