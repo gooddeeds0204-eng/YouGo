@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { LightAuthScreen } from "@/features/auth/components/LightAuthScreen";
 import { useAuthDraft } from "@/features/auth/store/AuthDraftProvider";
 import { authService } from "@/features/auth/services/authService";
+import { useSession } from "@/core/session/SessionProvider";
 
 export function OtpScreen(){
   const {challengeId=""}=useLocalSearchParams<{challengeId?:string}>();
   const {draft}=useAuthDraft();
+  const {refreshUser}=useSession();
   const [otp,setOtp]=useState("");
   const [busy,setBusy]=useState(false);
   const valid=otp.length===6;
@@ -16,8 +18,14 @@ export function OtpScreen(){
     if(!valid||busy)return;
     setBusy(true);
     try{
-      await authService.verifyOtp(challengeId,otp);
-      router.replace("/profile-setup");
+      const result=await authService.verifyOtp(challengeId,otp);
+      await refreshUser();
+      router.replace(result.isNewUser?"/profile-setup":"/home");
+    }catch(error:any){
+      Alert.alert(
+        "Verification failed",
+        error?.message || "Check the OTP and try again.",
+      );
     }finally{
       setBusy(false);
     }
@@ -48,9 +56,16 @@ export function OtpScreen(){
         <Text style={styles.primaryText}>{busy?"Verifying...":"Verify"}</Text>
       </Pressable>
 
-      <Pressable style={styles.link}><Text style={styles.linkText}>Didn't get the code? <Text style={styles.strong}>Resend</Text></Text></Pressable>
-
-      <View style={styles.preview}><Text style={styles.previewText}>Preview build: any 6 digits work for testing.</Text></View>
+      <Pressable onPress={async()=>{
+        try{
+          await authService.sendOtp(draft.phone);
+          Alert.alert("OTP sent","A new verification code was sent.");
+        }catch(error:any){
+          Alert.alert("Could not resend OTP",error?.message||"Try again shortly.");
+        }
+      }} style={styles.link}>
+        <Text style={styles.linkText}>Didn't get the code? <Text style={styles.strong}>Resend</Text></Text>
+      </Pressable>
     </LightAuthScreen>
   );
 }
@@ -63,12 +78,10 @@ const styles=StyleSheet.create({
   title:{color:"#211D2C",fontSize:28,fontWeight:"900"},
   sub:{color:"#7F7889",fontSize:14,lineHeight:20,marginTop:7},
   otp:{minHeight:64,borderRadius:18,backgroundColor:"#FFFFFF",borderWidth:1,borderColor:"#E8E6ED",color:"#2A2530",fontSize:24,fontWeight:"900",letterSpacing:8,textAlign:"center",marginTop:30},
-  primary:{minHeight:56,borderRadius:18,backgroundColor:"#7657F6",alignItems:"center",justifyContent:"center",marginTop:16},
+  primary:{minHeight:56,borderRadius:18,backgroundColor:"#7054E8",alignItems:"center",justifyContent:"center",marginTop:16},
   disabled:{backgroundColor:"#C9C5D2"},
   primaryText:{color:"#FFFFFF",fontSize:15,fontWeight:"900"},
   link:{alignItems:"center",paddingVertical:18},
   linkText:{color:"#8A8391",fontSize:13},
-  strong:{color:"#7657F6",fontWeight:"900"},
-  preview:{marginTop:"auto",backgroundColor:"#F0EDF8",borderRadius:16,padding:13},
-  previewText:{color:"#756F7E",fontSize:11,textAlign:"center"},
+  strong:{color:"#7054E8",fontWeight:"900"},
 });
