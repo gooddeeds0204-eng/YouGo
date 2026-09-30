@@ -3,52 +3,58 @@ import { router } from "expo-router";
 import { enabledGames } from "@/registries/gameRegistry";
 
 export function GameStage(){
-  const games=enabledGames();
+  const registered=enabledGames().slice(0,3);
+  const games=[
+    ...registered.map(game=>[game.icon,game.name]),
+    ["🎲","Lucky Dice"],
+  ];
+
   return(
     <View style={styles.wrap}>
       <View style={styles.hero}>
-        <View style={styles.glowA}/><View style={styles.glowB}/>
         <View>
-          <Text style={styles.eyebrow}>PLAY WHILE YOU CHAT</Text>
-          <Text style={styles.title}>Party Game Arena</Text>
-          <Text style={styles.sub}>Pick a game. Your room, chat and people stay together.</Text>
+          <Text style={styles.title}>Play together</Text>
+          <Text style={styles.sub}>Choose a game. Room chat stays open.</Text>
         </View>
         <Text style={styles.heroIcon}>🎮</Text>
       </View>
 
       <View style={styles.players}>
-        {["Neha","Arjun","Priya","Ravi"].map((name,index)=><View key={name} style={styles.player}><View style={[styles.avatar,{backgroundColor:["#FF6AA9","#5E9BFF","#986BFF","#FF9A52"][index]}]}><Text style={styles.avatarText}>{name[0]}</Text></View><Text style={styles.playerName}>{name}</Text></View>)}
-        <View style={styles.player}><View style={styles.add}><Text style={styles.addText}>＋</Text></View><Text style={styles.playerName}>Invite</Text></View>
+        {["N","A","P","R"].map((letter,index)=>(
+          <View key={letter} style={[styles.player,{backgroundColor:["#F768A7","#5C8EF2","#8B65E8","#E98C4A"][index]}]}>
+            <Text style={styles.playerText}>{letter}</Text>
+          </View>
+        ))}
+        <View style={styles.invite}><Text style={styles.inviteText}>＋</Text></View>
       </View>
 
       <View style={styles.grid}>
-        {games.map((game,index)=><Pressable key={game.id} onPress={()=>router.push("/games")} style={[styles.card,{backgroundColor:["#8B5CFF","#FF5FA2","#36BFEA"][index%3]}]}><Text style={styles.icon}>{game.icon}</Text><Text style={styles.name}>{game.name}</Text><Text style={styles.meta}>{game.supportsGamePk?"PK ready":"Play now"}</Text></Pressable>)}
-        <Pressable onPress={()=>router.push("/games")} style={[styles.card,{backgroundColor:"#48CBA4"}]}><Text style={styles.icon}>🎲</Text><Text style={styles.name}>Lucky Dice</Text><Text style={styles.meta}>Quick play</Text></Pressable>
-        <Pressable onPress={()=>router.push("/games")} style={[styles.card,{backgroundColor:"#F39547"}]}><Text style={styles.icon}>⚔️</Text><Text style={styles.name}>Game PK</Text><Text style={styles.meta}>Team battle</Text></Pressable>
+        {games.map(([icon,name])=>(
+          <Pressable key={name} onPress={()=>router.push("/games")} style={styles.card}>
+            <Text style={styles.icon}>{icon}</Text>
+            <Text style={styles.name}>{name}</Text>
+            <Text style={styles.play}>Play</Text>
+          </Pressable>
+        ))}
       </View>
     </View>
   );
 }
 
 const styles=StyleSheet.create({
-  wrap:{marginTop:12},
-  hero:{minHeight:120,borderRadius:24,backgroundColor:"#6F52DB",padding:16,justifyContent:"center",overflow:"hidden"},
-  glowA:{position:"absolute",width:150,height:150,borderRadius:75,right:-35,top:-45,backgroundColor:"rgba(255,255,255,.10)"},
-  glowB:{position:"absolute",width:110,height:110,borderRadius:55,left:-35,bottom:-45,backgroundColor:"rgba(255,95,162,.25)"},
-  eyebrow:{color:"#D9D0FF",fontSize:7,fontWeight:"900",letterSpacing:1.1},
-  title:{color:"#FFFFFF",fontSize:19,fontWeight:"900",marginTop:4},
-  sub:{color:"rgba(255,255,255,.72)",fontSize:8,lineHeight:12,marginTop:4,maxWidth:250},
-  heroIcon:{position:"absolute",right:18,fontSize:48},
-  players:{flexDirection:"row",justifyContent:"space-between",marginTop:11,paddingHorizontal:4},
-  player:{alignItems:"center"},
-  avatar:{width:44,height:44,borderRadius:22,alignItems:"center",justifyContent:"center",borderWidth:2,borderColor:"#FFFFFF"},
-  add:{width:44,height:44,borderRadius:22,alignItems:"center",justifyContent:"center",borderWidth:1,borderStyle:"dashed",borderColor:"rgba(255,255,255,.35)"},
-  addText:{color:"#FFFFFF",fontSize:19},
-  avatarText:{color:"#FFFFFF",fontSize:12,fontWeight:"900"},
-  playerName:{color:"rgba(255,255,255,.70)",fontSize:6.5,marginTop:4},
-  grid:{flexDirection:"row",flexWrap:"wrap",gap:8,marginTop:11},
-  card:{width:"48.8%",minHeight:95,borderRadius:20,padding:12,overflow:"hidden"},
-  icon:{fontSize:25},
-  name:{color:"#FFFFFF",fontSize:10,fontWeight:"900",marginTop:7},
-  meta:{color:"rgba(255,255,255,.70)",fontSize:6.5,marginTop:2},
+  wrap:{marginTop:16},
+  hero:{minHeight:110,borderRadius:20,backgroundColor:"#7657F6",padding:16,flexDirection:"row",alignItems:"center",justifyContent:"space-between"},
+  title:{color:"#FFFFFF",fontSize:20,fontWeight:"900"},
+  sub:{color:"rgba(255,255,255,.72)",fontSize:12,lineHeight:17,marginTop:4,maxWidth:240},
+  heroIcon:{fontSize:42},
+  players:{flexDirection:"row",gap:9,marginTop:14},
+  player:{width:46,height:46,borderRadius:23,alignItems:"center",justifyContent:"center",borderWidth:2,borderColor:"#FFFFFF"},
+  playerText:{color:"#FFFFFF",fontSize:14,fontWeight:"900"},
+  invite:{width:46,height:46,borderRadius:23,alignItems:"center",justifyContent:"center",borderWidth:1,borderStyle:"dashed",borderColor:"rgba(255,255,255,.35)"},
+  inviteText:{color:"#FFFFFF",fontSize:20},
+  grid:{flexDirection:"row",flexWrap:"wrap",gap:10,marginTop:14},
+  card:{width:"48.5%",minHeight:104,borderRadius:18,backgroundColor:"rgba(255,255,255,.08)",padding:13},
+  icon:{fontSize:28},
+  name:{color:"#FFFFFF",fontSize:14,fontWeight:"900",marginTop:7},
+  play:{color:"#BEB2FF",fontSize:11,fontWeight:"800",marginTop:5},
 });
