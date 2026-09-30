@@ -7,7 +7,15 @@
     "scheme": "yougo",
     "userInterfaceStyle": "dark",
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Ugo to access your photos so you can choose a profile picture.",
+          "cameraPermission": "Allow Ugo to use your camera for profile pictures.",
+          "microphonePermission": false
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
