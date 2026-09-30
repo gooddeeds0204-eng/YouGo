@@ -7,38 +7,48 @@ export function GameStage(){
   return(
     <View style={styles.wrap}>
       <View style={styles.hero}>
-        <View style={styles.glow}/>
-        <View><Text style={styles.eyebrow}>GAME MODE</Text><Text style={styles.title}>Room Game Arena</Text><Text style={styles.sub}>Play together without leaving the room.</Text></View>
+        <View style={styles.glowA}/><View style={styles.glowB}/>
+        <View>
+          <Text style={styles.eyebrow}>PLAY WHILE YOU CHAT</Text>
+          <Text style={styles.title}>Party Game Arena</Text>
+          <Text style={styles.sub}>Pick a game. Your room, chat and people stay together.</Text>
+        </View>
         <Text style={styles.heroIcon}>🎮</Text>
       </View>
+
       <View style={styles.players}>
-        {["Neha","Arjun","Priya","Ravi"].map((name,index)=><View key={name} style={styles.player}><View style={[styles.avatar,{backgroundColor:["#C54788","#3976C8","#7648D7","#D0783D"][index]}]}><Text style={styles.avatarText}>{name[0]}</Text></View><Text style={styles.playerName}>{name}</Text></View>)}
+        {["Neha","Arjun","Priya","Ravi"].map((name,index)=><View key={name} style={styles.player}><View style={[styles.avatar,{backgroundColor:["#FF6AA9","#5E9BFF","#986BFF","#FF9A52"][index]}]}><Text style={styles.avatarText}>{name[0]}</Text></View><Text style={styles.playerName}>{name}</Text></View>)}
+        <View style={styles.player}><View style={styles.add}><Text style={styles.addText}>＋</Text></View><Text style={styles.playerName}>Invite</Text></View>
       </View>
+
       <View style={styles.grid}>
-        {games.map(game=><Pressable key={game.id} onPress={()=>router.push("/games")} style={styles.card}><Text style={styles.icon}>{game.icon}</Text><Text style={styles.name}>{game.name}</Text><Text style={styles.meta}>{game.supportsGamePk?"PK ready":"Room game"}</Text></Pressable>)}
-        <Pressable onPress={()=>router.push("/games")} style={styles.card}><Text style={styles.icon}>🎲</Text><Text style={styles.name}>Lucky Dice</Text><Text style={styles.meta}>Quick play</Text></Pressable>
-        <Pressable onPress={()=>router.push("/games")} style={styles.card}><Text style={styles.icon}>⚔️</Text><Text style={styles.name}>Game PK</Text><Text style={styles.meta}>Team battle</Text></Pressable>
+        {games.map((game,index)=><Pressable key={game.id} onPress={()=>router.push("/games")} style={[styles.card,{backgroundColor:["#8B5CFF","#FF5FA2","#36BFEA"][index%3]}]}><Text style={styles.icon}>{game.icon}</Text><Text style={styles.name}>{game.name}</Text><Text style={styles.meta}>{game.supportsGamePk?"PK ready":"Play now"}</Text></Pressable>)}
+        <Pressable onPress={()=>router.push("/games")} style={[styles.card,{backgroundColor:"#48CBA4"}]}><Text style={styles.icon}>🎲</Text><Text style={styles.name}>Lucky Dice</Text><Text style={styles.meta}>Quick play</Text></Pressable>
+        <Pressable onPress={()=>router.push("/games")} style={[styles.card,{backgroundColor:"#F39547"}]}><Text style={styles.icon}>⚔️</Text><Text style={styles.name}>Game PK</Text><Text style={styles.meta}>Team battle</Text></Pressable>
       </View>
     </View>
   );
 }
 
 const styles=StyleSheet.create({
-  wrap:{marginTop:10},
-  hero:{minHeight:104,borderRadius:22,backgroundColor:"#16263A",borderWidth:1,borderColor:"rgba(43,203,255,.16)",padding:14,justifyContent:"center",overflow:"hidden"},
-  glow:{position:"absolute",width:150,height:150,borderRadius:75,right:-40,top:-40,backgroundColor:"rgba(43,203,255,.12)"},
-  eyebrow:{color:"#77D8FF",fontSize:6.5,fontWeight:"900",letterSpacing:1.2},
-  title:{color:"#FFFFFF",fontSize:17,fontWeight:"900",marginTop:4},
-  sub:{color:"#8DA3B9",fontSize:7,marginTop:3},
-  heroIcon:{position:"absolute",right:18,fontSize:42},
-  players:{flexDirection:"row",justifyContent:"space-around",marginTop:10},
+  wrap:{marginTop:12},
+  hero:{minHeight:120,borderRadius:24,backgroundColor:"#6F52DB",padding:16,justifyContent:"center",overflow:"hidden"},
+  glowA:{position:"absolute",width:150,height:150,borderRadius:75,right:-35,top:-45,backgroundColor:"rgba(255,255,255,.10)"},
+  glowB:{position:"absolute",width:110,height:110,borderRadius:55,left:-35,bottom:-45,backgroundColor:"rgba(255,95,162,.25)"},
+  eyebrow:{color:"#D9D0FF",fontSize:7,fontWeight:"900",letterSpacing:1.1},
+  title:{color:"#FFFFFF",fontSize:19,fontWeight:"900",marginTop:4},
+  sub:{color:"rgba(255,255,255,.72)",fontSize:8,lineHeight:12,marginTop:4,maxWidth:250},
+  heroIcon:{position:"absolute",right:18,fontSize:48},
+  players:{flexDirection:"row",justifyContent:"space-between",marginTop:11,paddingHorizontal:4},
   player:{alignItems:"center"},
-  avatar:{width:38,height:38,borderRadius:19,alignItems:"center",justifyContent:"center"},
-  avatarText:{color:"#FFFFFF",fontSize:11,fontWeight:"900"},
-  playerName:{color:"#969BAD",fontSize:6,marginTop:3},
-  grid:{flexDirection:"row",flexWrap:"wrap",gap:8,marginTop:10},
-  card:{width:"48.8%",minHeight:82,borderRadius:18,backgroundColor:"#11131E",borderWidth:1,borderColor:"rgba(255,255,255,.06)",padding:11},
-  icon:{fontSize:23},
-  name:{color:"#FFFFFF",fontSize:8.5,fontWeight:"900",marginTop:6},
-  meta:{color:"#747A8E",fontSize:6,marginTop:2},
+  avatar:{width:44,height:44,borderRadius:22,alignItems:"center",justifyContent:"center",borderWidth:2,borderColor:"#FFFFFF"},
+  add:{width:44,height:44,borderRadius:22,alignItems:"center",justifyContent:"center",borderWidth:1,borderStyle:"dashed",borderColor:"rgba(255,255,255,.35)"},
+  addText:{color:"#FFFFFF",fontSize:19},
+  avatarText:{color:"#FFFFFF",fontSize:12,fontWeight:"900"},
+  playerName:{color:"rgba(255,255,255,.70)",fontSize:6.5,marginTop:4},
+  grid:{flexDirection:"row",flexWrap:"wrap",gap:8,marginTop:11},
+  card:{width:"48.8%",minHeight:95,borderRadius:20,padding:12,overflow:"hidden"},
+  icon:{fontSize:25},
+  name:{color:"#FFFFFF",fontSize:10,fontWeight:"900",marginTop:7},
+  meta:{color:"rgba(255,255,255,.70)",fontSize:6.5,marginTop:2},
 });
