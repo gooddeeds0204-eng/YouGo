@@ -3,20 +3,31 @@ import { Animated, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
+import { useSession } from "@/core/session/SessionProvider";
 
 export function SplashScreen(){
   const scale=useRef(new Animated.Value(.90)).current;
   const opacity=useRef(new Animated.Value(0)).current;
+  const {user,isLoading}=useSession();
 
   useEffect(()=>{
     Animated.parallel([
       Animated.spring(scale,{toValue:1,useNativeDriver:true,friction:7}),
       Animated.timing(opacity,{toValue:1,duration:520,useNativeDriver:true}),
     ]).start();
-
-    const timer=setTimeout(()=>router.replace("/welcome"),1350);
-    return()=>clearTimeout(timer);
   },[opacity,scale]);
+
+  useEffect(()=>{
+    if(isLoading)return;
+    const timer=setTimeout(()=>{
+      if(!user){
+        router.replace("/welcome");
+        return;
+      }
+      router.replace(user.profileComplete?"/home":"/profile-setup");
+    },700);
+    return()=>clearTimeout(timer);
+  },[isLoading,user]);
 
   return(
     <SafeAreaView style={styles.safe}>
@@ -35,7 +46,7 @@ export function SplashScreen(){
 
       <View style={styles.footer}>
         <View style={styles.goldDot}/>
-        <Text style={styles.footerText}>Premium social rooms</Text>
+        <Text style={styles.footerText}>{isLoading?"Connecting securely...":"Premium social rooms"}</Text>
       </View>
     </SafeAreaView>
   );
