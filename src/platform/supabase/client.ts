@@ -8,10 +8,6 @@ export function getSupabaseClient(): SupabaseClient | null {
   if (client !== undefined) return client;
 
   const config = getSupabasePublicConfig();
-  if (!config) {
-    client = null;
-    return client;
-  }
 
   client = createClient(config.url, config.publishableKey, {
     auth: {
@@ -28,7 +24,7 @@ export function getSupabaseClient(): SupabaseClient | null {
 export function requireSupabaseClient(): SupabaseClient {
   const supabase = getSupabaseClient();
   if (!supabase) {
-    throw new Error("Supabase is not configured. Add EXPO_PUBLIC_SUPABASE_URL and EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY.");
+    throw new Error("Supabase client is unavailable.");
   }
   return supabase;
 }
