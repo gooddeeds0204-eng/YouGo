@@ -6,16 +6,20 @@ import { colors, spacing } from "@/shared/theme";
 type Props = PropsWithChildren<{
   scroll?: boolean;
   contentStyle?: ViewStyle;
+  dark?: boolean;
 }>;
 
-export function AppScreen({ children, scroll = false, contentStyle }: Props) {
+export function AppScreen({ children, scroll = false, contentStyle, dark = false }: Props) {
+  const safeStyle = [styles.safe, dark && styles.dark];
+
   if (scroll) {
     return (
-      <SafeAreaView style={styles.safe}>
+      <SafeAreaView style={safeStyle}>
         <ScrollView
-          style={styles.safe}
+          style={styles.fill}
           contentContainerStyle={[styles.content, contentStyle]}
           showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
         >
           {children}
         </ScrollView>
@@ -24,7 +28,7 @@ export function AppScreen({ children, scroll = false, contentStyle }: Props) {
   }
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView style={safeStyle}>
       <View style={[styles.content, styles.fill, contentStyle]}>{children}</View>
     </SafeAreaView>
   );
@@ -34,6 +38,9 @@ const styles = StyleSheet.create({
   safe: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+  dark: {
+    backgroundColor: "#171126",
   },
   fill: {
     flex: 1,
