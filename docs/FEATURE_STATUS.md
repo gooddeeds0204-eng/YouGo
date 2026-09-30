@@ -99,3 +99,18 @@ Legend: ✅ foundation ready · 🟡 planned/partial · ⬜ not started
 - ✅ Gifts / VIP / Wallet / Games / Family-Couple / Settings redesigned
 - ✅ Private chat / notifications redesigned
 - ✅ Original Ugo branding retained; no proprietary third-party artwork copied
+
+
+## Simple Mobile UI V3
+- ✅ Replaced cluttered/tiny UI with mobile-first sizing
+- ✅ Increased titles, labels, metadata and touch targets
+- ✅ Simplified Welcome / Login / Phone / Password / OTP
+- ✅ Simplified 3-step profile onboarding
+- ✅ Simplified Home / Explore / Inbox / Create Room / Profile
+- ✅ Rebuilt Voice Room around host + audio state + 8 seats
+- ✅ Simplified Video Room to four large tiles
+- ✅ Simplified Game Room
+- ✅ Removed always-visible room tools from main room layout
+- ✅ Enlarged audience, chat and bottom room controls
+- ✅ Simplified Gifts / VIP / Wallet / Games
+- ✅ Simplified Family-Couple / Settings / Notifications / Private Chat
