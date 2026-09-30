@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { router } from "expo-router";
 import { LightAuthScreen } from "@/features/auth/components/LightAuthScreen";
 import { useAuthDraft } from "@/features/auth/store/AuthDraftProvider";
@@ -20,6 +20,11 @@ export function PhoneScreen(){
       updateDraft({phone:normalized});
       const result=await authService.sendOtp(normalized);
       router.push({pathname:"/otp",params:{challengeId:result.challengeId}});
+    }catch(error:any){
+      Alert.alert(
+        "OTP could not be sent",
+        error?.message || "Please check the number and try again.",
+      );
     }finally{
       setBusy(false);
     }
@@ -77,11 +82,11 @@ const styles=StyleSheet.create({
   countryText:{color:"#302B38",fontSize:15,fontWeight:"900"},
   divider:{width:1,height:28,backgroundColor:"#E6E3EA",marginHorizontal:12},
   input:{flex:1,color:"#2B2631",fontSize:15,paddingVertical:0},
-  primary:{minHeight:56,borderRadius:18,backgroundColor:"#7657F6",alignItems:"center",justifyContent:"center",marginTop:16},
+  primary:{minHeight:56,borderRadius:18,backgroundColor:"#7054E8",alignItems:"center",justifyContent:"center",marginTop:16},
   disabled:{backgroundColor:"#C9C5D2"},
   primaryText:{color:"#FFFFFF",fontSize:15,fontWeight:"900"},
   link:{alignItems:"center",paddingVertical:18},
-  linkText:{color:"#7657F6",fontSize:13,fontWeight:"800"},
+  linkText:{color:"#7054E8",fontSize:13,fontWeight:"800"},
   note:{marginTop:"auto",backgroundColor:"#F0EDF8",borderRadius:16,padding:13},
   noteText:{color:"#756F7E",fontSize:11,lineHeight:16,textAlign:"center"},
 });
