@@ -1,93 +1,94 @@
-# Ugo — Final Party Social UI Direction
+# Ugo — Final Mobile UI Direction
 
-Status: **FROZEN — V2**
+Status: **FROZEN — Simple Mobile V3**
 
-The earlier dark/corporate dashboard direction is replaced by this final Ugo party-social direction.
+## Goal
 
-## Inspiration level
+Ugo must feel like a real mobile party app: clear, readable and easy to use.
 
-Ugo should feel as lively, social and room-first as leading voice/live party apps, while keeping **original Ugo branding, layouts, assets and code**.
+The earlier busy dashboard-style direction is retired.
 
-Do not copy proprietary artwork or exact screens.
+## Core rules
 
-## Brand
-- Visible product brand: **Ugo**
-- Repository/project name may remain **YouGo**
-- Tagline: **Voice • Party • Games**
-- Personality: colorful, friendly, social, playful, premium
-- Main accents: purple, pink, cyan, mint and gold
+- One main focus per screen.
+- Mobile-first sizing.
+- Large readable text.
+- Large touch targets.
+- Fewer visible controls.
+- Secondary tools open from More / menus instead of filling the room screen.
+- One main accent color with limited secondary accents.
+- People, rooms and seats take priority over decorative cards.
 
-## Experience rules
+## Mobile sizing
 
-### Onboarding
-- Bright background
-- Large playful illustrations / avatar clusters
-- Rounded white cards
-- One obvious CTA
-- No large dead empty areas
+- Screen side padding: 16–20
+- Main title: 22–30
+- Section title: 18–20
+- Body text: 12–15
+- Metadata: 10–12
+- Primary button: 56 minimum height
+- Inputs: 54–60 minimum height
+- Room seats: about 66 px frames
+- Bottom controls: about 52 px
+- Video tiles: about 160–170 px high
 
-### Home / Discover
-- Light base
-- Colorful room covers
-- Live hosts first
-- Strong room cards with viewer count, host, tags and room type
-- Fast access to games, gifts, VIP, ranking and couple/family
-- Bottom navigation always easy to reach
+Tiny 5–8 px body text is not allowed.
 
-### Voice Room
-- Immersive deep-purple party background
-- Room identity and online count in header
-- Voice / Video / Game switch inside same room
-- 8 seats clearly visible at Level 1
-- Host/admin/VIP frames visible
-- Lucky bag, music, charm and events integrated
-- Live chat, audience, gifts and party tools visible without feeling like a dashboard
-- Larger readable text and touch targets
+## Voice room
 
-### Video Room
-- Colorful live camera grid
-- Host/VIP badges
-- Open camera slots
-- Same room shell and controls
+Priority order:
+1. Room header
+2. Voice / Video / Game switch
+3. Host identity
+4. Audio state / listen action
+5. Eight Level-1 seats
+6. Audience
+7. Safety message
+8. Recent chat
+9. Bottom message / mic / gift / More controls
 
-### Game Room
-- Social game arena inside the same room
-- Player row + game cards
-- Room identity/chat/audience remain persistent
+Room PK, music, spin, dice, missions and other tools belong under More instead of staying visible on the main room screen.
 
-### Gifts
-- Bright gift tray
-- Large item art
-- Categories, wallet balance and combo controls
-- Gift effect uses immersive full-screen animation layer
+## Video room
 
-### Profile
-- Social identity first
-- Avatar/frame/status/levels
-- Followers/following/charm/visitors
-- Wallet/VIP/assets shortcut
-- Moments, couple, family, games, gifts and settings
+- Four large visible camera tiles.
+- Clear names and role badges.
+- Two simple camera join placeholders.
+- Audience, safety, chat and bottom controls remain below.
 
-## Typography / sizing
-- Avoid 5–7 px body text except tiny metadata.
-- Core labels should generally be 8–12 px.
-- Important room names / titles should be 16–30 px.
-- Touch targets should normally be 40 px or larger.
+## Home
 
-## Color system
-- Base: #F9F7FF / #FFFFFF
-- Purple: #7A5CFF
-- Pink: #FF5FA2
-- Cyan: #49BFEA
-- Mint: #48CBA4
-- Gold: #FFD65E
-- Deep room background: #171126 / #33204F
+- Ugo header
+- Four simple room-mode tabs
+- Live people row
+- One featured room
+- Four shortcuts
+- Large vertical room list
+- Five-item bottom navigation
 
-## Final UX rule
-Ugo should feel like a **party app**, not a website dashboard:
-- people before menus
-- rooms before settings
-- avatars before text blocks
-- visible activity before empty space
-- colorful social cards before flat dark rectangles
-- interactive controls close to the content they affect
+## Auth
+
+- Clean light background
+- One title and short explanation
+- One main field/action
+- Minimal decoration
+- Clear 56 px primary button
+
+## Profile
+
+- Profile identity card
+- Four stats
+- Wallet shortcut
+- Six simple feature shortcuts
+- Account menu
+
+## Visual system
+
+- Base: #F7F7FB / #FFFFFF
+- Purple: #7657F6
+- Pink: #F6549C
+- Mint: #4DCCAA
+- Dark room background: #171321
+- Border: #ECEAF2
+
+Ugo remains original. Third-party app layouts/assets are not copied.
