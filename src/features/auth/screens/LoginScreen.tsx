@@ -19,9 +19,11 @@ export function LoginScreen(){
         </View>
 
         <View style={styles.avatarCloud}>
-          {[
-            ["N","#FF6AA9",styles.a1],["A","#5E9BFF",styles.a2],["P","#986BFF",styles.a3],["R","#FF9A52",styles.a4],["S","#4CCFB0",styles.a5]
-          ].map(([n,tone,pos])=><View key={n as string} style={[styles.avatar,pos as object,{backgroundColor:tone as string}]}><Text style={styles.avatarText}>{n}</Text></View>)}
+          <View style={[styles.avatar,styles.a1,{backgroundColor:"#FF6AA9"}]}><Text style={styles.avatarText}>N</Text></View>
+          <View style={[styles.avatar,styles.a2,{backgroundColor:"#5E9BFF"}]}><Text style={styles.avatarText}>A</Text></View>
+          <View style={[styles.avatar,styles.a3,{backgroundColor:"#986BFF"}]}><Text style={styles.avatarText}>P</Text></View>
+          <View style={[styles.avatar,styles.a4,{backgroundColor:"#FF9A52"}]}><Text style={styles.avatarText}>R</Text></View>
+          <View style={[styles.avatar,styles.a5,{backgroundColor:"#4CCFB0"}]}><Text style={styles.avatarText}>S</Text></View>
           <Text style={styles.cloudTitle}>Find your vibe tonight</Text>
         </View>
 
