@@ -2,17 +2,18 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
 import { AppScreen } from "@/shared/ui/AppScreen";
 import { DarkTopBar } from "@/shared/ui/DarkTopBar";
-import { Avatar } from "@/shared/ui/Avatar";
-import { colors } from "@/shared/theme";
 
-const people=[
-  ["Neha","#D44B91"],["Arjun","#3C76C9"],["Priya","#7C43D6"],["Ravi","#D2763D"],["Sneha","#2F9E8D"]
+const hosts=[
+  ["Neha","#FF6AA9","LIVE"],["Arjun","#5E9BFF","PK"],["Priya","#986BFF","HOT"],["Ravi","#FF9A52","NEW"],["Sneha","#4CCFB0","LIVE"]
 ];
+
 const rooms=[
-  {id:"chill",title:"Chill Vibes",meta:"2.3K online",tag:"Talk • Music • Friends",tone:"#391A48",icon:"🎙"},
-  {id:"music",title:"Music Adda",meta:"1.8K online",tag:"Live singing tonight",tone:"#172A46",icon:"🎵"},
-  {id:"telugu",title:"Telugu Talks",meta:"1.5K online",tag:"Telugu • Fun • Friends",tone:"#4B2234",icon:"🔥"},
-  {id:"game",title:"Game Arena",meta:"932 online",tag:"Ludo • Cards • PK",tone:"#1F3A34",icon:"🎮"},
+  {id:"chill",title:"Chill Vibes",host:"Neha",count:"2.3K",tag:"Friends • Music",tone:"#8A5CFF",icon:"🎙"},
+  {id:"music",title:"Music Adda",host:"Priya",count:"1.8K",tag:"Singing • Requests",tone:"#FF669F",icon:"🎵"},
+  {id:"telugu",title:"Telugu Talks",host:"Ravi",count:"1.5K",tag:"Telugu • Fun",tone:"#39B7D8",icon:"🔥"},
+  {id:"game",title:"Game Arena",host:"Arjun",count:"932",tag:"Ludo • Cards • PK",tone:"#47C99D",icon:"🎮"},
+  {id:"night",title:"Late Night",host:"Sneha",count:"714",tag:"Talk • Chill",tone:"#6C66D9",icon:"🌙"},
+  {id:"dating",title:"Meet & Match",host:"Aanya",count:"601",tag:"Dating • Friends",tone:"#F58A73",icon:"💞"},
 ];
 
 export function HomeScreen(){
@@ -20,144 +21,145 @@ export function HomeScreen(){
     <AppScreen scroll contentStyle={styles.screen}>
       <DarkTopBar
         title="Ugo"
-        subtitle="Live. Social. Together."
+        subtitle="Party • Voice • Games"
         onSearch={()=>router.push("/discover")}
         onBell={()=>router.push("/notifications")}
       />
 
-      <View style={styles.tabs}>
-        {["For You","Voice","Video","Games"].map((item,index)=>(
-          <View key={item} style={[styles.filter,index===0&&styles.filterActive]}>
-            <Text style={[styles.filterText,index===0&&styles.filterTextActive]}>{item}</Text>
-          </View>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoryRow}>
+        {["For you","Voice","Video","Games","Nearby","New"].map((item,index)=>(
+          <Pressable key={item} style={[styles.category,index===0&&styles.categoryActive]}>
+            <Text style={[styles.categoryText,index===0&&styles.categoryTextActive]}>{item}</Text>
+          </Pressable>
         ))}
-      </View>
-
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.peopleRow}>
-        {people.map(([name,tone],index)=>(
-          <View key={name} style={styles.person}>
-            <View style={styles.avatarRing}><Avatar name={name} size={48} tone={tone} ring={index<3?"#E83CB9":"#2BCBFF"}/></View>
-            <Text style={styles.personName}>{name}</Text>
-          </View>
-        ))}
-        <View style={styles.person}>
-          <View style={styles.addPerson}><Text style={styles.addText}>＋</Text></View>
-          <Text style={styles.personName}>Invite</Text>
-        </View>
       </ScrollView>
 
-      <Pressable onPress={()=>router.push("/room/chill")} style={styles.hero}>
-        <View style={styles.heroGlowA}/>
-        <View style={styles.heroGlowB}/>
-        <View style={styles.heroTop}>
-          <View style={styles.livePill}><Text style={styles.livePillText}>● LIVE</Text></View>
-          <Text style={styles.heroCount}>👥 2.3K</Text>
-        </View>
-        <View style={styles.heroCenter}>
-          <Avatar name="Neha" size={82} tone="#C34185" ring="#FF73D5" badge="HOST"/>
-          <View style={styles.heroCopy}>
-            <Text style={styles.heroTitle}>Chill Vibes</Text>
-            <Text style={styles.heroSub}>Talk • Music • Friends</Text>
-            <View style={styles.heroAvatars}>
-              <Avatar name="A" size={26} tone="#3A74C9"/><Avatar name="P" size={26} tone="#7242D2"/><Avatar name="R" size={26} tone="#D2763D"/>
-            </View>
+      <View style={styles.storyBlock}>
+        <View style={styles.sectionLine}><Text style={styles.sectionTitle}>People live now</Text><Text style={styles.see}>See all</Text></View>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.hostRow}>
+          {hosts.map(([name,tone,badge])=>(
+            <Pressable key={name} onPress={()=>router.push("/room/chill")} style={styles.host}>
+              <View style={[styles.hostRing,{borderColor:tone}]}>
+                <View style={[styles.hostAvatar,{backgroundColor:tone}]}><Text style={styles.hostInitial}>{name[0]}</Text></View>
+                <View style={styles.hostLive}><Text style={styles.hostLiveText}>{badge}</Text></View>
+              </View>
+              <Text style={styles.hostName}>{name}</Text>
+            </Pressable>
+          ))}
+        </ScrollView>
+      </View>
+
+      <Pressable onPress={()=>router.push("/room/chill")} style={styles.featured}>
+        <View style={styles.featureCircleA}/><View style={styles.featureCircleB}/>
+        <View style={styles.featureTop}><View style={styles.livePill}><Text style={styles.liveText}>● LIVE PARTY</Text></View><Text style={styles.viewer}>👥 2.3K</Text></View>
+        <View style={styles.featureBody}>
+          <View style={styles.bigAvatar}><Text style={styles.bigAvatarText}>N</Text><View style={styles.hostBadge}><Text style={styles.hostBadgeText}>HOST</Text></View></View>
+          <View style={styles.featureCopy}>
+            <Text style={styles.featureTitle}>Chill Vibes ✨</Text>
+            <Text style={styles.featureSub}>Talk • Music • Friends</Text>
+            <View style={styles.tags}><Text style={styles.tag}>🎵 Music</Text><Text style={styles.tag}>💬 Chat</Text><Text style={styles.tag}>🎁 Gifts</Text></View>
           </View>
         </View>
-        <View style={styles.join}><Text style={styles.joinText}>JOIN ROOM</Text><Text style={styles.joinArrow}>→</Text></View>
+        <View style={styles.join}><Text style={styles.joinText}>Join party</Text><Text style={styles.joinArrow}>→</Text></View>
       </Pressable>
 
-      <View style={styles.sectionHead}>
-        <View><Text style={styles.kicker}>TRENDING NOW</Text><Text style={styles.sectionTitle}>Rooms you may like</Text></View>
-        <Text style={styles.seeAll}>See all</Text>
+      <View style={styles.quickRow}>
+        {[["🎮","Games","/games"],["🎁","Gifts","/gifts"],["👑","VIP","/vip"],["🏆","Rank","/vip"],["💞","Couple","/family-couple"]].map(([icon,label,path])=>(
+          <Pressable key={label} onPress={()=>router.push(path as never)} style={styles.quick}>
+            <View style={styles.quickIcon}><Text style={styles.quickEmoji}>{icon}</Text></View>
+            <Text style={styles.quickText}>{label}</Text>
+          </Pressable>
+        ))}
       </View>
+
+      <View style={styles.sectionLine}><Text style={styles.sectionTitle}>Popular rooms</Text><Text style={styles.see}>More</Text></View>
 
       <View style={styles.roomGrid}>
-        {rooms.slice(1).map(room=>(
-          <Pressable key={room.id} onPress={()=>router.push({pathname:"/room/[roomId]",params:{roomId:room.id}})} style={[styles.roomCard,{backgroundColor:room.tone}]}>
-            <View style={styles.roomCardTop}><Text style={styles.roomIcon}>{room.icon}</Text><Text style={styles.roomMeta}>{room.meta}</Text></View>
-            <View>
-              <Text style={styles.roomTitle}>{room.title}</Text>
-              <Text style={styles.roomTag}>{room.tag}</Text>
+        {rooms.map((room,index)=>(
+          <Pressable key={room.id} onPress={()=>router.push({pathname:"/room/[roomId]",params:{roomId:room.id}})} style={styles.roomCard}>
+            <View style={[styles.roomCover,{backgroundColor:room.tone}]}>
+              <View style={styles.roomBubble}/>
+              <Text style={styles.roomIcon}>{room.icon}</Text>
+              <View style={styles.roomCount}><Text style={styles.roomCountText}>👥 {room.count}</Text></View>
+              <View style={styles.roomAvatar}><Text style={styles.roomAvatarText}>{room.host[0]}</Text></View>
             </View>
+            <Text style={styles.roomTitle}>{room.title}</Text>
+            <Text style={styles.roomTag}>{room.tag}</Text>
+            <View style={styles.roomFooter}><Text style={styles.roomHost}>by {room.host}</Text><Text style={styles.roomType}>{index%2===0?"VOICE":"PARTY"}</Text></View>
           </Pressable>
         ))}
       </View>
 
-      <View style={styles.sectionHead}>
-        <View><Text style={styles.kicker}>EXPLORE</Text><Text style={styles.sectionTitle}>Everything in one place</Text></View>
-      </View>
-
-      <View style={styles.shortcutGrid}>
-        {[
-          ["🎵","Music","/games"],["🎮","Games","/games"],["💞","Couple","/family-couple"],
-          ["🫶","Family","/family-couple"],["🏆","Ranking","/vip"],["✨","VIP","/vip"]
-        ].map(([icon,label,path])=>(
-          <Pressable key={label} onPress={()=>router.push(path as never)} style={styles.shortcut}>
-            <View style={styles.shortcutIcon}><Text style={styles.shortcutEmoji}>{icon}</Text></View>
-            <Text style={styles.shortcutText}>{label}</Text>
-          </Pressable>
-        ))}
-      </View>
-
-      <View style={styles.eventCard}>
-        <View>
-          <Text style={styles.eventKicker}>GALAXY CARNIVAL</Text>
-          <Text style={styles.eventTitle}>Monthly event is live</Text>
-          <Text style={styles.eventSub}>Complete missions • earn tokens • climb rankings</Text>
-        </View>
-        <Text style={styles.eventIcon}>✦</Text>
-      </View>
+      <Pressable style={styles.event}>
+        <View><Text style={styles.eventKicker}>GALAXY PARTY</Text><Text style={styles.eventTitle}>Tonight's event is live ✨</Text><Text style={styles.eventText}>Missions • rankings • special gifts</Text></View>
+        <View style={styles.eventButton}><Text style={styles.eventButtonText}>GO</Text></View>
+      </Pressable>
     </AppScreen>
   );
 }
 
 const styles=StyleSheet.create({
-  screen:{paddingTop:8,paddingBottom:104,gap:16},
-  tabs:{flexDirection:"row",gap:7},
-  filter:{paddingHorizontal:13,paddingVertical:8,borderRadius:18,backgroundColor:"#11131E",borderWidth:1,borderColor:"rgba(255,255,255,.06)"},
-  filterActive:{backgroundColor:"#E83CB9",borderColor:"#E83CB9"},
-  filterText:{color:"#7C8296",fontSize:8,fontWeight:"800"},
-  filterTextActive:{color:"#FFFFFF"},
-  peopleRow:{gap:12,paddingRight:10},
-  person:{alignItems:"center",gap:5},
-  avatarRing:{borderRadius:30},
-  personName:{color:"#8A8FA1",fontSize:7},
-  addPerson:{width:48,height:48,borderRadius:24,borderWidth:1,borderStyle:"dashed",borderColor:"#44495A",alignItems:"center",justifyContent:"center"},
-  addText:{color:"#8C91A4",fontSize:22},
-  hero:{minHeight:218,borderRadius:28,backgroundColor:"#2D173A",overflow:"hidden",padding:18,borderWidth:1,borderColor:"rgba(255,255,255,.08)"},
-  heroGlowA:{position:"absolute",width:220,height:220,borderRadius:110,right:-70,top:-90,backgroundColor:"rgba(116,67,255,.23)"},
-  heroGlowB:{position:"absolute",width:180,height:180,borderRadius:90,left:-80,bottom:-90,backgroundColor:"rgba(43,203,255,.10)"},
-  heroTop:{flexDirection:"row",justifyContent:"space-between",alignItems:"center"},
-  livePill:{paddingHorizontal:9,paddingVertical:5,borderRadius:14,backgroundColor:"rgba(232,60,185,.18)",borderWidth:1,borderColor:"rgba(232,60,185,.4)"},
-  livePillText:{color:"#FF8BD8",fontSize:7,fontWeight:"900"},
-  heroCount:{color:"#C8CBD8",fontSize:8},
-  heroCenter:{flexDirection:"row",alignItems:"center",gap:18,marginTop:22},
-  heroCopy:{flex:1},
-  heroTitle:{color:"#FFFFFF",fontSize:24,fontWeight:"900"},
-  heroSub:{color:"#C3AFC8",fontSize:9,marginTop:4},
-  heroAvatars:{flexDirection:"row",gap:5,marginTop:15},
-  join:{position:"absolute",right:18,bottom:18,paddingHorizontal:14,paddingVertical:9,borderRadius:18,backgroundColor:"#E83CB9",flexDirection:"row",gap:8,alignItems:"center"},
-  joinText:{color:"#FFFFFF",fontSize:8,fontWeight:"900"},
-  joinArrow:{color:"#FFFFFF",fontSize:14},
-  sectionHead:{flexDirection:"row",alignItems:"flex-end",justifyContent:"space-between",marginTop:2},
-  kicker:{color:"#686E83",fontSize:7,fontWeight:"900",letterSpacing:1.2},
-  sectionTitle:{color:"#FFFFFF",fontSize:16,fontWeight:"900",marginTop:3},
-  seeAll:{color:"#B178FF",fontSize:8,fontWeight:"800"},
-  roomGrid:{flexDirection:"row",flexWrap:"wrap",gap:10},
-  roomCard:{width:"48.5%",minHeight:126,borderRadius:20,padding:13,borderWidth:1,borderColor:"rgba(255,255,255,.07)",justifyContent:"space-between"},
-  roomCardTop:{flexDirection:"row",alignItems:"center",justifyContent:"space-between"},
-  roomIcon:{fontSize:24},
-  roomMeta:{color:"#C9CBD5",fontSize:7},
-  roomTitle:{color:"#FFFFFF",fontSize:12,fontWeight:"900"},
-  roomTag:{color:"#AFB3C3",fontSize:6.5,marginTop:3},
-  shortcutGrid:{flexDirection:"row",flexWrap:"wrap",gap:8},
-  shortcut:{width:"31.8%",minHeight:84,borderRadius:18,backgroundColor:"#10121C",borderWidth:1,borderColor:"rgba(255,255,255,.06)",alignItems:"center",justifyContent:"center"},
-  shortcutIcon:{width:38,height:38,borderRadius:13,backgroundColor:"#19172A",alignItems:"center",justifyContent:"center"},
-  shortcutEmoji:{fontSize:19},
-  shortcutText:{color:"#FFFFFF",fontSize:8,fontWeight:"800",marginTop:6},
-  eventCard:{minHeight:98,borderRadius:22,padding:16,backgroundColor:"#171A2B",borderWidth:1,borderColor:"rgba(116,67,255,.2)",flexDirection:"row",alignItems:"center",justifyContent:"space-between"},
-  eventKicker:{color:"#BE8CFF",fontSize:7,fontWeight:"900",letterSpacing:1.1},
-  eventTitle:{color:"#FFFFFF",fontSize:15,fontWeight:"900",marginTop:5},
-  eventSub:{color:"#7C8295",fontSize:7,marginTop:4},
-  eventIcon:{color:"#E83CB9",fontSize:38},
+  screen:{paddingTop:8,paddingBottom:102,gap:16},
+  categoryRow:{gap:8,paddingRight:10},
+  category:{paddingHorizontal:15,paddingVertical:10,borderRadius:18,backgroundColor:"#FFFFFF",borderWidth:1,borderColor:"#EEEAF4"},
+  categoryActive:{backgroundColor:"#7A5CFF",borderColor:"#7A5CFF"},
+  categoryText:{color:"#8B839A",fontSize:10,fontWeight:"800"},
+  categoryTextActive:{color:"#FFFFFF"},
+  storyBlock:{gap:10},
+  sectionLine:{flexDirection:"row",alignItems:"center",justifyContent:"space-between"},
+  sectionTitle:{color:"#2A233B",fontSize:18,fontWeight:"900"},
+  see:{color:"#7A5CFF",fontSize:10,fontWeight:"800"},
+  hostRow:{gap:13,paddingRight:8},
+  host:{alignItems:"center"},
+  hostRing:{width:64,height:64,borderRadius:32,borderWidth:3,alignItems:"center",justifyContent:"center",backgroundColor:"#FFFFFF"},
+  hostAvatar:{width:54,height:54,borderRadius:27,alignItems:"center",justifyContent:"center"},
+  hostInitial:{color:"#FFFFFF",fontSize:16,fontWeight:"900"},
+  hostLive:{position:"absolute",bottom:-4,paddingHorizontal:6,paddingVertical:3,borderRadius:8,backgroundColor:"#FF5FA2",borderWidth:2,borderColor:"#FFFFFF"},
+  hostLiveText:{color:"#FFFFFF",fontSize:6,fontWeight:"900"},
+  hostName:{color:"#665E74",fontSize:8,fontWeight:"700",marginTop:7},
+  featured:{minHeight:224,borderRadius:30,backgroundColor:"#7A5CFF",overflow:"hidden",padding:18,shadowColor:"#6C4EDE",shadowOpacity:.22,shadowRadius:16,shadowOffset:{width:0,height:9},elevation:7},
+  featureCircleA:{position:"absolute",width:220,height:220,borderRadius:110,backgroundColor:"rgba(255,255,255,.10)",right:-80,top:-70},
+  featureCircleB:{position:"absolute",width:160,height:160,borderRadius:80,backgroundColor:"rgba(255,95,162,.28)",left:-70,bottom:-80},
+  featureTop:{flexDirection:"row",justifyContent:"space-between",alignItems:"center"},
+  livePill:{paddingHorizontal:9,paddingVertical:6,borderRadius:12,backgroundColor:"rgba(255,255,255,.18)"},
+  liveText:{color:"#FFFFFF",fontSize:8,fontWeight:"900"},
+  viewer:{color:"#FFFFFF",fontSize:9,fontWeight:"800"},
+  featureBody:{flexDirection:"row",alignItems:"center",marginTop:20},
+  bigAvatar:{width:92,height:92,borderRadius:46,backgroundColor:"#FF6AA9",borderWidth:4,borderColor:"#FFFFFF",alignItems:"center",justifyContent:"center"},
+  bigAvatarText:{color:"#FFFFFF",fontSize:31,fontWeight:"900"},
+  hostBadge:{position:"absolute",bottom:-6,paddingHorizontal:8,paddingVertical:4,borderRadius:9,backgroundColor:"#FF5FA2",borderWidth:2,borderColor:"#FFFFFF"},
+  hostBadgeText:{color:"#FFFFFF",fontSize:6,fontWeight:"900"},
+  featureCopy:{flex:1,marginLeft:15},
+  featureTitle:{color:"#FFFFFF",fontSize:24,fontWeight:"900"},
+  featureSub:{color:"rgba(255,255,255,.78)",fontSize:10,marginTop:4},
+  tags:{flexDirection:"row",gap:5,marginTop:13,flexWrap:"wrap"},
+  tag:{color:"#FFFFFF",fontSize:7,fontWeight:"800",paddingHorizontal:7,paddingVertical:5,borderRadius:9,backgroundColor:"rgba(255,255,255,.13)"},
+  join:{position:"absolute",right:16,bottom:16,minWidth:105,paddingHorizontal:14,paddingVertical:11,borderRadius:18,backgroundColor:"#FFFFFF",flexDirection:"row",alignItems:"center",justifyContent:"center"},
+  joinText:{color:"#6B4CF1",fontSize:9,fontWeight:"900"},
+  joinArrow:{color:"#6B4CF1",fontSize:15,marginLeft:8},
+  quickRow:{flexDirection:"row",justifyContent:"space-between"},
+  quick:{width:"18.2%",alignItems:"center"},
+  quickIcon:{width:52,height:52,borderRadius:18,backgroundColor:"#FFFFFF",alignItems:"center",justifyContent:"center",shadowColor:"#776B95",shadowOpacity:.08,shadowRadius:8,elevation:2},
+  quickEmoji:{fontSize:24},
+  quickText:{color:"#61596F",fontSize:8,fontWeight:"800",marginTop:6},
+  roomGrid:{flexDirection:"row",flexWrap:"wrap",gap:12},
+  roomCard:{width:"48%",backgroundColor:"#FFFFFF",borderRadius:22,paddingBottom:11,overflow:"hidden",borderWidth:1,borderColor:"#EEEAF4"},
+  roomCover:{height:128,position:"relative",overflow:"hidden",alignItems:"center",justifyContent:"center"},
+  roomBubble:{position:"absolute",width:130,height:130,borderRadius:65,backgroundColor:"rgba(255,255,255,.12)",right:-35,top:-35},
+  roomIcon:{fontSize:35},
+  roomCount:{position:"absolute",right:8,top:8,paddingHorizontal:7,paddingVertical:4,borderRadius:9,backgroundColor:"rgba(0,0,0,.18)"},
+  roomCountText:{color:"#FFFFFF",fontSize:6.5,fontWeight:"800"},
+  roomAvatar:{position:"absolute",left:10,bottom:9,width:38,height:38,borderRadius:19,backgroundColor:"rgba(255,255,255,.28)",borderWidth:2,borderColor:"#FFFFFF",alignItems:"center",justifyContent:"center"},
+  roomAvatarText:{color:"#FFFFFF",fontSize:11,fontWeight:"900"},
+  roomTitle:{color:"#332B45",fontSize:12,fontWeight:"900",paddingHorizontal:10,marginTop:10},
+  roomTag:{color:"#91899E",fontSize:7.5,paddingHorizontal:10,marginTop:3},
+  roomFooter:{flexDirection:"row",justifyContent:"space-between",alignItems:"center",paddingHorizontal:10,marginTop:8},
+  roomHost:{color:"#AAA3B5",fontSize:7},
+  roomType:{color:"#7A5CFF",fontSize:6.5,fontWeight:"900"},
+  event:{minHeight:102,borderRadius:24,backgroundColor:"#2B2440",padding:16,flexDirection:"row",alignItems:"center",justifyContent:"space-between"},
+  eventKicker:{color:"#B7A8FF",fontSize:7,fontWeight:"900",letterSpacing:1},
+  eventTitle:{color:"#FFFFFF",fontSize:16,fontWeight:"900",marginTop:4},
+  eventText:{color:"#ACA5B9",fontSize:8,marginTop:4},
+  eventButton:{width:46,height:46,borderRadius:16,backgroundColor:"#FF5FA2",alignItems:"center",justifyContent:"center"},
+  eventButtonText:{color:"#FFFFFF",fontSize:9,fontWeight:"900"},
 });
