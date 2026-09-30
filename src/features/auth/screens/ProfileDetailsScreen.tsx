@@ -1,7 +1,10 @@
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { useState } from "react";
+import { Alert, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { router } from "expo-router";
 import { AppScreen } from "@/shared/ui/AppScreen";
 import { useAuthDraft } from "@/features/auth/store/AuthDraftProvider";
+import { useSession } from "@/core/session/SessionProvider";
+import { isUsernameAvailable } from "@/platform/supabase/profiles";
 import { normalizeUsername, isValidBirthDate, isValidDisplayName, isValidUsername } from "@/domains/users/profileRules";
 import type { Gender } from "@/domains/users/profile";
 
@@ -13,7 +16,26 @@ const genders:Array<{value:Gender;label:string}>=[
 
 export function ProfileDetailsScreen(){
   const {draft,updateDraft}=useAuthDraft();
+  const {user}=useSession();
+  const [checking,setChecking]=useState(false);
   const valid=isValidDisplayName(draft.displayName)&&isValidUsername(draft.username)&&isValidBirthDate(draft.birthDate);
+
+  const next=async()=>{
+    if(!valid||checking)return;
+    setChecking(true);
+    try{
+      const available=await isUsernameAvailable(draft.username,user?.id);
+      if(!available){
+        Alert.alert("Username already taken","Choose another Ugo username.");
+        return;
+      }
+      router.push("/profile-interests");
+    }catch(error:any){
+      Alert.alert("Could not check username",error?.message||"Try again.");
+    }finally{
+      setChecking(false);
+    }
+  };
 
   return(
     <AppScreen scroll contentStyle={styles.screen}>
@@ -52,8 +74,8 @@ export function ProfileDetailsScreen(){
         </View>
       </View>
 
-      <Pressable disabled={!valid} onPress={()=>router.push("/profile-interests")} style={[styles.primary,!valid&&styles.disabled]}>
-        <Text style={styles.primaryText}>Continue</Text>
+      <Pressable disabled={!valid||checking} onPress={next} style={[styles.primary,(!valid||checking)&&styles.disabled]}>
+        <Text style={styles.primaryText}>{checking?"Checking username...":"Continue"}</Text>
       </Pressable>
     </AppScreen>
   );
@@ -66,7 +88,7 @@ const styles=StyleSheet.create({
   backText:{color:"#4E4858",fontSize:38,lineHeight:38},
   stepText:{color:"#8E8795",fontSize:12,fontWeight:"800"},
   progress:{height:5,borderRadius:3,backgroundColor:"#E7E4EB",marginTop:5,overflow:"hidden"},
-  progressFill:{width:"66%",height:"100%",backgroundColor:"#7657F6"},
+  progressFill:{width:"66%",height:"100%",backgroundColor:"#7054E8"},
   header:{marginTop:28},
   title:{color:"#211D2C",fontSize:28,fontWeight:"900"},
   sub:{color:"#7F7889",fontSize:14,lineHeight:20,marginTop:7},
@@ -74,14 +96,14 @@ const styles=StyleSheet.create({
   label:{color:"#5D5764",fontSize:13,fontWeight:"800",marginBottom:7,marginTop:14},
   input:{minHeight:56,borderRadius:17,backgroundColor:"#FFFFFF",borderWidth:1,borderColor:"#E8E6ED",color:"#2B2631",paddingHorizontal:14,fontSize:14},
   usernameWrap:{minHeight:56,borderRadius:17,backgroundColor:"#FFFFFF",borderWidth:1,borderColor:"#E8E6ED",flexDirection:"row",alignItems:"center",paddingHorizontal:14},
-  at:{color:"#7657F6",fontSize:16,fontWeight:"900",marginRight:5},
+  at:{color:"#7054E8",fontSize:16,fontWeight:"900",marginRight:5},
   usernameInput:{flex:1,color:"#2B2631",fontSize:14},
   genderRow:{flexDirection:"row",gap:8},
   gender:{flex:1,minHeight:48,borderRadius:16,backgroundColor:"#FFFFFF",borderWidth:1,borderColor:"#E8E6ED",alignItems:"center",justifyContent:"center"},
-  genderActive:{backgroundColor:"#EEE9FF",borderColor:"#7657F6"},
+  genderActive:{backgroundColor:"#EEE9FF",borderColor:"#7054E8"},
   genderText:{color:"#726B7A",fontSize:13,fontWeight:"800"},
   genderTextActive:{color:"#6749DB"},
-  primary:{minHeight:56,borderRadius:18,backgroundColor:"#7657F6",alignItems:"center",justifyContent:"center",marginTop:28},
+  primary:{minHeight:56,borderRadius:18,backgroundColor:"#7054E8",alignItems:"center",justifyContent:"center",marginTop:28},
   disabled:{opacity:.38},
   primaryText:{color:"#FFFFFF",fontSize:15,fontWeight:"900"},
 });
