@@ -2,8 +2,12 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
+import { useSession } from "@/core/session/SessionProvider";
 
 export function WelcomeScreen(){
+  const {enterPreviewMode}=useSession();
+  const enter=async()=>{await enterPreviewMode();router.replace("/home");};
+
   return(
     <SafeAreaView style={styles.safe}>
       <StatusBar style="dark"/>
@@ -49,7 +53,7 @@ export function WelcomeScreen(){
         </View>
 
         <View style={styles.actions}>
-          <Pressable onPress={()=>router.push("/login")} style={styles.primary}><Text style={styles.primaryText}>Get started</Text><Text style={styles.arrow}>→</Text></Pressable>
+          <Pressable onPress={enter} style={styles.primary}><Text style={styles.primaryText}>Enter Ugo</Text><Text style={styles.arrow}>→</Text></Pressable>
           <Pressable onPress={()=>router.push("/login")}><Text style={styles.signIn}>Already have an account? <Text style={styles.signInStrong}>Sign in</Text></Text></Pressable>
         </View>
       </View>
