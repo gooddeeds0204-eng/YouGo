@@ -1,17 +1,32 @@
 import type { UserProfileDraft } from "@/domains/users/profile";
 import type { UserProfile } from "@/contracts/user";
-import { getSupabaseClient } from "@/platform/supabase/client";
+import { requireSupabaseClient } from "@/platform/supabase/client";
+
+export async function isUsernameAvailable(username: string, currentUserId?: string) {
+  const supabase = requireSupabaseClient();
+  let query = supabase
+    .from("profiles")
+    .select("id")
+    .ilike("username", username.trim().toLowerCase());
+
+  if (currentUserId) query = query.neq("id", currentUserId);
+
+  const { data, error } = await query.limit(1);
+  if (error) throw error;
+  return data.length === 0;
+}
 
 export async function upsertMyProfile(userId: string, draft: UserProfileDraft) {
-  const supabase = getSupabaseClient();
-  if (!supabase) return null;
+  const supabase = requireSupabaseClient();
+  const displayName = draft.displayName.trim();
+  const username = draft.username.trim().toLowerCase();
 
   const { data, error } = await supabase
     .from("profiles")
     .upsert({
       id: userId,
-      display_name: draft.displayName.trim(),
-      username: draft.username.trim().toLowerCase(),
+      display_name: displayName,
+      username,
       avatar_url: draft.avatarUri ?? null,
       birth_date: draft.birthDate || null,
       gender: draft.gender,
@@ -26,6 +41,16 @@ export async function upsertMyProfile(userId: string, draft: UserProfileDraft) {
 
   if (error) throw error;
 
+  const { error: authError } = await supabase.auth.updateUser({
+    data: {
+      display_name: displayName,
+      username,
+      avatar_url: draft.avatarUri ?? null,
+      profile_complete: true,
+    },
+  });
+  if (authError) throw authError;
+
   return {
     id: data.id,
     displayName: data.display_name,
@@ -39,8 +64,7 @@ export async function upsertMyProfile(userId: string, draft: UserProfileDraft) {
 }
 
 export async function getProfile(userId: string) {
-  const supabase = getSupabaseClient();
-  if (!supabase) return null;
+  const supabase = requireSupabaseClient();
 
   const { data, error } = await supabase
     .from("profiles")
