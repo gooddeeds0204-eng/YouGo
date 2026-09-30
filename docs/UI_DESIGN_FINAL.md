@@ -1,80 +1,93 @@
-# YouGo — Final UI Direction
+# Ugo — Final Party Social UI Direction
 
-Status: **FROZEN**
+Status: **FROZEN — V2**
 
-The visual direction shown in the latest approved multi-screen concept is the final UI direction for YouGo.
+The earlier dark/corporate dashboard direction is replaced by this final Ugo party-social direction.
+
+## Inspiration level
+
+Ugo should feel as lively, social and room-first as leading voice/live party apps, while keeping **original Ugo branding, layouts, assets and code**.
+
+Do not copy proprietary artwork or exact screens.
 
 ## Brand
-- Product name: **YouGo**
-- Core tagline: **Talk • Play • Connect**
-- Logo: glowing `YouGo` / `YG` identity with pink-purple-cyan energy accents
-- Visual personality: youthful, premium, social, energetic, game-friendly
+- Visible product brand: **Ugo**
+- Repository/project name may remain **YouGo**
+- Tagline: **Voice • Party • Games**
+- Personality: colorful, friendly, social, playful, premium
+- Main accents: purple, pink, cyan, mint and gold
 
-## Experience split
+## Experience rules
 
-### 1. Entry / onboarding
-- Bright, welcoming, playful visuals
-- Green / cyan / teal gradients for login entry
-- Simple white phone/password/OTP screens
-- Large touch targets
-- Minimal text
-- One clear primary action per screen
+### Onboarding
+- Bright background
+- Large playful illustrations / avatar clusters
+- Rounded white cards
+- One obvious CTA
+- No large dead empty areas
 
-### 2. Main app
-- Premium dark background
-- Purple / pink / cyan accent system
-- Rounded cards with subtle glow
-- Rich avatar imagery and live indicators
-- Bottom navigation with highlighted center create action
+### Home / Discover
+- Light base
+- Colorful room covers
+- Live hosts first
+- Strong room cards with viewer count, host, tags and room type
+- Fast access to games, gifts, VIP, ranking and couple/family
+- Bottom navigation always easy to reach
 
-### 3. Rooms
-- Immersive dark room background
-- Persistent Voice / Video / Game shell
-- Premium avatar frames
-- Live chat, audience, gifts and effects layered into the same room
-- Bottom controls stay stable across modes
+### Voice Room
+- Immersive deep-purple party background
+- Room identity and online count in header
+- Voice / Video / Game switch inside same room
+- 8 seats clearly visible at Level 1
+- Host/admin/VIP frames visible
+- Lucky bag, music, charm and events integrated
+- Live chat, audience, gifts and party tools visible without feeling like a dashboard
+- Larger readable text and touch targets
 
-### 4. Economy / premium
-- VIP uses gold / magenta luxury styling
-- Wallet is clean and trustworthy
-- Gift panel is dark with bright item art
-- Gift / vehicle / entry effects may use full-screen animation
+### Video Room
+- Colorful live camera grid
+- Host/VIP badges
+- Open camera slots
+- Same room shell and controls
 
-## Final screen map
-1. Splash
-2. Welcome
-3. Login options
-4. Phone login
-5. Password login
-6. OTP verification
-7. Profile setup — photo
-8. Profile setup — details
-9. Profile setup — interests
-10. Home
-11. Discover
-12. Voice room
-13. Video room
-14. Game room
-15. Create room
-16. Gifts panel
-17. Live gift / entry effects
-18. Messages
-19. Private chat
-20. Profile
-21. VIP center
-22. Wallet
-23. Games center
-24. Family / Couple
-25. More / Settings
+### Game Room
+- Social game arena inside the same room
+- Player row + game cards
+- Room identity/chat/audience remain persistent
 
-## UI rules
-- Do not redesign individual screens in unrelated styles.
-- Use the same spacing, radii, typography hierarchy and accent palette across the app.
-- Auth screens stay simple; main app stays dark and premium.
-- Avoid crowded screens and unnecessary helper cards.
-- Avoid excessive empty space.
-- Use reusable shared components instead of duplicated one-off UI.
-- Future screens must extend this design language instead of replacing it.
+### Gifts
+- Bright gift tray
+- Large item art
+- Categories, wallet balance and combo controls
+- Gift effect uses immersive full-screen animation layer
 
-## Implementation rule
-Each screen is implemented inside its own feature folder. Shared styling primitives live in `src/shared/theme` and reusable components in `src/shared/ui`. Updating one feature should not require rewriting unrelated features.
+### Profile
+- Social identity first
+- Avatar/frame/status/levels
+- Followers/following/charm/visitors
+- Wallet/VIP/assets shortcut
+- Moments, couple, family, games, gifts and settings
+
+## Typography / sizing
+- Avoid 5–7 px body text except tiny metadata.
+- Core labels should generally be 8–12 px.
+- Important room names / titles should be 16–30 px.
+- Touch targets should normally be 40 px or larger.
+
+## Color system
+- Base: #F9F7FF / #FFFFFF
+- Purple: #7A5CFF
+- Pink: #FF5FA2
+- Cyan: #49BFEA
+- Mint: #48CBA4
+- Gold: #FFD65E
+- Deep room background: #171126 / #33204F
+
+## Final UX rule
+Ugo should feel like a **party app**, not a website dashboard:
+- people before menus
+- rooms before settings
+- avatars before text blocks
+- visible activity before empty space
+- colorful social cards before flat dark rectangles
+- interactive controls close to the content they affect
