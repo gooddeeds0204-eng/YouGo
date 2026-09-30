@@ -6,24 +6,23 @@ import {
   useState,
   type PropsWithChildren,
 } from "react";
-import { authService } from "@/features/auth/services/authService";
-
-type SessionUser = {
-  id: string;
-  displayName: string;
-} | null;
+import {
+  authService,
+  type AuthUser,
+} from "@/features/auth/services/authService";
 
 type SessionContextValue = {
-  user: SessionUser;
+  user: AuthUser | null;
   isLoading: boolean;
-  setUser: (user: SessionUser) => void;
+  setUser: (user: AuthUser | null) => void;
+  refreshUser: () => Promise<AuthUser | null>;
   signOut: () => Promise<void>;
 };
 
 const SessionContext = createContext<SessionContextValue | null>(null);
 
 export function SessionProvider({ children }: PropsWithChildren) {
-  const [user, setUser] = useState<SessionUser>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -52,6 +51,11 @@ export function SessionProvider({ children }: PropsWithChildren) {
       user,
       isLoading,
       setUser,
+      refreshUser: async () => {
+        const currentUser = await authService.getCurrentUser();
+        setUser(currentUser);
+        return currentUser;
+      },
       signOut: async () => {
         await authService.signOut();
         setUser(null);
