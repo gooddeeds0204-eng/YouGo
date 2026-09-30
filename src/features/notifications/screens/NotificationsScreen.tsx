@@ -2,11 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
 import { AppScreen } from "@/shared/ui/AppScreen";
-import {
-  listNotifications,
-  markAllNotificationsRead,
-  type AppNotification,
-} from "@/platform/supabase/notifications";
+import { listNotifications, markAllNotificationsRead, type AppNotification } from "@/platform/supabase/notifications";
 
 const demo=[
   {icon:"🎁",text:"Priya sent you a Heart ×10",time:"2m"},
@@ -26,11 +22,7 @@ function iconFor(type:string){
 
 export function NotificationsScreen(){
   const [items,setItems]=useState<AppNotification[]>([]);
-
-  useEffect(()=>{
-    void listNotifications().then(setItems).catch(()=>undefined);
-  },[]);
-
+  useEffect(()=>{void listNotifications().then(setItems).catch(()=>undefined);},[]);
   const real=items.length>0;
   const unread=useMemo(()=>items.filter((item)=>!item.readAt).length,[items]);
 
@@ -42,15 +34,17 @@ export function NotificationsScreen(){
   return(
     <AppScreen scroll contentStyle={styles.screen}>
       <View style={styles.header}>
-        <Pressable onPress={()=>router.back()}><Text style={styles.back}>‹</Text></Pressable>
-        <View><Text style={styles.title}>Notifications</Text>{real?<Text style={styles.count}>{unread} unread</Text>:null}</View>
+        <Pressable onPress={()=>router.back()} style={styles.back}><Text style={styles.backText}>‹</Text></Pressable>
+        <View><Text style={styles.kicker}>WHAT'S HAPPENING</Text><Text style={styles.title}>Notifications</Text></View>
         <Pressable onPress={markRead}><Text style={styles.mark}>Mark read</Text></Pressable>
       </View>
+
+      {real?<View style={styles.unreadPill}><Text style={styles.unreadPillText}>{unread} unread</Text></View>:null}
 
       <View style={styles.list}>
         {real ? items.map((item)=>(
           <View key={item.id} style={[styles.row,!item.readAt&&styles.newRow]}>
-            <View style={styles.icon}><Text>{iconFor(item.type)}</Text></View>
+            <View style={[styles.icon,!item.readAt&&styles.newIcon]}><Text style={styles.iconEmoji}>{iconFor(item.type)}</Text></View>
             <View style={styles.copy}>
               <Text style={styles.text}>{item.title}</Text>
               {item.body?<Text style={styles.body}>{item.body}</Text>:null}
@@ -60,7 +54,7 @@ export function NotificationsScreen(){
           </View>
         )) : demo.map((item,index)=>(
           <View key={item.text} style={[styles.row,index<3&&styles.newRow]}>
-            <View style={styles.icon}><Text>{item.icon}</Text></View>
+            <View style={[styles.icon,index<3&&styles.newIcon]}><Text style={styles.iconEmoji}>{item.icon}</Text></View>
             <View style={styles.copy}><Text style={styles.text}>{item.text}</Text><Text style={styles.time}>{item.time} ago</Text></View>
             {index<3?<View style={styles.dot}/>:null}
           </View>
@@ -71,19 +65,24 @@ export function NotificationsScreen(){
 }
 
 const styles=StyleSheet.create({
-  screen:{paddingTop:10,paddingBottom:28},
-  header:{flexDirection:"row",alignItems:"center",justifyContent:"space-between"},
-  back:{color:"#FFFFFF",fontSize:30},
-  title:{color:"#FFFFFF",fontSize:19,fontWeight:"900"},
-  count:{color:"#6E7488",fontSize:6.5,marginTop:2,textAlign:"center"},
-  mark:{color:"#B17BFF",fontSize:8,fontWeight:"800"},
-  list:{gap:8,marginTop:18},
-  row:{minHeight:68,borderRadius:18,backgroundColor:"#11131E",padding:11,flexDirection:"row",alignItems:"center"},
-  newRow:{backgroundColor:"#171426"},
-  icon:{width:42,height:42,borderRadius:14,backgroundColor:"#1D1B31",alignItems:"center",justifyContent:"center"},
+  screen:{paddingTop:10,paddingBottom:28,gap:14},
+  header:{flexDirection:"row",alignItems:"center"},
+  back:{width:40,height:40,borderRadius:14,backgroundColor:"#FFFFFF",borderWidth:1,borderColor:"#EEEAF4",alignItems:"center",justifyContent:"center"},
+  backText:{color:"#554D65",fontSize:29,marginTop:-3},
+  kicker:{color:"#8B5CFF",fontSize:7.5,fontWeight:"900",letterSpacing:1.1,marginLeft:10},
+  title:{color:"#2B243D",fontSize:21,fontWeight:"900",marginLeft:10},
+  mark:{marginLeft:"auto",color:"#7A5CFF",fontSize:8.5,fontWeight:"900"},
+  unreadPill:{alignSelf:"flex-start",paddingHorizontal:10,paddingVertical:6,borderRadius:12,backgroundColor:"#EEE9FF"},
+  unreadPillText:{color:"#6D4DF1",fontSize:7.5,fontWeight:"900"},
+  list:{gap:8},
+  row:{minHeight:72,borderRadius:19,backgroundColor:"#FFFFFF",borderWidth:1,borderColor:"#EEEAF4",padding:11,flexDirection:"row",alignItems:"center"},
+  newRow:{backgroundColor:"#FCFAFF",borderColor:"#DED4FF"},
+  icon:{width:46,height:46,borderRadius:15,backgroundColor:"#F6F2FA",alignItems:"center",justifyContent:"center"},
+  newIcon:{backgroundColor:"#EEE9FF"},
+  iconEmoji:{fontSize:20},
   copy:{flex:1,marginLeft:10},
-  text:{color:"#FFFFFF",fontSize:9,fontWeight:"800"},
-  body:{color:"#8A8FA1",fontSize:7,marginTop:3},
-  time:{color:"#6E7488",fontSize:7,marginTop:4},
-  dot:{width:6,height:6,borderRadius:3,backgroundColor:"#E83CB9"},
+  text:{color:"#3A3348",fontSize:9.5,fontWeight:"900"},
+  body:{color:"#898193",fontSize:7.5,marginTop:3},
+  time:{color:"#A39CAD",fontSize:6.5,marginTop:4},
+  dot:{width:8,height:8,borderRadius:4,backgroundColor:"#FF5FA2"},
 });
