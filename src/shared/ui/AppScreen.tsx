@@ -1,7 +1,7 @@
 import type { PropsWithChildren } from "react";
 import { ScrollView, StyleSheet, View, type ViewStyle } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { colors, spacing } from "@/shared/theme";
+import { colors } from "@/shared/theme";
 
 type Props = PropsWithChildren<{
   scroll?: boolean;
@@ -35,17 +35,8 @@ export function AppScreen({ children, scroll = false, contentStyle, dark = false
 }
 
 const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  dark: {
-    backgroundColor: "#171126",
-  },
-  fill: {
-    flex: 1,
-  },
-  content: {
-    paddingHorizontal: spacing.lg,
-  },
+  safe:{flex:1,backgroundColor:colors.background},
+  dark:{backgroundColor:"#171321"},
+  fill:{flex:1},
+  content:{paddingHorizontal:16,width:"100%",maxWidth:520,alignSelf:"center"},
 });
