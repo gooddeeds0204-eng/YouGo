@@ -1,7 +1,6 @@
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { router } from "expo-router";
 import { AppScreen } from "@/shared/ui/AppScreen";
-import { ChoiceChip } from "@/features/auth/components/ChoiceChip";
 import { useAuthDraft } from "@/features/auth/store/AuthDraftProvider";
 import { normalizeUsername, isValidBirthDate, isValidDisplayName, isValidUsername } from "@/domains/users/profileRules";
 import type { Gender } from "@/domains/users/profile";
