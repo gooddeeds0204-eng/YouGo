@@ -1,28 +1,46 @@
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { router } from "expo-router";
 import { AppScreen } from "@/shared/ui/AppScreen";
-import { Avatar } from "@/shared/ui/Avatar";
-import { colors } from "@/shared/theme";
 
 const chats=[
-  {id:"priya",name:"Priya",msg:"Hey! are you there?",time:"2m",tone:"#C44784",unread:4},
-  {id:"arjun",name:"Arjun",msg:"Sent a gift 🎁",time:"12m",tone:"#3574C6"},
-  {id:"official",name:"Ugo Official",msg:"New event is live now",time:"1h",tone:"#7646D6",unread:1},
-  {id:"sneha",name:"Sneha",msg:"Let's join tomorrow",time:"3h",tone:"#2E9C88"},
-  {id:"ravi",name:"Ravi",msg:"Ok sure",time:"5h",tone:"#D1773C"}
+  {id:"priya",name:"Priya",msg:"Hey! are you there?",time:"2m",tone:"#FF6AA9",unread:4},
+  {id:"arjun",name:"Arjun",msg:"Sent a gift 🎁",time:"12m",tone:"#5E9BFF"},
+  {id:"official",name:"Ugo Official",msg:"Galaxy Party is live now ✨",time:"1h",tone:"#986BFF",unread:1},
+  {id:"sneha",name:"Sneha",msg:"Let's join tomorrow",time:"3h",tone:"#4CCFB0"},
+  {id:"ravi",name:"Ravi",msg:"Ok sure",time:"5h",tone:"#FF9A52"}
 ];
 
 export function MessagesScreen(){
   return(
     <AppScreen scroll contentStyle={styles.screen}>
-      <View style={styles.header}><View><Text style={styles.kicker}>YOUR PEOPLE</Text><Text style={styles.title}>Messages</Text></View><View style={styles.headerActions}><Text style={styles.headerIcon}>⌕</Text><Text style={styles.headerIcon}>•••</Text></View></View>
-      <View style={styles.tabs}><View style={styles.tabActive}><Text style={styles.tabActiveText}>Chats</Text></View><Text style={styles.tab}>Calls</Text><Text style={styles.tab}>Requests</Text></View>
-      <View style={styles.searchWrap}><Text style={styles.searchIcon}>⌕</Text><TextInput placeholder="Search messages" placeholderTextColor="#646A7D" style={styles.search}/></View>
+      <View style={styles.header}>
+        <View><Text style={styles.kicker}>STAY CONNECTED</Text><Text style={styles.title}>Inbox</Text></View>
+        <View style={styles.headerActions}><Pressable style={styles.icon}><Text style={styles.iconText}>⌕</Text></Pressable><Pressable style={styles.icon}><Text style={styles.iconText}>＋</Text></Pressable></View>
+      </View>
+
+      <View style={styles.storyRow}>
+        {[["P","#FF6AA9"],["A","#5E9BFF"],["S","#4CCFB0"],["R","#FF9A52"]].map(([n,tone])=>(
+          <View key={n} style={styles.story}><View style={[styles.storyAvatar,{backgroundColor:tone}]}><Text style={styles.storyText}>{n}</Text></View><View style={styles.onlineDot}/></View>
+        ))}
+        <View style={styles.storyAdd}><Text style={styles.storyAddText}>＋</Text></View>
+      </View>
+
+      <View style={styles.tabs}>
+        <Pressable style={styles.tabActive}><Text style={styles.tabActiveText}>Chats</Text></Pressable>
+        <Pressable style={styles.tab}><Text style={styles.tabText}>Calls</Text></Pressable>
+        <Pressable style={styles.tab}><Text style={styles.tabText}>Requests</Text></Pressable>
+      </View>
+
+      <View style={styles.searchWrap}><Text style={styles.searchIcon}>⌕</Text><TextInput placeholder="Search messages" placeholderTextColor="#9F97AA" style={styles.search}/></View>
+
       <View style={styles.list}>
         {chats.map(chat=>(
           <Pressable key={chat.id} onPress={()=>router.push({pathname:"/chat/[conversationId]",params:{conversationId:chat.id}})} style={styles.row}>
-            <Avatar name={chat.name} size={50} tone={chat.tone} ring={chat.unread?"#E83CB9":"transparent"}/>
-            <View style={styles.copy}><View style={styles.nameRow}><Text style={styles.name}>{chat.name}</Text><Text style={styles.time}>{chat.time}</Text></View><Text style={styles.msg}>{chat.msg}</Text></View>
+            <View style={[styles.avatar,{backgroundColor:chat.tone}]}><Text style={styles.avatarText}>{chat.name[0]}</Text>{chat.id!=="official"?<View style={styles.online}/>:null}</View>
+            <View style={styles.copy}>
+              <View style={styles.nameRow}><Text style={styles.name}>{chat.name}</Text><Text style={styles.time}>{chat.time}</Text></View>
+              <Text numberOfLines={1} style={styles.msg}>{chat.msg}</Text>
+            </View>
             {chat.unread?<View style={styles.unread}><Text style={styles.unreadText}>{chat.unread}</Text></View>:null}
           </Pressable>
         ))}
@@ -32,26 +50,38 @@ export function MessagesScreen(){
 }
 
 const styles=StyleSheet.create({
-  screen:{paddingTop:10,paddingBottom:104,gap:14},
+  screen:{paddingTop:10,paddingBottom:102,gap:14},
   header:{flexDirection:"row",justifyContent:"space-between",alignItems:"center"},
-  kicker:{color:"#7F53C4",fontSize:7,fontWeight:"900",letterSpacing:1.2},
-  title:{color:"#FFFFFF",fontSize:29,fontWeight:"900",marginTop:2},
+  kicker:{color:"#8B5CFF",fontSize:8,fontWeight:"900",letterSpacing:1.2},
+  title:{color:"#2B243D",fontSize:28,fontWeight:"900",marginTop:2},
   headerActions:{flexDirection:"row",gap:8},
-  headerIcon:{width:36,height:36,borderRadius:12,backgroundColor:"#11131E",color:"#FFFFFF",textAlign:"center",textAlignVertical:"center",paddingTop:9,fontSize:14},
-  tabs:{flexDirection:"row",alignItems:"center",gap:18},
-  tabActive:{paddingHorizontal:15,paddingVertical:8,borderRadius:17,backgroundColor:"#E83CB9"},
-  tabActiveText:{color:"#FFFFFF",fontSize:8,fontWeight:"900"},
-  tab:{color:"#747A8E",fontSize:8,fontWeight:"800"},
-  searchWrap:{minHeight:48,borderRadius:17,backgroundColor:"#11131E",flexDirection:"row",alignItems:"center",paddingHorizontal:12},
-  searchIcon:{color:"#747A8E",fontSize:18,marginRight:7},
-  search:{flex:1,color:"#FFFFFF",fontSize:10},
-  list:{gap:6},
-  row:{minHeight:72,borderBottomWidth:1,borderBottomColor:"rgba(255,255,255,.05)",flexDirection:"row",alignItems:"center",paddingVertical:8},
+  icon:{width:40,height:40,borderRadius:14,backgroundColor:"#FFFFFF",borderWidth:1,borderColor:"#EEEAF4",alignItems:"center",justifyContent:"center"},
+  iconText:{color:"#554D65",fontSize:18,fontWeight:"900"},
+  storyRow:{flexDirection:"row",gap:10},
+  story:{position:"relative"},
+  storyAvatar:{width:54,height:54,borderRadius:27,alignItems:"center",justifyContent:"center",borderWidth:3,borderColor:"#FFFFFF"},
+  storyText:{color:"#FFFFFF",fontSize:15,fontWeight:"900"},
+  onlineDot:{position:"absolute",right:1,bottom:1,width:14,height:14,borderRadius:7,backgroundColor:"#42D29D",borderWidth:3,borderColor:"#F8F7FF"},
+  storyAdd:{width:54,height:54,borderRadius:27,borderWidth:1.5,borderStyle:"dashed",borderColor:"#BDB4C7",alignItems:"center",justifyContent:"center"},
+  storyAddText:{color:"#8A8296",fontSize:23},
+  tabs:{flexDirection:"row",gap:8},
+  tabActive:{paddingHorizontal:16,paddingVertical:9,borderRadius:17,backgroundColor:"#7A5CFF"},
+  tabActiveText:{color:"#FFFFFF",fontSize:9,fontWeight:"900"},
+  tab:{paddingHorizontal:16,paddingVertical:9,borderRadius:17,backgroundColor:"#FFFFFF",borderWidth:1,borderColor:"#EEEAF4"},
+  tabText:{color:"#8C8497",fontSize:9,fontWeight:"800"},
+  searchWrap:{minHeight:50,borderRadius:18,backgroundColor:"#FFFFFF",borderWidth:1,borderColor:"#EEEAF4",flexDirection:"row",alignItems:"center",paddingHorizontal:12},
+  searchIcon:{color:"#8C8497",fontSize:19,marginRight:7},
+  search:{flex:1,color:"#30293E",fontSize:10},
+  list:{gap:7},
+  row:{minHeight:74,borderRadius:19,backgroundColor:"#FFFFFF",borderWidth:1,borderColor:"#EEEAF4",flexDirection:"row",alignItems:"center",padding:10},
+  avatar:{width:50,height:50,borderRadius:25,alignItems:"center",justifyContent:"center",position:"relative"},
+  avatarText:{color:"#FFFFFF",fontSize:14,fontWeight:"900"},
+  online:{position:"absolute",right:0,bottom:0,width:13,height:13,borderRadius:7,backgroundColor:"#42D29D",borderWidth:3,borderColor:"#FFFFFF"},
   copy:{flex:1,marginLeft:11},
   nameRow:{flexDirection:"row",justifyContent:"space-between"},
-  name:{color:"#FFFFFF",fontSize:11,fontWeight:"900"},
-  time:{color:"#666C80",fontSize:7},
-  msg:{color:"#80869A",fontSize:8,marginTop:5},
-  unread:{width:20,height:20,borderRadius:10,backgroundColor:"#E83CB9",alignItems:"center",justifyContent:"center",marginLeft:8},
+  name:{color:"#342D43",fontSize:11,fontWeight:"900"},
+  time:{color:"#A39BAD",fontSize:7},
+  msg:{color:"#8A8297",fontSize:8.5,marginTop:5},
+  unread:{width:22,height:22,borderRadius:11,backgroundColor:"#FF5FA2",alignItems:"center",justifyContent:"center",marginLeft:8},
   unreadText:{color:"#FFFFFF",fontSize:7,fontWeight:"900"},
 });
