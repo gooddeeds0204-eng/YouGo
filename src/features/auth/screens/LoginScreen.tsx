@@ -2,10 +2,18 @@ import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
+import { useSession } from "@/core/session/SessionProvider";
 
-function preview(name:string){Alert.alert("Preview mode",name+" sign-in will be connected later.");}
+function preview(name:string){Alert.alert("Coming soon",name+" login will be enabled later.");}
 
 export function LoginScreen(){
+  const {enterPreviewMode}=useSession();
+
+  const enter=async()=>{
+    await enterPreviewMode();
+    router.replace("/home");
+  };
+
   return(
     <SafeAreaView style={styles.safe}>
       <StatusBar style="dark"/>
@@ -20,28 +28,28 @@ export function LoginScreen(){
         </View>
 
         <View style={styles.sheet}>
-          <Text style={styles.title}>Welcome back</Text>
-          <Text style={styles.sub}>Enter Ugo and join your people.</Text>
+          <Text style={styles.title}>Welcome to Ugo</Text>
+          <Text style={styles.sub}>SMS login will be enabled later. For now, enter directly and test the app.</Text>
 
-          <Pressable onPress={()=>router.push("/phone")} style={styles.primary}>
-            <Text style={styles.primaryIcon}>☎</Text>
-            <Text style={styles.primaryText}>Continue with phone</Text>
+          <Pressable onPress={enter} style={styles.primary}>
+            <Text style={styles.primaryText}>Enter Ugo</Text>
             <Text style={styles.primaryArrow}>→</Text>
           </Pressable>
 
-          <View style={styles.divider}><View style={styles.line}/><Text style={styles.or}>or</Text><View style={styles.line}/></View>
-
-          <View style={styles.socialRow}>
-            <Pressable onPress={()=>preview("Google")} style={styles.social}><Text style={styles.google}>G</Text><Text style={styles.socialText}>Google</Text></Pressable>
-            <Pressable onPress={()=>preview("Facebook")} style={styles.social}><Text style={styles.facebook}>f</Text><Text style={styles.socialText}>Facebook</Text></Pressable>
+          <View style={styles.previewNote}>
+            <Text style={styles.previewNoteTitle}>TEST ACCESS</Text>
+            <Text style={styles.previewNoteText}>No OTP is required in the current preview build.</Text>
           </View>
 
-          <Pressable onPress={()=>router.push("/language")} style={styles.language}>
-            <Text style={styles.languageText}>🌐 English</Text><Text style={styles.chev}>›</Text>
-          </Pressable>
+          <View style={styles.divider}><View style={styles.line}/><Text style={styles.or}>later</Text><View style={styles.line}/></View>
+
+          <View style={styles.socialRow}>
+            <Pressable onPress={()=>preview("Phone")} style={styles.social}><Text style={styles.socialIcon}>☎</Text><Text style={styles.socialText}>Phone</Text></Pressable>
+            <Pressable onPress={()=>preview("Google")} style={styles.social}><Text style={styles.google}>G</Text><Text style={styles.socialText}>Google</Text></Pressable>
+          </View>
         </View>
 
-        <Text style={styles.legal}>By continuing, you agree to Ugo Terms, Privacy Policy and Community Guidelines.</Text>
+        <Text style={styles.legal}>Preview access is temporary. Production login will use verified authentication.</Text>
       </View>
     </SafeAreaView>
   );
@@ -62,21 +70,20 @@ const styles=StyleSheet.create({
   brandLine:{color:"#9A8C67",fontSize:9,fontWeight:"900",letterSpacing:1.8,marginTop:4},
   sheet:{backgroundColor:"#FFFFFF",borderRadius:26,borderWidth:1,borderColor:"#EAE7F1",padding:18,marginTop:30,shadowColor:"#352A43",shadowOpacity:.07,shadowRadius:18,shadowOffset:{width:0,height:9},elevation:4},
   title:{color:"#1D1924",fontSize:24,fontWeight:"900",textAlign:"center"},
-  sub:{color:"#7C7584",fontSize:13,textAlign:"center",marginTop:5},
-  primary:{minHeight:58,borderRadius:18,backgroundColor:"#7054E8",flexDirection:"row",alignItems:"center",justifyContent:"center",marginTop:22},
-  primaryIcon:{fontSize:17,marginRight:9},
+  sub:{color:"#7C7584",fontSize:13,lineHeight:19,textAlign:"center",marginTop:6},
+  primary:{minHeight:58,borderRadius:18,backgroundColor:"#7054E8",alignItems:"center",justifyContent:"center",marginTop:22},
   primaryText:{color:"#FFFFFF",fontSize:15,fontWeight:"900"},
-  primaryArrow:{position:"absolute",right:18,color:"#FFFFFF",fontSize:19},
+  primaryArrow:{position:"absolute",right:18,color:"#E8B95A",fontSize:20},
+  previewNote:{borderRadius:16,backgroundColor:"#F3F0FA",padding:12,marginTop:12},
+  previewNoteTitle:{color:"#9A814B",fontSize:9,fontWeight:"900",letterSpacing:1,textAlign:"center"},
+  previewNoteText:{color:"#6D6674",fontSize:11,textAlign:"center",marginTop:3},
   divider:{flexDirection:"row",alignItems:"center",gap:9,marginVertical:15},
   line:{flex:1,height:1,backgroundColor:"#ECE9F0"},
   or:{color:"#A19AA7",fontSize:11},
   socialRow:{flexDirection:"row",gap:10},
   social:{flex:1,minHeight:52,borderRadius:16,backgroundColor:"#FAF9FC",borderWidth:1,borderColor:"#ECE9F0",flexDirection:"row",alignItems:"center",justifyContent:"center"},
+  socialIcon:{fontSize:17,marginRight:7},
   google:{color:"#486EDB",fontSize:18,fontWeight:"900",marginRight:7},
-  facebook:{color:"#486EDB",fontSize:20,fontWeight:"900",marginRight:7},
   socialText:{color:"#49424F",fontSize:13,fontWeight:"800"},
-  language:{minHeight:50,borderRadius:16,backgroundColor:"#FAF9FC",borderWidth:1,borderColor:"#ECE9F0",flexDirection:"row",alignItems:"center",paddingHorizontal:14,marginTop:10},
-  languageText:{flex:1,color:"#5E5764",fontSize:13,fontWeight:"700"},
-  chev:{color:"#9C95A2",fontSize:22},
   legal:{color:"#9B94A0",fontSize:10,lineHeight:15,textAlign:"center",marginTop:"auto"},
 });
