@@ -107,7 +107,7 @@ export function ActivityCenterScreen(){
           return(
             <View key={m.id} style={styles.mission}>
               <View style={styles.missionTop}><Text style={styles.missionTitle}>{m.title}</Text><Text style={styles.reward}>+{m.rewardAmount} {m.rewardType.replace("_"," ")}</Text></View>
-              <View style={styles.track}><View style={[styles.fill,{width:(ratio*100)+"%"}]}/></View>
+              <View style={styles.track}><View style={[styles.fill,{width:(Math.round(ratio*100)+"%") as `${number}%`}]}/></View>
               <Text style={styles.progressText}>{m.progress} / {m.target}</Text>
             </View>
           );
