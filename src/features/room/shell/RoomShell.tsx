@@ -11,6 +11,7 @@ import { RoomAudienceBar } from "@/features/room/audience/RoomAudienceBar";
 import { RoomChatFeed } from "@/features/room/chat/RoomChatFeed";
 import { RoomBottomControls } from "@/features/room/components/RoomBottomControls";
 import { AppScreen } from "@/shared/ui/AppScreen";
+import { LiveRoomMedia } from "@/platform/livekit/LiveRoomMedia";
 import {
   getRoom,
   joinRoom,
@@ -109,6 +110,8 @@ export function RoomShell({roomId}:Props){
       {mode==="voice"?<VoiceStage roomId={roomId} seatCount={seatCount}/>:null}
       {mode==="video"?<VideoStage/>:null}
       {mode==="game"?<GameStage roomId={roomId}/>:null}
+
+      <LiveRoomMedia roomId={roomId} mode={mode}/>
 
       <RoomAudienceBar/>
 
