@@ -4,13 +4,13 @@ import { AppScreen } from "@/shared/ui/AppScreen";
 import { useSession } from "@/core/session/SessionProvider";
 
 const rows=[
-  ["👤","Account & profile"],
-  ["🔐","Privacy"],
-  ["🔔","Notifications"],
-  ["🛡","Safety center"],
-  ["🚫","Blocked users"],
-  ["🌐","Language"],
-  ["❓","Help & support"],
+  ["👤","Account & profile","/profile"],
+  ["🔐","Privacy","/safety"],
+  ["🔔","Notifications","/notifications"],
+  ["🛡","Safety center","/safety"],
+  ["🚫","Blocked users","/safety"],
+  ["🌐","Language","/language"],
+  ["❓","Help & support","/safety"],
 ];
 
 export function SettingsScreen(){
@@ -36,8 +36,8 @@ export function SettingsScreen(){
       </View>
 
       <View style={styles.menu}>
-        {rows.map(([icon,label],index)=>(
-          <Pressable key={label} style={[styles.row,index>0&&styles.border]}>
+        {rows.map(([icon,label,path],index)=>(
+          <Pressable key={label} onPress={()=>router.push(path as never)} style={[styles.row,index>0&&styles.border]}>
             <Text style={styles.icon}>{icon}</Text>
             <Text style={styles.label}>{label}</Text>
             <Text style={styles.arrow}>›</Text>
