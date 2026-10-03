@@ -25,7 +25,7 @@ export function RoomBottomControls({roomId,message,onChangeMessage,onSend,sendin
         <Text style={styles.roundText}>🎁</Text>
       </Pressable>
 
-      <Pressable style={styles.round}><Text style={styles.more}>•••</Text></Pressable>
+      <Pressable onPress={()=>router.push({pathname:"/room-tools",params:{roomId}})} style={styles.round}><Text style={styles.more}>•••</Text></Pressable>
     </View>
   );
 }
