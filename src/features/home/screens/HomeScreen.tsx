@@ -1,24 +1,43 @@
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
 import { AppScreen } from "@/shared/ui/AppScreen";
 import { DarkTopBar } from "@/shared/ui/DarkTopBar";
+import { listPublicRooms, type PublicRoom } from "@/platform/supabase/roomRuntime";
+import { searchProfiles, type SocialProfile } from "@/platform/supabase/social";
 
-const livePeople=[
-  ["Neha","#D95C91","HOST"],
-  ["Arjun","#557FD0","VIP"],
-  ["Priya","#7E62D9","LIVE"],
-  ["Ravi","#C8793D","NEW"],
-  ["Sneha","#3FA987","LIVE"],
+const demoPeople:SocialProfile[]=[
+  {id:"neha",displayName:"Neha",username:"neha",avatarUrl:null,level:24,vipLevel:3,charm:98000,wealth:65000},
+  {id:"arjun",displayName:"Arjun",username:"arjun",avatarUrl:null,level:31,vipLevel:4,charm:76000,wealth:116000},
+  {id:"priya",displayName:"Priya",username:"priya",avatarUrl:null,level:28,vipLevel:2,charm:128000,wealth:84000},
+  {id:"ravi",displayName:"Ravi",username:"ravi",avatarUrl:null,level:18,vipLevel:1,charm:42000,wealth:36000},
+  {id:"sneha",displayName:"Sneha",username:"sneha",avatarUrl:null,level:22,vipLevel:2,charm:69000,wealth:49000},
 ];
 
-const rooms=[
-  {id:"chill",title:"Chill Vibes",host:"Neha",count:"2.3K",tag:"Music • Friends",tone:"#6E55D8",icon:"🎙"},
-  {id:"music",title:"Music Adda",host:"Priya",count:"1.8K",tag:"Songs • Requests",tone:"#C45182",icon:"🎵"},
-  {id:"telugu",title:"Telugu Talks",host:"Ravi",count:"1.5K",tag:"Telugu • Fun",tone:"#3E8EB0",icon:"💬"},
-  {id:"game",title:"Game Room",host:"Arjun",count:"932",tag:"Ludo • Cards",tone:"#3A9A7D",icon:"🎮"},
+const demoRooms:PublicRoom[]=[
+  {id:"chill",name:"Chill Vibes",mode:"voice",level:8,audienceCount:2300,ownerId:"neha",announcement:"Music • Friends"},
+  {id:"music",name:"Music Adda",mode:"voice",level:5,audienceCount:1800,ownerId:"priya",announcement:"Songs • Requests"},
+  {id:"telugu",name:"Telugu Talks",mode:"voice",level:4,audienceCount:1500,ownerId:"ravi",announcement:"Telugu • Fun"},
+  {id:"game",name:"Game Room",mode:"game",level:6,audienceCount:932,ownerId:"arjun",announcement:"Ludo • Cards"},
 ];
+
+const tones=["#6E55D8","#C45182","#3E8EB0","#3A9A7D","#9A6E35"];
+const modeIcon=(mode:string)=>mode==="video"?"🎥":mode==="game"?"🎮":"🎙";
+const modeLabel=(mode:string)=>mode==="video"?"Video Party":mode==="game"?"Game Room":"Voice Room";
 
 export function HomeScreen(){
+  const [rooms,setRooms]=useState<PublicRoom[]>([]);
+  const [people,setPeople]=useState<SocialProfile[]>([]);
+
+  useEffect(()=>{
+    void listPublicRooms(12).then(setRooms).catch(()=>undefined);
+    void searchProfiles("",5).then(setPeople).catch(()=>undefined);
+  },[]);
+
+  const shownRooms=rooms.length?rooms:demoRooms;
+  const shownPeople=people.length?people:demoPeople;
+  const featured=shownRooms[0];
+
   return(
     <AppScreen scroll contentStyle={styles.screen}>
       <DarkTopBar
@@ -30,52 +49,46 @@ export function HomeScreen(){
 
       <View style={styles.tabs}>
         {["For you","Voice","Video","Games"].map((item,index)=>(
-          <Pressable key={item} style={[styles.tab,index===0&&styles.tabActive]}>
+          <Pressable key={item} onPress={item==="Games"?()=>router.push("/games"):undefined} style={[styles.tab,index===0&&styles.tabActive]}>
             <Text style={[styles.tabText,index===0&&styles.tabTextActive]}>{item}</Text>
           </Pressable>
         ))}
       </View>
 
       <View style={styles.sectionHead}>
-        <View>
-          <Text style={styles.eyebrow}>LIVE NOW</Text>
-          <Text style={styles.sectionTitle}>People on Ugo</Text>
-        </View>
-        <Text style={styles.see}>See all</Text>
+        <View><Text style={styles.eyebrow}>LIVE NOW</Text><Text style={styles.sectionTitle}>People on Ugo</Text></View>
+        <Pressable onPress={()=>router.push("/discover")}><Text style={styles.see}>See all</Text></Pressable>
       </View>
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.peopleRow}>
-        {livePeople.map(([name,tone,badge])=>(
-          <Pressable key={name} onPress={()=>router.push("/room/chill")} style={styles.person}>
+        {shownPeople.map((person,index)=>(
+          <Pressable key={person.id} onPress={()=>router.push({pathname:"/user/[userId]",params:{userId:person.id}})} style={styles.person}>
             <View style={styles.personHalo}>
-              <View style={[styles.personRing,{borderColor:tone}]}>
-                <View style={[styles.personAvatar,{backgroundColor:tone}]}><Text style={styles.personText}>{name[0]}</Text></View>
+              <View style={[styles.personRing,{borderColor:tones[index%tones.length]}]}>
+                <View style={[styles.personAvatar,{backgroundColor:tones[index%tones.length]}]}>
+                  {person.avatarUrl?<Image source={{uri:person.avatarUrl}} style={styles.personImage}/>:<Text style={styles.personText}>{person.displayName[0]}</Text>}
+                </View>
               </View>
-              <View style={styles.personBadge}><Text style={styles.personBadgeText}>{badge}</Text></View>
+              <View style={styles.personBadge}><Text style={styles.personBadgeText}>{person.vipLevel>0?"VIP "+person.vipLevel:"LIVE"}</Text></View>
             </View>
-            <Text style={styles.personName}>{name}</Text>
+            <Text numberOfLines={1} style={styles.personName}>{person.displayName}</Text>
           </Pressable>
         ))}
       </ScrollView>
 
-      <Pressable onPress={()=>router.push("/room/chill")} style={styles.featured}>
-        <View style={styles.featureOrbA}/><View style={styles.featureOrbB}/>
-        <View style={styles.featureLine}/>
+      <Pressable onPress={()=>router.push({pathname:"/room/[roomId]",params:{roomId:featured.id}})} style={styles.featured}>
+        <View style={styles.featureOrbA}/><View style={styles.featureOrbB}/><View style={styles.featureLine}/>
         <View style={styles.featureTop}>
           <View style={styles.livePill}><Text style={styles.livePillText}>● LIVE ROOM</Text></View>
-          <Text style={styles.viewer}>2.3K listening</Text>
+          <Text style={styles.viewer}>{featured.audienceCount.toLocaleString()} listening</Text>
         </View>
 
         <View style={styles.featureMain}>
-          <View style={styles.hostHalo}>
-            <View style={styles.hostRing}>
-              <View style={styles.hostAvatar}><Text style={styles.hostAvatarText}>N</Text></View>
-            </View>
-          </View>
+          <View style={styles.hostHalo}><View style={styles.hostRing}><View style={styles.hostAvatar}><Text style={styles.hostAvatarText}>{featured.name[0]}</Text></View></View></View>
           <View style={styles.featureCopy}>
-            <Text style={styles.featureTitle}>Chill Vibes</Text>
-            <Text style={styles.featureHost}>Hosted by Neha</Text>
-            <Text style={styles.featureMeta}>Music • Friends • Telugu + English</Text>
+            <Text style={styles.featureTitle}>{featured.name}</Text>
+            <Text style={styles.featureHost}>{modeLabel(featured.mode)} • LV.{featured.level}</Text>
+            <Text style={styles.featureMeta}>{featured.announcement||"Talk • Play • Connect"}</Text>
           </View>
         </View>
 
@@ -88,8 +101,8 @@ export function HomeScreen(){
       <View style={styles.quickRow}>
         {[
           ["🎮","Games","/games"],
+          ["🎉","Events","/activity"],
           ["🎁","Gifts","/gifts"],
-          ["👑","VIP","/vip"],
           ["💎","Wallet","/wallet"]
         ].map(([icon,label,path])=>(
           <Pressable key={label} onPress={()=>router.push(path as never)} style={styles.quick}>
@@ -100,27 +113,20 @@ export function HomeScreen(){
       </View>
 
       <View style={styles.sectionHead}>
-        <View>
-          <Text style={styles.eyebrow}>DISCOVER</Text>
-          <Text style={styles.sectionTitle}>Popular rooms</Text>
-        </View>
-        <Text style={styles.see}>More</Text>
+        <View><Text style={styles.eyebrow}>DISCOVER</Text><Text style={styles.sectionTitle}>Popular rooms</Text></View>
+        <Pressable onPress={()=>router.push("/discover")}><Text style={styles.see}>More</Text></Pressable>
       </View>
 
       <View style={styles.roomList}>
-        {rooms.map((room,index)=>(
+        {shownRooms.slice(0,6).map((room,index)=>(
           <Pressable key={room.id} onPress={()=>router.push({pathname:"/room/[roomId]",params:{roomId:room.id}})} style={styles.roomCard}>
-            <View style={[styles.roomCover,{backgroundColor:room.tone}]}>
-              <View style={styles.roomCoverGlow}/>
-              <Text style={styles.roomIcon}>{room.icon}</Text>
+            <View style={[styles.roomCover,{backgroundColor:tones[index%tones.length]}]}>
+              <View style={styles.roomCoverGlow}/><Text style={styles.roomIcon}>{modeIcon(room.mode)}</Text>
             </View>
             <View style={styles.roomCopy}>
-              <View style={styles.roomTitleRow}>
-                <Text style={styles.roomTitle}>{room.title}</Text>
-                {index===0?<View style={styles.goldDot}/>:null}
-              </View>
-              <Text style={styles.roomMeta}>{room.host} • {room.tag}</Text>
-              <Text style={styles.roomCount}>👥 {room.count} online</Text>
+              <View style={styles.roomTitleRow}><Text style={styles.roomTitle}>{room.name}</Text>{index===0?<View style={styles.goldDot}/>:null}</View>
+              <Text style={styles.roomMeta}>{modeLabel(room.mode)} • LV.{room.level}</Text>
+              <Text style={styles.roomCount}>👥 {room.audienceCount.toLocaleString()} online</Text>
             </View>
             <View style={styles.roomArrow}><Text style={styles.roomArrowText}>›</Text></View>
           </Pressable>
@@ -145,11 +151,12 @@ const styles=StyleSheet.create({
   person:{alignItems:"center",width:70},
   personHalo:{position:"relative"},
   personRing:{width:66,height:66,borderRadius:33,borderWidth:2.5,alignItems:"center",justifyContent:"center",backgroundColor:"#FFFFFF"},
-  personAvatar:{width:56,height:56,borderRadius:28,alignItems:"center",justifyContent:"center"},
+  personAvatar:{width:56,height:56,borderRadius:28,alignItems:"center",justifyContent:"center",overflow:"hidden"},
+  personImage:{width:"100%",height:"100%"},
   personText:{color:"#FFFFFF",fontSize:18,fontWeight:"900"},
   personBadge:{position:"absolute",bottom:-5,alignSelf:"center",paddingHorizontal:7,paddingVertical:3,borderRadius:8,backgroundColor:"#17131F",borderWidth:1,borderColor:"rgba(232,185,90,.45)"},
   personBadgeText:{color:"#E8B95A",fontSize:7,fontWeight:"900"},
-  personName:{color:"#5E5865",fontSize:11,fontWeight:"700",marginTop:9},
+  personName:{color:"#5E5865",fontSize:11,fontWeight:"700",marginTop:9,maxWidth:68},
   featured:{minHeight:244,borderRadius:28,backgroundColor:"#1B1623",padding:18,overflow:"hidden",borderWidth:1,borderColor:"#34283F",shadowColor:"#22182F",shadowOpacity:.18,shadowRadius:20,shadowOffset:{width:0,height:12},elevation:7},
   featureOrbA:{position:"absolute",width:210,height:210,borderRadius:105,backgroundColor:"rgba(112,84,232,.25)",right:-70,top:-65},
   featureOrbB:{position:"absolute",width:130,height:130,borderRadius:65,backgroundColor:"rgba(240,91,145,.14)",left:-50,bottom:-50},
