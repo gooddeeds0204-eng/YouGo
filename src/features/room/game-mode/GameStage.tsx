@@ -1,20 +1,37 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useState } from "react";
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
 import { enabledGames } from "@/registries/gameRegistry";
+import { createGameSession } from "@/platform/supabase/roomRuntime";
 
-export function GameStage(){
-  const registered=enabledGames().slice(0,3);
-  const games=[
-    ...registered.map(game=>[game.icon,game.name]),
-    ["🎲","Lucky Dice"],
-  ];
+type Props={roomId:string};
+
+export function GameStage({roomId}:Props){
+  const [busy,setBusy]=useState<string|null>(null);
+  const games=enabledGames().slice(0,6);
+
+  const start=async(gameId:string)=>{
+    if(busy)return;
+    setBusy(gameId);
+    try{
+      const session=await createGameSession(roomId,gameId);
+      router.push({
+        pathname:"/game/[sessionId]",
+        params:{sessionId:session?.id||"preview-session",gameKey:gameId},
+      });
+    }catch(error:any){
+      Alert.alert("Game",error?.message||"Could not start the game.");
+    }finally{
+      setBusy(null);
+    }
+  };
 
   return(
     <View style={styles.wrap}>
       <View style={styles.hero}>
         <View>
           <Text style={styles.title}>Play together</Text>
-          <Text style={styles.sub}>Choose a game. Room chat stays open.</Text>
+          <Text style={styles.sub}>Choose a game. Room identity, audience and chat stay active.</Text>
         </View>
         <Text style={styles.heroIcon}>🎮</Text>
       </View>
@@ -29,11 +46,11 @@ export function GameStage(){
       </View>
 
       <View style={styles.grid}>
-        {games.map(([icon,name])=>(
-          <Pressable key={name} onPress={()=>router.push("/games")} style={styles.card}>
-            <Text style={styles.icon}>{icon}</Text>
-            <Text style={styles.name}>{name}</Text>
-            <Text style={styles.play}>Play</Text>
+        {games.map(game=>(
+          <Pressable key={game.id} onPress={()=>start(game.id)} style={styles.card}>
+            <Text style={styles.icon}>{game.icon}</Text>
+            <Text style={styles.name}>{game.name}</Text>
+            <Text style={styles.play}>{busy===game.id?"Starting...":game.supportsGamePk?"Play • PK":"Play"}</Text>
           </Pressable>
         ))}
       </View>
@@ -43,7 +60,7 @@ export function GameStage(){
 
 const styles=StyleSheet.create({
   wrap:{marginTop:16},
-  hero:{minHeight:110,borderRadius:20,backgroundColor:"#7657F6",padding:16,flexDirection:"row",alignItems:"center",justifyContent:"space-between"},
+  hero:{minHeight:110,borderRadius:20,backgroundColor:"#7054E8",padding:16,flexDirection:"row",alignItems:"center",justifyContent:"space-between"},
   title:{color:"#FFFFFF",fontSize:20,fontWeight:"900"},
   sub:{color:"rgba(255,255,255,.72)",fontSize:12,lineHeight:17,marginTop:4,maxWidth:240},
   heroIcon:{fontSize:42},
