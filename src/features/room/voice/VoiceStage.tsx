@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View } from "react-native";
 import { SeatGrid } from "@/features/room/seats/SeatGrid";
 
-type Props={seatCount:number};
+type Props={roomId:string;seatCount:number};
 
-export function VoiceStage({seatCount}:Props){
+export function VoiceStage({roomId,seatCount}:Props){
   return(
     <View style={styles.wrap}>
       <View style={styles.host}>
@@ -43,7 +43,7 @@ export function VoiceStage({seatCount}:Props){
         <Text style={styles.sectionTitle}>Mic seats</Text>
         <Text style={styles.sectionMeta}>{seatCount} seats</Text>
       </View>
-      <SeatGrid seatCount={seatCount}/>
+      <SeatGrid roomId={roomId} seatCount={seatCount}/>
     </View>
   );
 }
