@@ -4,15 +4,19 @@ import { router } from "expo-router";
 import { AppScreen } from "@/shared/ui/AppScreen";
 import { useSession } from "@/core/session/SessionProvider";
 import { getProfile } from "@/platform/supabase/profiles";
+import { getFollowCounts, listProfileVisitors } from "@/platform/supabase/social";
 import type { UserProfile } from "@/contracts/user";
 
 export function ProfileScreen(){
   const {user}=useSession();
   const [profile,setProfile]=useState<UserProfile|null>(null);
+  const [social,setSocial]=useState({followers:0,following:0,visitors:0});
 
   useEffect(()=>{
     if(!user?.id)return;
     void getProfile(user.id).then(setProfile).catch(()=>undefined);
+    void getFollowCounts(user.id).then(counts=>setSocial(current=>({...current,...counts}))).catch(()=>undefined);
+    void listProfileVisitors(50).then(items=>setSocial(current=>({...current,visitors:items.length}))).catch(()=>undefined);
   },[user?.id]);
 
   const displayName=profile?.displayName||user?.displayName||"Ugo User";
@@ -54,7 +58,7 @@ export function ProfileScreen(){
       </View>
 
       <View style={styles.stats}>
-        {[["—","Followers"],["—","Following"],[charm.toLocaleString(),"Charm"],["—","Visitors"]].map(([value,label],index)=>(
+        {[[social.followers.toLocaleString(),"Followers"],[social.following.toLocaleString(),"Following"],[charm.toLocaleString(),"Charm"],[social.visitors.toLocaleString(),"Visitors"]].map(([value,label],index)=>(
           <View key={label} style={[styles.stat,index>0&&styles.statBorder]}>
             <Text style={styles.statValue}>{value}</Text>
             <Text style={styles.statLabel}>{label}</Text>
@@ -62,12 +66,12 @@ export function ProfileScreen(){
         ))}
       </View>
 
-      <Pressable onPress={()=>router.push("/wallet")} style={styles.wallet}>
+      <Pressable onPress={()=>router.push("/store")} style={styles.wallet}>
         <View style={styles.walletIcon}><Text style={styles.walletEmoji}>💎</Text></View>
         <View>
           <Text style={styles.walletLabel}>MY ASSETS</Text>
-          <Text style={styles.walletTitle}>Wallet & Store</Text>
-          <Text style={styles.walletSub}>Diamonds, coins and purchases</Text>
+          <Text style={styles.walletTitle}>Store & Bag</Text>
+          <Text style={styles.walletSub}>Frames, vehicles, bubbles and effects</Text>
         </View>
         <View style={styles.walletRight}><Text style={styles.walletBalance}>Open</Text><Text style={styles.walletArrow}>›</Text></View>
       </Pressable>
@@ -78,9 +82,9 @@ export function ProfileScreen(){
           ["👑","VIP","/vip"],
           ["🎮","Games","/games"],
           ["🎁","Gifts","/gifts"],
-          ["🫶","Family","/family-couple"],
-          ["💞","Couple","/family-couple"],
-          ["🔔","Alerts","/notifications"]
+          ["🎉","Events","/activity"],
+          ["💬","Moments","/moments"],
+          ["🫶","Community","/family-couple"]
         ].map(([icon,label,path])=>(
           <Pressable key={label} onPress={()=>router.push(path as never)} style={styles.shortcut}>
             <View style={styles.shortcutIcon}><Text style={styles.shortcutEmoji}>{icon}</Text></View>
@@ -92,12 +96,13 @@ export function ProfileScreen(){
       <Text style={styles.sectionTitle}>Account</Text>
       <View style={styles.menu}>
         {[
-          ["👀","Profile visitors"],
-          ["🎯","Missions"],
-          ["🛍","Store"],
-          ["⚙","Settings"]
-        ].map(([icon,label],index)=>(
-          <Pressable key={label} onPress={label==="Settings"?()=>router.push("/settings"):undefined} style={[styles.menuRow,index>0&&styles.menuBorder]}>
+          ["👀","Profile visitors","/visitors"],
+          ["🎙","Host Center","/host-center"],
+          ["🛍","Store & Bag","/store"],
+          ["🛡","Safety Center","/safety"],
+          ["⚙","Settings","/settings"]
+        ].map(([icon,label,path],index)=>(
+          <Pressable key={label} onPress={()=>router.push(path as never)} style={[styles.menuRow,index>0&&styles.menuBorder]}>
             <View style={styles.menuIconWrap}><Text style={styles.menuIcon}>{icon}</Text></View>
             <Text style={styles.menuText}>{label}</Text>
             <Text style={styles.menuArrow}>›</Text>
