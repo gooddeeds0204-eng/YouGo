@@ -232,3 +232,59 @@ export async function getGameSession(sessionId:string){
   if(error)throw error;
   return data;
 }
+
+
+export async function setRoomAnnouncement(roomId:string,announcement:string){
+  const supabase=getSupabaseClient();
+  if(!supabase||!UUID_RE.test(roomId))return false;
+  const {data:auth}=await supabase.auth.getUser();
+  if(!auth.user)return false;
+  const {data,error}=await supabase.rpc("set_room_announcement",{p_room_id:roomId,p_announcement:announcement});
+  if(error)throw error;
+  return Boolean(data);
+}
+
+export async function setRoomSeatLocked(roomId:string,seatNo:number,locked:boolean){
+  const supabase=getSupabaseClient();
+  if(!supabase||!UUID_RE.test(roomId))return false;
+  const {data:auth}=await supabase.auth.getUser();
+  if(!auth.user)return false;
+  const {data,error}=await supabase.rpc("set_room_seat_locked",{p_room_id:roomId,p_seat_no:seatNo,p_locked:locked});
+  if(error)throw error;
+  return Boolean(data);
+}
+
+export async function muteAllRoomSeats(roomId:string,muted:boolean){
+  const supabase=getSupabaseClient();
+  if(!supabase||!UUID_RE.test(roomId))return false;
+  const {data:auth}=await supabase.auth.getUser();
+  if(!auth.user)return false;
+  const {data,error}=await supabase.rpc("mute_all_room_seats",{p_room_id:roomId,p_muted:muted});
+  if(error)throw error;
+  return Boolean(data);
+}
+
+export async function removeRoomMember(roomId:string,userId:string){
+  const supabase=getSupabaseClient();
+  if(!supabase||!UUID_RE.test(roomId))return false;
+  const {data:auth}=await supabase.auth.getUser();
+  if(!auth.user)return false;
+  const {data,error}=await supabase.rpc("remove_room_member",{p_room_id:roomId,p_user_id:userId});
+  if(error)throw error;
+  return Boolean(data);
+}
+
+export async function updateRoomSettings(roomId:string,input:{name:string;privacy:"public"|"private";language:string}){
+  const supabase=getSupabaseClient();
+  if(!supabase||!UUID_RE.test(roomId))return false;
+  const {data:auth}=await supabase.auth.getUser();
+  if(!auth.user)return false;
+  const {data,error}=await supabase.rpc("update_room_settings",{
+    p_room_id:roomId,
+    p_name:input.name,
+    p_privacy:input.privacy,
+    p_language:input.language,
+  });
+  if(error)throw error;
+  return Boolean(data);
+}
