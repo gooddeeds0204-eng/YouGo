@@ -186,3 +186,49 @@ export async function createGameSession(roomId:string,gameKey:string){
   if(error)throw error;
   return data;
 }
+
+
+export type GameActionResult={
+  session_id:string;
+  game_key:string;
+  round:number;
+  score:number;
+  result:{
+    kind:string;
+    value?:number;
+    score?:number;
+    position?:number;
+    label?:string;
+  };
+};
+
+export async function performGameAction(sessionId:string,action="play"):Promise<GameActionResult|null>{
+  const supabase=getSupabaseClient();
+  if(!supabase||!UUID_RE.test(sessionId))return null;
+  const {data:auth}=await supabase.auth.getUser();
+  if(!auth.user)return null;
+  const {data,error}=await supabase.rpc("perform_game_action",{p_session_id:sessionId,p_action:action});
+  if(error)throw error;
+  return data as GameActionResult;
+}
+
+export async function finishGameSession(sessionId:string){
+  const supabase=getSupabaseClient();
+  if(!supabase||!UUID_RE.test(sessionId))return false;
+  const {data:auth}=await supabase.auth.getUser();
+  if(!auth.user)return false;
+  const {data,error}=await supabase.rpc("finish_game_session",{p_session_id:sessionId});
+  if(error)throw error;
+  return Boolean(data);
+}
+
+export async function getGameSession(sessionId:string){
+  const supabase=getSupabaseClient();
+  if(!supabase||!UUID_RE.test(sessionId))return null;
+  const {data,error}=await supabase.from("game_sessions")
+    .select("id,room_id,game_key,status,state,created_at,updated_at")
+    .eq("id",sessionId)
+    .maybeSingle();
+  if(error)throw error;
+  return data;
+}
