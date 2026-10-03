@@ -106,7 +106,7 @@ export function RoomShell({roomId}:Props){
 
       <RoomModeTabs mode={mode} onChange={changeMode}/>
 
-      {mode==="voice"?<VoiceStage seatCount={seatCount}/>:null}
+      {mode==="voice"?<VoiceStage roomId={roomId} seatCount={seatCount}/>:null}
       {mode==="video"?<VideoStage/>:null}
       {mode==="game"?<GameStage/>:null}
 
