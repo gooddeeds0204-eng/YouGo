@@ -40,8 +40,8 @@ export function WalletScreen(){
         <Text style={styles.balanceLabel}>Diamond balance</Text>
         <Text style={styles.balance}>💎 {diamonds.toLocaleString()}</Text>
         <View style={styles.actions}>
-          <Pressable style={styles.recharge}><Text style={styles.rechargeText}>Recharge</Text></Pressable>
-          <Pressable style={styles.store}><Text style={styles.storeText}>Store</Text></Pressable>
+          <Pressable onPress={()=>router.push("/recharge")} style={styles.recharge}><Text style={styles.rechargeText}>Recharge</Text></Pressable>
+          <Pressable onPress={()=>router.push("/store")} style={styles.store}><Text style={styles.storeText}>Store</Text></Pressable>
         </View>
       </View>
 
